@@ -34,7 +34,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="1101.0" prefWidth="1906.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -73,7 +73,7 @@
         </Menu>
       </menus>
     </MenuBar>
-    <SplitPane dividerPositions="0.18466353677621283, 0.7856025039123631" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+    <SplitPane dividerPositions="0.15913865546218486, 0.8103991596638656" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <items>
             <TabPane maxWidth="300.0" minWidth="200.0" prefWidth="250.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
@@ -97,17 +97,24 @@
                            <content>
                               <AnchorPane id="Content" minHeight="-1.0">
                                  <children>
-                                    <TableView layoutX="91.0" layoutY="67.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <TableView fixedCellSize="1.0" layoutX="91.0" layoutY="67.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                       <columns>
-                                        <TableColumn editable="false" prefWidth="75.0" sortable="false" text="1" />
-                                        <TableColumn editable="false" prefWidth="75.0" sortable="false" text="2" />
-                                          <TableColumn editable="false" prefWidth="75.0" sortable="false" text="3" />
-                                          <TableColumn editable="false" prefWidth="75.0" sortable="false" text="4" />
-                                          <TableColumn editable="false" prefWidth="75.0" sortable="false" text="5" />
-                                          <TableColumn editable="false" prefWidth="75.0" sortable="false" text="6" />
-                                          <TableColumn editable="false" prefWidth="75.0" sortable="false" text="7" />
-                                          <TableColumn editable="false" prefWidth="75.0" sortable="false" text="8" />
-                                          <TableColumn editable="false" prefWidth="75.0" sortable="false" text="9" />
+                                        <TableColumn editable="false" maxWidth="150.0" minWidth="75.0" prefWidth="75.0" sortable="false" text="Marker ID" />
+                                        <TableColumn editable="false" maxWidth="150.0" minWidth="50.0" prefWidth="75.0" sortable="false" text="Name" />
+                                          <TableColumn editable="false" maxWidth="150.0" minWidth="50.0" prefWidth="75.0" sortable="false" text="Allele" />
+                                          <TableColumn editable="false" maxWidth="100.0" minWidth="50.0" prefWidth="50.0" sortable="false" text="n0" />
+                                          <TableColumn editable="false" maxWidth="100.0" minWidth="50.0" prefWidth="50.0" sortable="false" text="n1" />
+                                          <TableColumn editable="false" maxWidth="150.0" minWidth="75.0" prefWidth="75.0" sortable="false" text="nMissing" />
+                                          <TableColumn editable="false" maxWidth="100.0" minWidth="50.0" prefWidth="50.0" sortable="false" text="p0" />
+                                          <TableColumn editable="false" maxWidth="100.0" minWidth="50.0" prefWidth="50.0" sortable="false" text="p1" />
+                                          <TableColumn editable="false" maxWidth="150.0" minWidth="75.0" prefWidth="75.0" sortable="false" text="pMissing" />
+                                          <TableColumn editable="false" maxWidth="150.0" minWidth="75.0" prefWidth="75.0" sortable="false" text="Segregation" />
+                                          <TableColumn editable="false" maxWidth="150.0" minWidth="75.0" prefWidth="75.0" sortable="false" text="Twins" />
+                                          <TableColumn editable="false" maxWidth="150.0" minWidth="75.0" prefWidth="75.0" sortable="false" text="LG ID" />
+                                          <TableColumn editable="false" prefWidth="57.0" sortable="false" text="LG" />
+                                          <TableColumn editable="false" maxWidth="150.0" minWidth="75.0" prefWidth="100.0" sortable="false" text="Topology Index" />
+                                          <TableColumn editable="false" maxWidth="150.0" minWidth="75.0" prefWidth="100.0" sortable="false" text="Skeleton Index" />
+                                          <TableColumn editable="false" maxWidth="150.0" minWidth="100.0" prefWidth="125.0" sortable="false" text="Genetic Coordiante" />
                                       </columns>
                                     </TableView>
                                  </children>
@@ -117,16 +124,37 @@
                      </content>
                   </Tab>
                   <Tab text="Linkages">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <ImageView fitHeight="437.0" fitWidth="769.0" layoutX="-5.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@Linkage.JPG" />
-                                 </image>
-                              </ImageView>
-                           </children></AnchorPane>
-                    </content>
+                     <content>
+                        <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1008.0" prefWidth="1900.0">
+                                 <children>
+                                    <TableView tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <columns>
+                                        <TableColumn editable="false" maxWidth="150.0" minWidth="75.0" prefWidth="75.0" text="Linkage ID" />
+                                        <TableColumn editable="false" maxWidth="150.0" minWidth="75.0" prefWidth="75.0" sortable="false" text="Marker 1 ID" />
+                                          <TableColumn editable="false" maxWidth="150.0" minWidth="75.0" prefWidth="75.0" sortable="false" text="Marker 2 ID" />
+                                          <TableColumn editable="false" maxWidth="200.0" minWidth="100.0" prefWidth="100.0" sortable="false" text="Maker 1 Name" />
+                                          <TableColumn editable="false" maxWidth="200.0" minWidth="100.0" prefWidth="100.0" sortable="false" text="Maker 2 Name" />
+                                          <TableColumn editable="false" maxWidth="200.0" minWidth="100.0" prefWidth="100.0" sortable="false" text="n00,n01,n10,11" />
+                                          <TableColumn editable="false" maxWidth="175.0" minWidth="125.0" prefWidth="125.0" sortable="false" text="Recombination Rate" />
+                                          <TableColumn editable="false" maxWidth="200.0" minWidth="140.0" prefWidth="140.0" sortable="false" text="Est. Haldane Distance" />
+                                          <TableColumn editable="false" maxWidth="200.0" minWidth="140.0" prefWidth="140.0" sortable="false" text="Est. Kossambi Distance" />
+                                          <TableColumn editable="false" maxWidth="200.0" minWidth="140.0" prefWidth="140.0" sortable="false" text="Observed Distance" />
+                                          <TableColumn editable="false" maxWidth="200.0" minWidth="140.0" prefWidth="140.0" sortable="false" text="Distance On Map" />
+                                          <TableColumn editable="false" maxWidth="100.0" minWidth="75.0" prefWidth="75.0" sortable="false" text="p-value" />
+                                          <TableColumn editable="false" maxWidth="100.0" minWidth="75.0" prefWidth="75.0" sortable="false" text="p_min" />
+                                          <TableColumn editable="false" maxWidth="100.0" minWidth="75.0" prefWidth="75.0" sortable="false" text="p_max" />
+                                          <TableColumn editable="false" maxWidth="200.0" minWidth="140.0" prefWidth="140.0" sortable="false" text="Min Haldane Distance" />
+                                          <TableColumn editable="false" maxWidth="200.0" minWidth="140.0" prefWidth="140.0" sortable="false" text="Max Haldane Distance" />
+                                          <TableColumn editable="false" maxWidth="200.0" minWidth="140.0" prefWidth="140.0" sortable="false" text="Connection Index" />
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </ScrollPane>
+                     </content>
                   </Tab>
                   <Tab text="Network Structure">
                      <content>
@@ -218,15 +246,15 @@
                 </Tab>
               </tabs>
             </TabPane>
-            <TabPane prefHeight="671.0" prefWidth="232.0" tabClosingPolicy="UNAVAILABLE">
+            <TabPane maxWidth="400.0" minWidth="300.0" prefHeight="1052.0" prefWidth="350.0" tabClosingPolicy="UNAVAILABLE">
                <tabs>
                   <Tab text="Statistics">
                      <content>
-                        <AnchorPane>
+                        <AnchorPane prefHeight="1023.0" prefWidth="400.0">
                            <children>
-                              <SplitPane dividerPositions="0.325, 0.640625" layoutX="53.0" layoutY="121.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <SplitPane dividerPositions="0.325, 0.640625" layoutX="-7.0" layoutY="121.0" orientation="VERTICAL" prefHeight="1023.0" prefWidth="366.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <items>
-                                    <AnchorPane prefHeight="229.0" prefWidth="269.0">
+                                    <AnchorPane maxHeight="250.0" prefHeight="250.0" prefWidth="356.0">
                                        <children>
                                           <GridPane layoutX="14.0" layoutY="45.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                                              <columnConstraints>
@@ -246,7 +274,7 @@
                                                 </Label>
                                              </children>
                                           </GridPane>
-                                          <GridPane layoutY="45.0" AnchorPane.bottomAnchor="0.0">
+                                          <GridPane layoutX="14.0" layoutY="38.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
                                              <columnConstraints>
                                                 <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="158.0" minWidth="10.0" prefWidth="152.0" />
                                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="202.0" minWidth="10.0" prefWidth="107.0" />
@@ -268,9 +296,12 @@
                                              <padding>
                                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                              </padding>
+                                             <opaqueInsets>
+                                                <Insets />
+                                             </opaqueInsets>
                                           </GridPane>
                                        </children></AnchorPane>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                                  <AnchorPane maxHeight="300.0" minHeight="200.0" minWidth="0.0" prefHeight="200.0" prefWidth="356.0">
                                        <children>
                                           <GridPane>
                                             <columnConstraints>
@@ -290,10 +321,10 @@
                                                 </Label>
                                              </children>
                                           </GridPane>
-                                          <GridPane layoutX="55.0" layoutY="26.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                          <GridPane layoutX="55.0" layoutY="26.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
                                             <columnConstraints>
-                                              <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="130.0" minWidth="10.0" prefWidth="91.0" />
-                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="202.0" minWidth="10.0" prefWidth="168.0" />
+                                              <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="130.0" minWidth="10.0" prefWidth="81.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="274.0" minWidth="10.0" prefWidth="251.0" />
                                             </columnConstraints>
                                             <rowConstraints>
                                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -339,10 +370,10 @@
                                                 </Label>
                                              </children>
                                           </GridPane>
-                                          <GridPane layoutY="41.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                          <GridPane layoutY="41.0" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
                                              <columnConstraints>
-                                                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="148.0" minWidth="10.0" prefWidth="145.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="202.0" minWidth="10.0" prefWidth="114.0" />
+                                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="148.0" minWidth="10.0" prefWidth="141.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="218.0" minWidth="10.0" prefWidth="205.0" />
                                              </columnConstraints>
                                              <rowConstraints>
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
