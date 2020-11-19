@@ -27,7 +27,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>C:/Users/fire_/PycharmProjects/PycharmProjects/pngegg (49).png</normaloff>C:/Users/fire_/PycharmProjects/PycharmProjects/pngegg (49).png</iconset>
+    <normaloff>../PycharmProjects/pngegg (49).png</normaloff>../PycharmProjects/pngegg (49).png</iconset>
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>
@@ -109,7 +109,7 @@
           <property name="currentIndex">
            <number>0</number>
           </property>
-          <widget class="QWidget" name="tab_8">
+          <widget class="QWidget" name="FileBrowserTab">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -142,14 +142,14 @@
               </property>
               <layout class="QFormLayout" name="formLayout_13">
                <item row="0" column="0">
-                <widget class="QTreeView" name="treeView_2"/>
+                <widget class="QTreeView" name="browserTreeView"/>
                </item>
               </layout>
              </widget>
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="tab_9">
+          <widget class="QWidget" name="viewOptionsTab">
            <attribute name="title">
             <string>View Options</string>
            </attribute>
@@ -193,10 +193,10 @@
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: rgb(255, 255, 255);</string>
+           <string notr="true"/>
           </property>
           <property name="currentIndex">
-           <number>4</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="markersTab">
            <attribute name="title">
@@ -211,28 +211,153 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Sunken</enum>
+              </property>
+              <property name="dragDropMode">
+               <enum>QAbstractItemView::NoDragDrop</enum>
+              </property>
+              <property name="gridStyle">
+               <enum>Qt::SolidLine</enum>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
               <property name="rowCount">
-               <number>0</number>
+               <number>28</number>
               </property>
               <property name="columnCount">
                <number>16</number>
               </property>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
+              <attribute name="horizontalHeaderCascadingSectionResizes">
+               <bool>false</bool>
+              </attribute>
+              <attribute name="horizontalHeaderMinimumSectionSize">
+               <number>50</number>
+              </attribute>
+              <attribute name="horizontalHeaderDefaultSectionSize">
+               <number>115</number>
+              </attribute>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <column>
+               <property name="text">
+                <string>Marker ID</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Name</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Allele</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>n0</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>n1</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>nMissing</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>p0</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>p1</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>pMissing</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Segregation</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Twins</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>LG ID</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>LG</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Topology Index</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Skeleton Index</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Genetic Coordinates</string>
+               </property>
+               <property name="font">
+                <font>
+                 <weight>50</weight>
+                 <bold>false</bold>
+                </font>
+               </property>
+              </column>
              </widget>
             </item>
            </layout>
@@ -244,25 +369,123 @@
            <layout class="QFormLayout" name="formLayout_5">
             <item row="0" column="1">
              <widget class="QTableWidget" name="linkageTable">
-              <property name="columnCount">
-               <number>16</number>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
               </property>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
+              <property name="rowCount">
+               <number>20</number>
+              </property>
+              <attribute name="horizontalHeaderCascadingSectionResizes">
+               <bool>false</bool>
+              </attribute>
+              <attribute name="horizontalHeaderDefaultSectionSize">
+               <number>125</number>
+              </attribute>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <column>
+               <property name="text">
+                <string>Linkage ID</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Marker 1 ID</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Marker 2 ID</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Marker 1 Name</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Marker 2 Name</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>n00,n01,n10,n11</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Recombination Rate</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Haldane Distance</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Kossambi Distance</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Observed Distance</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Distance On Map</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>p Value</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>p Min</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>p Max</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Min Haldane Distance</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Max Haldane Distance</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Connection Index</string>
+               </property>
+              </column>
              </widget>
             </item>
            </layout>
@@ -272,7 +495,7 @@
             <string>Network Structure</string>
            </attribute>
            <layout class="QFormLayout" name="formLayout_6">
-            <item row="0" column="0">
+            <item row="0" column="1">
              <widget class="QLabel" name="label_2">
               <property name="text">
                <string>Network Structure Quick Preview</string>
@@ -300,7 +523,7 @@
             <string>Genetic Map</string>
            </attribute>
            <layout class="QFormLayout" name="formLayout_8">
-            <item row="0" column="0">
+            <item row="0" column="1">
              <widget class="QPushButton" name="pushButton_2">
               <property name="text">
                <string>PushButton</string>
@@ -423,7 +646,10 @@
                  </font>
                 </property>
                 <property name="title">
-                 <string>Marker Statistics</string>
+                 <string>Statistics</string>
+                </property>
+                <property name="flat">
+                 <bool>true</bool>
                 </property>
                 <layout class="QFormLayout" name="formLayout">
                  <item row="0" column="0" colspan="2">
@@ -454,12 +680,18 @@
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
                      </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
                     </widget>
                    </item>
                    <item row="2" column="1">
                     <widget class="QLineEdit" name="lineEdit_3">
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
+                     </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
                      </property>
                     </widget>
                    </item>
@@ -492,6 +724,9 @@
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
                      </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
                     </widget>
                    </item>
                    <item row="4" column="1">
@@ -499,12 +734,18 @@
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
                      </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
                     </widget>
                    </item>
                    <item row="1" column="1">
                     <widget class="QLineEdit" name="lineEdit_2">
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
+                     </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
                      </property>
                     </widget>
                    </item>
@@ -514,6 +755,8 @@
                       <font>
                        <family>Georgia</family>
                        <pointsize>10</pointsize>
+                       <weight>50</weight>
+                       <bold>false</bold>
                       </font>
                      </property>
                      <property name="text">
@@ -530,6 +773,8 @@
                       <font>
                        <family>Georgia</family>
                        <pointsize>10</pointsize>
+                       <weight>50</weight>
+                       <bold>false</bold>
                       </font>
                      </property>
                      <property name="text">
@@ -546,6 +791,8 @@
                       <font>
                        <family>Georgia</family>
                        <pointsize>10</pointsize>
+                       <weight>50</weight>
+                       <bold>false</bold>
                       </font>
                      </property>
                      <property name="text">
@@ -576,8 +823,17 @@
                   <bold>true</bold>
                  </font>
                 </property>
+                <property name="autoFillBackground">
+                 <bool>false</bool>
+                </property>
                 <property name="title">
-                 <string>GroupBox</string>
+                 <string>Marker Statistics</string>
+                </property>
+                <property name="flat">
+                 <bool>true</bool>
+                </property>
+                <property name="checkable">
+                 <bool>false</bool>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_3">
                  <item row="0" column="0">
@@ -600,6 +856,8 @@
                       <font>
                        <family>Georgia</family>
                        <pointsize>10</pointsize>
+                       <weight>50</weight>
+                       <bold>false</bold>
                       </font>
                      </property>
                      <property name="text">
@@ -616,6 +874,8 @@
                       <font>
                        <family>Georgia</family>
                        <pointsize>10</pointsize>
+                       <weight>50</weight>
+                       <bold>false</bold>
                       </font>
                      </property>
                      <property name="text">
@@ -632,6 +892,8 @@
                       <font>
                        <family>Georgia</family>
                        <pointsize>10</pointsize>
+                       <weight>50</weight>
+                       <bold>false</bold>
                       </font>
                      </property>
                      <property name="text">
@@ -647,12 +909,18 @@
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
                      </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
                     </widget>
                    </item>
                    <item row="1" column="1">
                     <widget class="QLineEdit" name="lineEdit_7">
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
+                     </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
                      </property>
                     </widget>
                    </item>
@@ -661,6 +929,9 @@
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
                      </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
                     </widget>
                    </item>
                    <item row="3" column="1">
@@ -668,12 +939,18 @@
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
                      </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
                     </widget>
                    </item>
                    <item row="4" column="1">
                     <widget class="QLineEdit" name="lineEdit_10">
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
+                     </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
                      </property>
                     </widget>
                    </item>
@@ -683,6 +960,8 @@
                       <font>
                        <family>Georgia</family>
                        <pointsize>10</pointsize>
+                       <weight>50</weight>
+                       <bold>false</bold>
                       </font>
                      </property>
                      <property name="text">
@@ -699,6 +978,8 @@
                       <font>
                        <family>Georgia</family>
                        <pointsize>10</pointsize>
+                       <weight>50</weight>
+                       <bold>false</bold>
                       </font>
                      </property>
                      <property name="text">
@@ -724,7 +1005,10 @@
                  </font>
                 </property>
                 <property name="title">
-                 <string>GroupBox</string>
+                 <string>Linkage Group</string>
+                </property>
+                <property name="flat">
+                 <bool>true</bool>
                 </property>
                 <layout class="QFormLayout" name="formLayout_3">
                  <item row="0" column="0" colspan="2">
@@ -744,6 +1028,8 @@
                       <font>
                        <family>Georgia</family>
                        <pointsize>10</pointsize>
+                       <weight>50</weight>
+                       <bold>false</bold>
                       </font>
                      </property>
                      <property name="text">
@@ -756,8 +1042,14 @@
                    </item>
                    <item row="3" column="1">
                     <widget class="QCheckBox" name="checkBox_2">
+                     <property name="enabled">
+                      <bool>true</bool>
+                     </property>
                      <property name="text">
                       <string/>
+                     </property>
+                     <property name="checkable">
+                      <bool>false</bool>
                      </property>
                     </widget>
                    </item>
@@ -765,6 +1057,9 @@
                     <widget class="QLineEdit" name="lineEdit_15">
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
+                     </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
                      </property>
                     </widget>
                    </item>
@@ -774,6 +1069,8 @@
                       <font>
                        <family>Georgia</family>
                        <pointsize>10</pointsize>
+                       <weight>50</weight>
+                       <bold>false</bold>
                       </font>
                      </property>
                      <property name="text">
@@ -790,6 +1087,8 @@
                       <font>
                        <family>Georgia</family>
                        <pointsize>10</pointsize>
+                       <weight>50</weight>
+                       <bold>false</bold>
                       </font>
                      </property>
                      <property name="text">
@@ -805,6 +1104,9 @@
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
                      </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
                     </widget>
                    </item>
                    <item row="3" column="0">
@@ -813,6 +1115,8 @@
                       <font>
                        <family>Georgia</family>
                        <pointsize>10</pointsize>
+                       <weight>50</weight>
+                       <bold>false</bold>
                       </font>
                      </property>
                      <property name="text">
@@ -827,6 +1131,9 @@
                     <widget class="QLineEdit" name="lineEdit_14">
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
+                     </property>
+                     <property name="readOnly">
+                      <bool>true</bool>
                      </property>
                     </widget>
                    </item>
@@ -844,61 +1151,9 @@
        </layout>
       </item>
       <item>
-       <widget class="QWidget" name="widget" native="true">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>600</width>
-          <height>50</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>600</width>
-          <height>30</height>
-         </size>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
-         <item>
-          <widget class="QLabel" name="importStatus">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>50</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>200</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="layoutDirection">
-            <enum>Qt::LeftToRight</enum>
-           </property>
-           <property name="text">
-            <string>No Data has been imported yet</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="">
-        <property name="spacing">
-         <number>0</number>
+       <layout class="QGridLayout" name="gridLayout_6">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetDefaultConstraint</enum>
         </property>
         <property name="leftMargin">
          <number>0</number>
@@ -906,6 +1161,53 @@
         <property name="rightMargin">
          <number>0</number>
         </property>
+        <item row="0" column="0">
+         <widget class="QLabel" name="importStatus">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>50</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>200</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>MS Shell Dlg 2</family>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="layoutDirection">
+           <enum>Qt::LeftToRight</enum>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+          <property name="text">
+           <string>No Data has been imported yet</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+          <property name="wordWrap">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
      </layout>
@@ -928,7 +1230,7 @@
     <addaction name="actionImport_Map_Data"/>
     <addaction name="actionImport_Existing_Map"/>
     <addaction name="separator"/>
-    <addaction name="actionEdit_Input_Map_2"/>
+    <addaction name="actionEdit_Input_Map"/>
     <addaction name="separator"/>
     <addaction name="actionPreferences"/>
     <addaction name="actionQuit"/>
@@ -967,36 +1269,55 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionImport_Map_Data">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/importIcon.png</normaloff>images/importIcon.png</iconset>
+   </property>
    <property name="text">
     <string>Import Map Data</string>
    </property>
   </action>
   <action name="actionImport_Existing_Map">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/importIcon.png</normaloff>images/importIcon.png</iconset>
+   </property>
    <property name="text">
     <string>Import Existing Map</string>
    </property>
   </action>
   <action name="actionEdit_Input_Map">
-   <property name="text">
-    <string>Edit Input Map</string>
+   <property name="icon">
+    <iconset>
+     <normaloff>images/editIcon.png</normaloff>images/editIcon.png</iconset>
    </property>
-  </action>
-  <action name="actionEdit_Input_Map_2">
    <property name="text">
     <string>Edit Input Map</string>
    </property>
   </action>
   <action name="actionPreferences">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/preferencesIcon.png</normaloff>images/preferencesIcon.png</iconset>
+   </property>
    <property name="text">
     <string>Preferences</string>
    </property>
   </action>
   <action name="actionQuit">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/exitIcon.png</normaloff>images/exitIcon.png</iconset>
+   </property>
    <property name="text">
     <string>Quit</string>
    </property>
   </action>
   <action name="actionCompare_Maps">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/compareIcon2.png</normaloff>images/compareIcon2.png</iconset>
+   </property>
    <property name="text">
     <string>Compare Maps</string>
    </property>
@@ -1007,11 +1328,19 @@
    </property>
   </action>
   <action name="actionCompare_Distances">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/compareIcon.png</normaloff>images/compareIcon.png</iconset>
+   </property>
    <property name="text">
     <string>Compare Distances</string>
    </property>
   </action>
   <action name="actionEdit_Genetic_MAp">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/editIcon.png</normaloff>images/editIcon.png</iconset>
+   </property>
    <property name="text">
     <string>Edit Genetic MAp</string>
    </property>
@@ -1032,6 +1361,10 @@
    </property>
   </action>
   <action name="actionInspect_Parallel_Linkage">
+   <property name="icon">
+    <iconset>
+     <normaloff>images/linkageIcon.png</normaloff>images/linkageIcon.png</iconset>
+   </property>
    <property name="text">
     <string>Inspect Parallel Linkage</string>
    </property>
