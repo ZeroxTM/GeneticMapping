@@ -57,5 +57,5 @@ if __name__ == "__main__":
     widget.init_file_system_tree()
     widget.set_menu_functionality()
     widget.set_controllers_ui_ref()
-   # widget.show()
+   # widget.show() hello
     sys.exit(app.exec_())
