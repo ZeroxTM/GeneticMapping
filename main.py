@@ -2,11 +2,11 @@
 import sys
 import os
 
-
+from PySide2 import QtWidgets
+from PySide2.QtGui import QPalette, QColor
 from PySide2.QtWidgets import QApplication, QMainWindow, QFileSystemModel, QFileDialog
-from PySide2.QtCore import QFile
+from PySide2.QtCore import QFile, Qt
 from PySide2.QtUiTools import QUiLoader
-
 from controllers.MarkersTabController import MarkersTabController
 from controllers.FileBrowserController import FileBrowserController
 
@@ -14,6 +14,7 @@ from controllers.FileBrowserController import FileBrowserController
 class main(QMainWindow):
     def __init__(self):
         super(main, self).__init__()
+        self.current_hover = [0, 0]
         self.load_ui()
 
     def load_ui(self):
@@ -28,6 +29,21 @@ class main(QMainWindow):
     def set_menu_functionality(self):
         self.ui.actionImport_Map_Data.triggered.connect(self.file_open)
         self.ui.actionQuit.triggered.connect(self.ui.close)
+        self.ui.markersTable.setMouseTracking(True)
+        self.ui.markersTable.cellEntered.connect(self.cellHover)
+
+    #Override
+    def cellHover(self, row, column):
+        item = self.ui.markersTable.item(row, column)
+        #old_item = self.ui.markersTable.item(self.current_hover[0], self.current_hover[1])
+        if self.current_hover != [row, column] and item is not None:
+            self.ui.lineEdit_6.setText(self.ui.markersTable.item(row, 0).text())
+            self.ui.lineEdit_7.setText(self.ui.markersTable.item(row, 1).text())
+            self.ui.lineEdit_8.setText(self.ui.markersTable.item(row, 2).text())
+            self.ui.lineEdit_9.setText(self.ui.markersTable.item(row, 13).text())
+            self.ui.lineEdit_10.setText(self.ui.markersTable.item(row, 14).text())
+        self.current_hover = [row, column]
+
 
     def init_file_system_tree(self):
         model = QFileSystemModel()
@@ -45,17 +61,28 @@ class main(QMainWindow):
 
     def file_open(self):
         name = QFileDialog.getOpenFileName(self, "Import")
-        print(name)
 
     def set_controllers_ui_ref(self):
         FileBrowserController.ui = self.ui
         MarkersTabController.ui = self.ui
 
 if __name__ == "__main__":
-    app = QApplication([])
+    app = QApplication(sys.argv)
+    # Way to get screen size #1
+    screen = app.primaryScreen()
+    print('Screen: %s' % screen.name())
+    size = screen.size()
+    print('Size: %d x %d' % (size.width(), size.height()))
+    rect = screen.availableGeometry()
+    print('Available: %d x %d' % (rect.width(), rect.height()))
+
+    # Way to get screen size #2
+    sizeObject = QtWidgets.QDesktopWidget().screenGeometry(-1)
+    print(sizeObject.width())
+
     widget = main()
     widget.init_file_system_tree()
     widget.set_menu_functionality()
     widget.set_controllers_ui_ref()
-   # widget.show() hello
+   # widget.show()
     sys.exit(app.exec_())

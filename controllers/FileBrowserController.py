@@ -13,7 +13,6 @@ class FileBrowserController:
             df.columns = df.iloc[0]
             df = df.drop(df.index[0])
             df = df.drop(['im', 'indexOnPath'], axis=1)
-            print(df)
             QMessageBox.information(FileBrowserController.ui, "Info", "File was loaded successfully.")
             mtc.fetch_markers(df)
 
