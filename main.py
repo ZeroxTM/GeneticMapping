@@ -7,6 +7,9 @@ from PySide2.QtGui import QPalette, QColor
 from PySide2.QtWidgets import QApplication, QMainWindow, QFileSystemModel, QFileDialog
 from PySide2.QtCore import QFile, Qt
 from PySide2.QtUiTools import QUiLoader
+
+from classes.LinkageGroup import LinkageGroup
+from controllers.StatisticsController import StatisticsController
 from controllers.MarkersTabController import MarkersTabController
 from controllers.FileBrowserController import FileBrowserController
 
@@ -32,18 +35,23 @@ class main(QMainWindow):
         self.ui.markersTable.setMouseTracking(True)
         self.ui.markersTable.cellEntered.connect(self.cellHover)
 
-    #Override
+    # Override
     def cellHover(self, row, column):
+        """
+        Edits statistics tab on hover over the GUI
+        """
         item = self.ui.markersTable.item(row, column)
-        #old_item = self.ui.markersTable.item(self.current_hover[0], self.current_hover[1])
+        # old_item = self.ui.markersTable.item(self.current_hover[0], self.current_hover[1])
         if self.current_hover != [row, column] and item is not None:
-            self.ui.lineEdit_6.setText(self.ui.markersTable.item(row, 0).text())
-            self.ui.lineEdit_7.setText(self.ui.markersTable.item(row, 1).text())
-            self.ui.lineEdit_8.setText(self.ui.markersTable.item(row, 2).text())
-            self.ui.lineEdit_9.setText(self.ui.markersTable.item(row, 13).text())
-            self.ui.lineEdit_10.setText(self.ui.markersTable.item(row, 14).text())
+            self.ui.marker_id.setText(self.ui.markersTable.item(row, 0).text())
+            self.ui.marker_name.setText(self.ui.markersTable.item(row, 1).text())
+            self.ui.marker_genotype.setText(self.ui.markersTable.item(row, 2).text())
+            self.ui.marker_skeleton_ind.setText(self.ui.markersTable.item(row, 14).text())
+            self.ui.marker_gencords.setText(self.ui.markersTable.item(row, 15).text())
+            self.ui.lg_id.setText(self.ui.markersTable.item(row, 11).text())
+            self.ui.lg_name.setText(self.ui.markersTable.item(row, 12).text())
+            self.ui.lg_markers.setText(str(len(LinkageGroup.LinkageGroups[self.ui.markersTable.item(row, 12).text()].markers)))
         self.current_hover = [row, column]
-
 
     def init_file_system_tree(self):
         model = QFileSystemModel()
@@ -65,11 +73,13 @@ class main(QMainWindow):
     def set_controllers_ui_ref(self):
         FileBrowserController.ui = self.ui
         MarkersTabController.ui = self.ui
+        StatisticsController.ui = self.ui
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     # Way to get screen size #1
-    screen = app.primaryScreen()
+    """screen = app.primaryScreen()
     print('Screen: %s' % screen.name())
     size = screen.size()
     print('Size: %d x %d' % (size.width(), size.height()))
@@ -78,11 +88,11 @@ if __name__ == "__main__":
 
     # Way to get screen size #2
     sizeObject = QtWidgets.QDesktopWidget().screenGeometry(-1)
-    print(sizeObject.width())
+    print(sizeObject.width())"""
 
     widget = main()
     widget.init_file_system_tree()
     widget.set_menu_functionality()
     widget.set_controllers_ui_ref()
-   # widget.show()
+    # widget.show()
     sys.exit(app.exec_())

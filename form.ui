@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>1700</width>
-    <height>1075</height>
+    <height>1050</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1700</width>
-    <height>1000</height>
+    <width>0</width>
+    <height>0</height>
    </size>
   </property>
   <property name="cursor">
@@ -59,8 +59,8 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>1700</width>
-     <height>100</height>
+     <width>0</width>
+     <height>0</height>
     </size>
    </property>
    <layout class="QFormLayout" name="formLayout_2">
@@ -601,7 +601,7 @@
             </size>
            </property>
            <attribute name="title">
-            <string>Statistics</string>
+            <string>Statistics / Details</string>
            </attribute>
            <layout class="QFormLayout" name="formLayout_10">
             <item row="0" column="0" colspan="2">
@@ -634,8 +634,8 @@
                 </property>
                 <property name="minimumSize">
                  <size>
-                  <width>300</width>
-                  <height>200</height>
+                  <width>0</width>
+                  <height>0</height>
                  </size>
                 </property>
                 <property name="font">
@@ -646,7 +646,7 @@
                  </font>
                 </property>
                 <property name="title">
-                 <string>Statistics</string>
+                 <string>Map Statistics</string>
                 </property>
                 <property name="flat">
                  <bool>true</bool>
@@ -656,6 +656,12 @@
                   <layout class="QGridLayout" name="gridLayout">
                    <property name="rightMargin">
                     <number>5</number>
+                   </property>
+                   <property name="horizontalSpacing">
+                    <number>0</number>
+                   </property>
+                   <property name="verticalSpacing">
+                    <number>20</number>
                    </property>
                    <item row="1" column="0">
                     <widget class="QLabel" name="label_7">
@@ -676,7 +682,7 @@
                     </widget>
                    </item>
                    <item row="3" column="1">
-                    <widget class="QLineEdit" name="lineEdit_4">
+                    <widget class="QLineEdit" name="map_recombination">
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
                      </property>
@@ -686,7 +692,7 @@
                     </widget>
                    </item>
                    <item row="2" column="1">
-                    <widget class="QLineEdit" name="lineEdit_3">
+                    <widget class="QLineEdit" name="map_linkages">
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
                      </property>
@@ -720,7 +726,7 @@
                     </widget>
                    </item>
                    <item row="0" column="1">
-                    <widget class="QLineEdit" name="lineEdit">
+                    <widget class="QLineEdit" name="map_markers">
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
                      </property>
@@ -730,7 +736,7 @@
                     </widget>
                    </item>
                    <item row="4" column="1">
-                    <widget class="QLineEdit" name="lineEdit_5">
+                    <widget class="QLineEdit" name="map_allele">
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
                      </property>
@@ -740,7 +746,7 @@
                     </widget>
                    </item>
                    <item row="1" column="1">
-                    <widget class="QLineEdit" name="lineEdit_2">
+                    <widget class="QLineEdit" name="map_genotypes">
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
                      </property>
@@ -845,10 +851,10 @@
                     <number>5</number>
                    </property>
                    <property name="horizontalSpacing">
-                    <number>50</number>
+                    <number>0</number>
                    </property>
                    <property name="verticalSpacing">
-                    <number>5</number>
+                    <number>20</number>
                    </property>
                    <item row="2" column="0">
                     <widget class="QLabel" name="label_10">
@@ -905,7 +911,13 @@
                     </widget>
                    </item>
                    <item row="0" column="1">
-                    <widget class="QLineEdit" name="lineEdit_6">
+                    <widget class="QLineEdit" name="marker_id">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
                      </property>
@@ -915,7 +927,13 @@
                     </widget>
                    </item>
                    <item row="1" column="1">
-                    <widget class="QLineEdit" name="lineEdit_7">
+                    <widget class="QLineEdit" name="marker_name">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
                      </property>
@@ -925,7 +943,13 @@
                     </widget>
                    </item>
                    <item row="2" column="1">
-                    <widget class="QLineEdit" name="lineEdit_8">
+                    <widget class="QLineEdit" name="marker_genotype">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
                      </property>
@@ -935,7 +959,13 @@
                     </widget>
                    </item>
                    <item row="3" column="1">
-                    <widget class="QLineEdit" name="lineEdit_9">
+                    <widget class="QLineEdit" name="marker_skeleton_ind">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
                      </property>
@@ -945,7 +975,13 @@
                     </widget>
                    </item>
                    <item row="4" column="1">
-                    <widget class="QLineEdit" name="lineEdit_10">
+                    <widget class="QLineEdit" name="marker_gencords">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
                      </property>
@@ -1020,7 +1056,10 @@
                     <number>1</number>
                    </property>
                    <property name="horizontalSpacing">
-                    <number>15</number>
+                    <number>0</number>
+                   </property>
+                   <property name="verticalSpacing">
+                    <number>20</number>
                    </property>
                    <item row="2" column="0">
                     <widget class="QLabel" name="label_23">
@@ -1041,7 +1080,7 @@
                     </widget>
                    </item>
                    <item row="3" column="1">
-                    <widget class="QCheckBox" name="checkBox_2">
+                    <widget class="QCheckBox" name="lg_skeleton">
                      <property name="enabled">
                       <bool>true</bool>
                      </property>
@@ -1054,7 +1093,13 @@
                     </widget>
                    </item>
                    <item row="2" column="1">
-                    <widget class="QLineEdit" name="lineEdit_15">
+                    <widget class="QLineEdit" name="lg_markers">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
                      </property>
@@ -1089,6 +1134,7 @@
                        <pointsize>10</pointsize>
                        <weight>50</weight>
                        <bold>false</bold>
+                       <strikeout>false</strikeout>
                       </font>
                      </property>
                      <property name="text">
@@ -1100,7 +1146,13 @@
                     </widget>
                    </item>
                    <item row="1" column="1">
-                    <widget class="QLineEdit" name="lineEdit_16">
+                    <widget class="QLineEdit" name="lg_name">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
                      </property>
@@ -1128,7 +1180,13 @@
                     </widget>
                    </item>
                    <item row="0" column="1">
-                    <widget class="QLineEdit" name="lineEdit_14">
+                    <widget class="QLineEdit" name="lg_id">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
                      <property name="styleSheet">
                       <string notr="true">background-color: rgb(255, 255, 255);</string>
                      </property>
@@ -1151,17 +1209,11 @@
        </layout>
       </item>
       <item>
-       <layout class="QGridLayout" name="gridLayout_6">
-        <property name="sizeConstraint">
-         <enum>QLayout::SetDefaultConstraint</enum>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <property name="spacing">
+         <number>50</number>
         </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <item row="0" column="0">
+        <item>
          <widget class="QLabel" name="importStatus">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -1207,6 +1259,12 @@
            <bool>false</bool>
           </property>
          </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="widget_4" native="true"/>
+        </item>
+        <item>
+         <widget class="QWidget" name="widget" native="true"/>
         </item>
        </layout>
       </item>
