@@ -27,7 +27,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../PycharmProjects/pngegg (49).png</normaloff>../PycharmProjects/pngegg (49).png</iconset>
+    <normaloff>images/pngegg (59).png</normaloff>images/pngegg (59).png</iconset>
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>
@@ -196,7 +196,7 @@
            <string notr="true"/>
           </property>
           <property name="currentIndex">
-           <number>3</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="markersTab">
            <attribute name="title">
@@ -510,7 +510,7 @@
            </attribute>
            <layout class="QFormLayout" name="formLayout_7">
             <item row="0" column="0" colspan="2">
-             <widget class="QTableWidget" name="tableWidget">
+             <widget class="QTableWidget" name="genotypingTable">
               <property name="rowCount">
                <number>5</number>
               </property>

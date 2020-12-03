@@ -35,15 +35,15 @@ class main(QMainWindow):
         self.ui.actionImport_Map_Data.triggered.connect(self.file_open)
         self.ui.actionQuit.triggered.connect(self.ui.close)
         self.ui.markersTable.setMouseTracking(True)
-        self.ui.tableWidget.setMouseTracking(True)
+        self.ui.genotypingTable.setMouseTracking(True)
         self.ui.markersTable.cellEntered.connect(self.cellHover)
-        self.ui.tableWidget.cellEntered.connect(self.cellHover2)
+        self.ui.genotypingTable.cellEntered.connect(self.cellHover2)
 
     def cellHover2(self, row, column):
         """
         Edits statistics tab on hover over the GUI
         """
-        item = self.ui.tableWidget.item(row, column)
+        item = self.ui.genotypingTable.item(row, column)
         if self.current_hover2 != [row, column] and item is not None:
             marker = GraphicalGenotypeController.used_indexes[row]
             self.ui.marker_id.setText(str(marker.id))
