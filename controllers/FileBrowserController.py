@@ -12,7 +12,6 @@ class FileBrowserController:
     @staticmethod
     def load_file(path):
         dff = None
-        print(path)
         if (path[-4:] == '.txt'):
             df = pd.read_csv(path, sep="\t", header=None)
             df.columns = df.iloc[0]
@@ -31,7 +30,6 @@ class FileBrowserController:
                 ddf = pd.read_csv(path[0], sep="\t", header=None)
                 ddf.columns = ['marker_name', 'properties']
             mtc.fetch_markers(df, ddf)
-
 
         else:
             print("Invalid file type")

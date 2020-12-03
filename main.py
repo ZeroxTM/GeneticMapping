@@ -2,14 +2,14 @@
 import sys
 import os
 
-from PySide2 import QtWidgets
+from PySide2 import QtWidgets, QtGui
 from PySide2.QtGui import QPalette, QColor
 from PySide2.QtWidgets import QApplication, QMainWindow, QFileSystemModel, QFileDialog
-from PySide2.QtCore import QFile, Qt
+from PySide2.QtCore import QFile, Qt, QDir
 from PySide2.QtUiTools import QUiLoader
 
 from classes.LinkageGroup import LinkageGroup
-#from controllers.StatisticsController import StatisticsController
+# from controllers.StatisticsController import StatisticsController
 from controllers.GraphicalGenotypeController import GraphicalGenotypeController
 from controllers.MarkersTabController import MarkersTabController
 from controllers.FileBrowserController import FileBrowserController
@@ -32,7 +32,7 @@ class main(QMainWindow):
         ui_file.close()
 
     def set_menu_functionality(self):
-        self.ui.actionImport_Map_Data.triggered.connect(self.file_open)
+        self.ui.actionImport_Map_Data.triggered.connect(self.import_file)
         self.ui.actionQuit.triggered.connect(self.ui.close)
         self.ui.markersTable.setMouseTracking(True)
         self.ui.genotypingTable.setMouseTracking(True)
@@ -45,10 +45,11 @@ class main(QMainWindow):
         """
         item = self.ui.genotypingTable.item(row, column)
         if self.current_hover2 != [row, column] and item is not None:
-            marker = GraphicalGenotypeController.used_indexes[row]
+            marker = MarkersTabController.markers[row]
             self.ui.marker_id.setText(str(marker.id))
             self.ui.marker_name.setText(str(marker.name))
-            self.ui.marker_genotype.setText(str(marker.alleles))
+            self.ui.marker_genotype.setText(
+                str(marker.alleles) if len(MarkersTabController.markers[row].alleles) != 0 else 'N/A')
             self.ui.marker_skeleton_ind.setText(str(marker.skeleton_index))
             self.ui.marker_gencords.setText(str(marker.coordinateGenet))
             self.ui.lg_id.setText(str(marker.linkage_id))
@@ -71,13 +72,14 @@ class main(QMainWindow):
             self.ui.marker_gencords.setText(self.ui.markersTable.item(row, 15).text())
             self.ui.lg_id.setText(self.ui.markersTable.item(row, 11).text())
             self.ui.lg_name.setText(self.ui.markersTable.item(row, 12).text())
-            self.ui.lg_markers.setText(str(len(LinkageGroup.LinkageGroups[self.ui.markersTable.item(row, 12).text()].markers)))
+            self.ui.lg_markers.setText(
+                str(len(LinkageGroup.LinkageGroups[self.ui.markersTable.item(row, 12).text()].markers)))
         self.current_hover = [row, column]
 
-
     def init_file_system_tree(self):
-        model = QFileSystemModel()
+        model = QFileSystemModel(nameFilterDisables=False)
         model.setRootPath("Desktop")
+        model.setNameFilters(["*.txt"])
         self.ui.browserTreeView.setModel(model)
         self.ui.browserTreeView.setRootIndex(model.index("Desktop"))
         self.ui.browserTreeView.hideColumn(1)
@@ -87,15 +89,17 @@ class main(QMainWindow):
 
     def onClicked(self, index):
         path = self.sender().model().filePath(index)
-        FileBrowserController.load_file(path)
+        if path is not None:
+            FileBrowserController.load_file(path)
 
-    def file_open(self):
-        name = QFileDialog.getOpenFileName(self, "Import")
+    def import_file(self):
+        path, _ = QFileDialog().getOpenFileName(QApplication.activeWindow(), "Select a file to open", filter="*.txt")
+        print(path) if path else print("No path")
 
     def set_controllers_ui_ref(self):
         FileBrowserController.ui = self.ui
         MarkersTabController.ui = self.ui
-        #StatisticsController.ui = self.ui
+        # StatisticsController.ui = self.ui
         GraphicalGenotypeController.ui = self.ui
 
 
