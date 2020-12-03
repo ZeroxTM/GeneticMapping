@@ -10,7 +10,7 @@ class GraphicalGenotypeController:
     ui = None
     colors = {
         "1": QtGui.QColor(0, 77, 153, 180),
-        "0": QtGui.QColor(112, 128, 144, 180),
+        "0": QtGui.QColor(112, 128, 144),
         "-": QtGui.QColor(134, 136, 138, 180),
         "empty": QtGui.QColor(211, 211, 211, 180)
     }
