@@ -7,6 +7,8 @@ from PySide2.QtWidgets import QTableWidgetItem
 
 class GraphicalGenotypeController:
     ui = None
+    used_indexes = dict()
+
     colors = {
         "1": QtGui.QColor(102, 0, 0, 180),  # Dark Red
         "0": QtGui.QColor(0, 77, 153, 180),  # Dark Blue
@@ -20,8 +22,9 @@ class GraphicalGenotypeController:
         GraphicalGenotypeController.ui.tableWidget.verticalHeader().hide()
         row = 0
         from controllers.MarkersTabController import MarkersTabController
-        for marker in MarkersTabController.markers:
+        for index, marker in enumerate(MarkersTabController.markers):
             if len(marker.alleles) != 0:
+                GraphicalGenotypeController.used_indexes[index] = marker
                 GraphicalGenotypeController.ui.tableWidget.setColumnCount(len(marker.alleles[0]))
                 GraphicalGenotypeController.ui.tableWidget.insertRow(row)
                 for col_index, char in enumerate(marker.alleles[0]):

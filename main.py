@@ -19,6 +19,7 @@ class main(QMainWindow):
     def __init__(self):
         super(main, self).__init__()
         self.current_hover = [0, 0]
+        self.current_hover2 = [0, 0]
         self.load_ui()
 
     def load_ui(self):
@@ -34,7 +35,26 @@ class main(QMainWindow):
         self.ui.actionImport_Map_Data.triggered.connect(self.file_open)
         self.ui.actionQuit.triggered.connect(self.ui.close)
         self.ui.markersTable.setMouseTracking(True)
+        self.ui.tableWidget.setMouseTracking(True)
         self.ui.markersTable.cellEntered.connect(self.cellHover)
+        self.ui.tableWidget.cellEntered.connect(self.cellHover2)
+
+    def cellHover2(self, row, column):
+        """
+        Edits statistics tab on hover over the GUI
+        """
+        item = self.ui.tableWidget.item(row, column)
+        if self.current_hover2 != [row, column] and item is not None:
+            marker = GraphicalGenotypeController.used_indexes[row]
+            self.ui.marker_id.setText(str(marker.id))
+            self.ui.marker_name.setText(str(marker.name))
+            self.ui.marker_genotype.setText(str(marker.alleles))
+            self.ui.marker_skeleton_ind.setText(str(marker.skeleton_index))
+            self.ui.marker_gencords.setText(str(marker.coordinateGenet))
+            self.ui.lg_id.setText(str(marker.linkage_id))
+            self.ui.lg_name.setText(str(marker.linkage_group))
+            self.ui.lg_markers.setText(str(len(LinkageGroup.LinkageGroups[marker.linkage_group].markers)))
+        self.current_hover2 = [row, column]
 
     # Override
     def cellHover(self, row, column):
@@ -53,6 +73,7 @@ class main(QMainWindow):
             self.ui.lg_name.setText(self.ui.markersTable.item(row, 12).text())
             self.ui.lg_markers.setText(str(len(LinkageGroup.LinkageGroups[self.ui.markersTable.item(row, 12).text()].markers)))
         self.current_hover = [row, column]
+
 
     def init_file_system_tree(self):
         model = QFileSystemModel()
