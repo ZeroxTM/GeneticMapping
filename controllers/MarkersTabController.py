@@ -6,6 +6,7 @@ from PySide2.QtWidgets import QMessageBox
 
 from classes.LinkageGroup import LinkageGroup
 from classes.Marker import Marker
+from controllers.GraphicalGenotypeController import GraphicalGenotypeController
 
 
 class MarkersTabController:
@@ -13,7 +14,7 @@ class MarkersTabController:
     markers = list()
 
     @staticmethod
-    def fetch_markers(data):  # Fetch data into table view markersTable
+    def fetch_markers(data, ddf):  # Fetch data into table view markersTable
         if MarkersTabController.ui is None:
             QMessageBox.information(MarkersTabController.ui, "Warning", "Something went wrong with the .txt file.")
         else:
@@ -30,8 +31,8 @@ class MarkersTabController:
             markers = MarkersTabController.markers
             # ~~~~~~~~~~~~~~ Read the markers from the file (Panda DataFrame) ~~~~~~~~~~~~~~#
             for index, row in data.iterrows():
-                marker = Marker(index, row['marker'], row['iLG']
-                                , row['chr'], 0, row['coorGenet'])
+                marker = Marker(index, row['marker'], (list(ddf.loc[ddf['marker_name'] == row['marker'], 'properties'])),
+                                row['iLG'], row['chr'], 0, row['coorGenet'])
                 markers.append(marker)
                 linkageGroupsDict[marker.linkage_group].append(marker)
 
@@ -47,3 +48,4 @@ class MarkersTabController:
 
             # Display statistics
             MarkersTabController.ui.map_markers.setText(str(len(MarkersTabController.markers)))
+            GraphicalGenotypeController.draw_graphical_genotype_map()

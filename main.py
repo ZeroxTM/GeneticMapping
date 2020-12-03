@@ -9,7 +9,8 @@ from PySide2.QtCore import QFile, Qt
 from PySide2.QtUiTools import QUiLoader
 
 from classes.LinkageGroup import LinkageGroup
-from controllers.StatisticsController import StatisticsController
+#from controllers.StatisticsController import StatisticsController
+from controllers.GraphicalGenotypeController import GraphicalGenotypeController
 from controllers.MarkersTabController import MarkersTabController
 from controllers.FileBrowserController import FileBrowserController
 
@@ -73,7 +74,8 @@ class main(QMainWindow):
     def set_controllers_ui_ref(self):
         FileBrowserController.ui = self.ui
         MarkersTabController.ui = self.ui
-        StatisticsController.ui = self.ui
+        #StatisticsController.ui = self.ui
+        GraphicalGenotypeController.ui = self.ui
 
 
 if __name__ == "__main__":

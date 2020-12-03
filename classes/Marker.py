@@ -5,7 +5,7 @@ from Macros import calculate_p0, calculate_p1, calculate_p_missing, calculate_se
 
 
 class Marker:
-    def __init__(self, id, name, linkage_id, linkage_group, skeleton_index, coordinate_genet):
+    def __init__(self, id, name, alleles, linkage_id, linkage_group, skeleton_index, coordinate_genet):
         """
         Marker initilization
         :param id: Marker ID int
@@ -25,7 +25,7 @@ class Marker:
         """
         self.id = id
         self.name = name
-        self.alleles = 0  # Needs redefinition
+        self.alleles = alleles  # Needs redefinition
         self.n0 = 0  # Needs redefinition
         self.n1 = 0  # Needs redefinition
         self.n_missing = 0  # Needs redefinition
