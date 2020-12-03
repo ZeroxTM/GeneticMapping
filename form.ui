@@ -196,7 +196,7 @@
            <string notr="true"/>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>3</number>
           </property>
           <widget class="QWidget" name="markersTab">
            <attribute name="title">
@@ -512,21 +512,11 @@
             <item row="0" column="0" colspan="2">
              <widget class="QTableWidget" name="genotypingTable">
               <property name="rowCount">
-               <number>5</number>
+               <number>0</number>
               </property>
               <property name="columnCount">
-               <number>5</number>
+               <number>0</number>
               </property>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
-              <column/>
              </widget>
             </item>
            </layout>
