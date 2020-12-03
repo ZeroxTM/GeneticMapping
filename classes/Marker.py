@@ -5,6 +5,8 @@ from Macros import calculate_p0, calculate_p1, calculate_p_missing, calculate_se
 
 
 class Marker:
+    markers = list()
+
     def __init__(self, id, name, alleles, linkage_id, linkage_group, skeleton_index, coordinate_genet):
         """
         Marker initilization
@@ -25,10 +27,8 @@ class Marker:
         """
         self.id = id
         self.name = name
-        self.alleles = alleles  # Needs redefinition
-        self.n0 = 0  # Needs redefinition
-        self.n1 = 0  # Needs redefinition
-        self.n_missing = 0  # Needs redefinition
+        self.alleles = alleles
+        self.n0, self.n1, self.n_missing = self.calculate_n01()
 
         self.p0 = calculate_p0(self.n0, self.n1)
         self.p1 = calculate_p1(self.n0, self.n1)
@@ -42,8 +42,11 @@ class Marker:
         self.skeleton_index = skeleton_index
         self.coordinateGenet = coordinate_genet
 
-
-
+    def calculate_n01(self):
+        if len(self.alleles) != 0:
+            return str(self.alleles[0]).count('0'), str(self.alleles[0]).count('1'), str(self.alleles[0]).count('-')
+        else:
+            return 0, 0, 0
 
     def calcStatistics(self):
         """

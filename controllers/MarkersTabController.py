@@ -7,11 +7,12 @@ from PySide2.QtWidgets import QMessageBox
 from classes.LinkageGroup import LinkageGroup
 from classes.Marker import Marker
 from controllers.GraphicalGenotypeController import GraphicalGenotypeController
+from controllers.StatisticsController import StatisticsController
 
 
 class MarkersTabController:
     ui = None
-    markers = list()
+    markers=list()
 
     @staticmethod
     def fetch_markers(data, ddf):  # Fetch data into table view markersTable
@@ -28,24 +29,28 @@ class MarkersTabController:
                                                                , temp_line[4], 0, temp_line[5]))
             '''
             linkageGroupsDict = defaultdict(list)
-            markers = MarkersTabController.markers
+            markers = list()
             # ~~~~~~~~~~~~~~ Read the markers from the file (Panda DataFrame) ~~~~~~~~~~~~~~#
             for index, row in data.iterrows():
-                marker = Marker(index, row['marker'], (list(ddf.loc[ddf['marker_name'] == row['marker'], 'properties'])),
+                marker = Marker(index, row['marker'],
+                                (list(ddf.loc[ddf['marker_name'] == row['marker'], 'properties'])),
                                 row['iLG'], row['chr'], 0, row['coorGenet'])
                 markers.append(marker)
                 linkageGroupsDict[marker.linkage_group].append(marker)
 
             LinkageGroup.create_linkages(linkageGroupsDict)  # Create all linkage groups
-
+            Marker.markers = markers
+            MarkersTabController.markers = markers
             # ~~~~~~~~~~~~~~ Display the markers in the table in gui ~~~~~~~~~~~~~~#
             for row, marker in enumerate(markers):
                 MarkersTabController.ui.markersTable.insertRow(row)
                 for column, variable in enumerate(vars(marker).items()):
-                    item = QTableWidgetItem(str(variable[1]))
+                    item = QTableWidgetItem(str(variable[1])) if str(
+                        variable[0]) != 'alleles' else QTableWidgetItem('N/A') if len(
+                        variable[1]) == 0 else QTableWidgetItem(str(variable[1])[2:-2])
                     item.setFlags(QtCore.Qt.ItemIsEnabled)
                     MarkersTabController.ui.markersTable.setItem(row, column, item)
 
             # Display statistics
-            MarkersTabController.ui.map_markers.setText(str(len(MarkersTabController.markers)))
+            StatisticsController.display_stat(markers, LinkageGroup.LinkageGroups)
             GraphicalGenotypeController.draw_graphical_genotype_map()

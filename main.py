@@ -13,6 +13,7 @@ from classes.LinkageGroup import LinkageGroup
 from controllers.GraphicalGenotypeController import GraphicalGenotypeController
 from controllers.MarkersTabController import MarkersTabController
 from controllers.FileBrowserController import FileBrowserController
+from controllers.StatisticsController import StatisticsController
 
 
 class main(QMainWindow):
@@ -50,6 +51,7 @@ class main(QMainWindow):
             self.ui.marker_name.setText(str(marker.name))
             self.ui.marker_genotype.setText(
                 str(marker.alleles) if len(MarkersTabController.markers[row].alleles) != 0 else 'N/A')
+            self.ui.marker_genotype_ns.setText("n0: " + str(marker.n0) + " | n1: " + str(marker.n1) + " | n-Miss: " + str(marker.n_missing))
             self.ui.marker_skeleton_ind.setText(str(marker.skeleton_index))
             self.ui.marker_gencords.setText(str(marker.coordinateGenet))
             self.ui.lg_id.setText(str(marker.linkage_id))
@@ -68,6 +70,9 @@ class main(QMainWindow):
             self.ui.marker_id.setText(self.ui.markersTable.item(row, 0).text())
             self.ui.marker_name.setText(self.ui.markersTable.item(row, 1).text())
             self.ui.marker_genotype.setText(self.ui.markersTable.item(row, 2).text())
+            self.ui.marker_genotype_ns.setText(
+                "n0: " + self.ui.markersTable.item(row, 3).text() + " | n1: " + self.ui.markersTable.item(row,4).text()
+                + " | n-Miss: " + self.ui.markersTable.item(row, 5).text())
             self.ui.marker_skeleton_ind.setText(self.ui.markersTable.item(row, 14).text())
             self.ui.marker_gencords.setText(self.ui.markersTable.item(row, 15).text())
             self.ui.lg_id.setText(self.ui.markersTable.item(row, 11).text())
@@ -99,7 +104,7 @@ class main(QMainWindow):
     def set_controllers_ui_ref(self):
         FileBrowserController.ui = self.ui
         MarkersTabController.ui = self.ui
-        # StatisticsController.ui = self.ui
+        StatisticsController.ui = self.ui
         GraphicalGenotypeController.ui = self.ui
 
 
