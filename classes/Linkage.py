@@ -33,3 +33,8 @@ class Linkage:
         self.max_distance_haldane = 0  # Needs redefinition
         self.topology_connection_index = 0  # Needs redefinition
 
+
+    def __eq__(self, other):
+        return self.linkage_id == other.linkage_id and self.marker_1_id == other.marker_1_id \
+               and self.marker_2_id == other.marker_2_id
+
