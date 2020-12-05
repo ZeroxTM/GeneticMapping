@@ -40,7 +40,7 @@ class Marker:
         self.linkage_group = linkage_group
         self.topology_connection_index = 0  # Needs redefinition
         self.skeleton_index = skeleton_index
-        self.coordinateGenet = coordinate_genet
+        self.coordinateGenet = round(float(coordinate_genet), 2)
 
     def calculate_n01(self):
         if len(self.alleles) != 0:

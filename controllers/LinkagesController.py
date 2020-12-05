@@ -44,7 +44,8 @@ class LinkagesController:
         # and for each of these combinations, create a linkage object, and store it in
         # the markers_linkages dictionary with the key being the the linkage group id
         for row_index, markr in enumerate(linkage_group_markers):
-            linkage = Linkage(linkage_group.id, marker.id, marker.name, markr.id, markr.name)
+            LinkagesController.ui.linkageTable.insertRow(row_index)
+            linkage = Linkage(linkage_group.id, marker, markr)
             available = LinkagesController.markers_linkages.get(linkage_group.id, None)
             if available is None:
                 LinkagesController.markers_linkages[linkage_group.id] = list()
