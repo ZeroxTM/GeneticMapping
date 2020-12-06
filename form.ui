@@ -196,7 +196,7 @@
            <string notr="true"/>
           </property>
           <property name="currentIndex">
-           <number>3</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="markersTab">
            <attribute name="title">
@@ -230,7 +230,7 @@
                <bool>true</bool>
               </property>
               <property name="rowCount">
-               <number>28</number>
+               <number>0</number>
               </property>
               <property name="columnCount">
                <number>16</number>
@@ -244,34 +244,6 @@
               <attribute name="horizontalHeaderDefaultSectionSize">
                <number>115</number>
               </attribute>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
               <column>
                <property name="text">
                 <string>Marker ID</string>
@@ -517,6 +489,12 @@
               <property name="columnCount">
                <number>0</number>
               </property>
+              <attribute name="horizontalHeaderMinimumSectionSize">
+               <number>8</number>
+              </attribute>
+              <attribute name="horizontalHeaderDefaultSectionSize">
+               <number>8</number>
+              </attribute>
              </widget>
             </item>
            </layout>

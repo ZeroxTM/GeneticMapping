@@ -32,15 +32,17 @@ class MarkersTabController:
             markers = list()
             # ~~~~~~~~~~~~~~ Read the markers from the file (Panda DataFrame) ~~~~~~~~~~~~~~#
             for index, row in data.iterrows():
-                marker = Marker(index, row['marker'],
+                marker = Marker(row['im'], row['marker'],
                                 (list(ddf.loc[ddf['marker_name'] == row['marker'], 'properties'])),
                                 row['iLG'], row['chr'], 0, row['coorGenet'])
+                print(row['im'])
                 markers.append(marker)
                 linkageGroupsDict[marker.linkage_group].append(marker)
 
             LinkageGroup.create_linkages(linkageGroupsDict)  # Create all linkage groups
             Marker.markers = markers
             MarkersTabController.markers = markers
+            MarkersTabController.ui.markersTable.verticalHeader().hide()
             # ~~~~~~~~~~~~~~ Display the markers in the table in gui ~~~~~~~~~~~~~~#
             for row, marker in enumerate(markers):
                 MarkersTabController.ui.markersTable.insertRow(row)

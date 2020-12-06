@@ -16,9 +16,9 @@ class FileBrowserController:
             df = pd.read_csv(path, sep="\t", header=None)
             df.columns = df.iloc[0]
             df = df.drop(df.index[0])
-            df = df.drop(['im', 'indexOnPath'], axis=1)
+            df = df.drop(['indexOnPath'], axis=1)
             QMessageBox.information(FileBrowserController.ui, "Info", "File was loaded successfully.")
-            #mtc.fetch_markers(df)
+            df = df.drop_duplicates(subset=['marker'], keep='first')
 
             if (os.path.exists(path[:-4] + '-data.txt')):
                 ddf = pd.read_csv(path[:-4] + '-data.txt', sep="\t", header=None)
