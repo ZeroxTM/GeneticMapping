@@ -35,7 +35,6 @@ class MarkersTabController:
                 marker = Marker(row['im'], row['marker'],
                                 (list(ddf.loc[ddf['marker_name'] == row['marker'], 'properties'])),
                                 row['iLG'], row['chr'], 0, row['coorGenet'])
-                print(row['im'])
                 markers.append(marker)
                 linkageGroupsDict[marker.linkage_group].append(marker)
 

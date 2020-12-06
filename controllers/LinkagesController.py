@@ -55,6 +55,7 @@ class LinkagesController:
             else:
                 linkage = next((lnkage for lnkage in available if lnkage == linkage), None)
             for column, variable in enumerate(vars(linkage).items()):
+                #LinkagesController.ui.linkageTable.resizeColumnToContents(column)
                 item = QTableWidgetItem(str(variable[1]))
                 item.setFlags(QtCore.Qt.ItemIsEnabled)
                 LinkagesController.ui.linkageTable.setItem(row_index, column, item)

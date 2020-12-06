@@ -57,7 +57,7 @@ class main(QMainWindow):
 
     def cellHover2(self, row, column):
         """
-        Edits statistics tab on hover over the table
+        Edits statistics tab on hover over the table of graphical genotyping
         """
         item = self.ui.genotypingTable.item(row, column)
         if self.current_hover2 != [row, column] and item is not None:

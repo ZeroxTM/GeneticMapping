@@ -196,7 +196,7 @@
            <string notr="true"/>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="markersTab">
            <attribute name="title">
@@ -219,6 +219,9 @@
               </property>
               <property name="frameShadow">
                <enum>QFrame::Sunken</enum>
+              </property>
+              <property name="dragEnabled">
+               <bool>true</bool>
               </property>
               <property name="dragDropMode">
                <enum>QAbstractItemView::NoDragDrop</enum>
@@ -345,7 +348,7 @@
                <enum>QFrame::StyledPanel</enum>
               </property>
               <property name="rowCount">
-               <number>20</number>
+               <number>0</number>
               </property>
               <attribute name="horizontalHeaderCascadingSectionResizes">
                <bool>false</bool>
@@ -353,29 +356,16 @@
               <attribute name="horizontalHeaderDefaultSectionSize">
                <number>125</number>
               </attribute>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
-              <row/>
               <column>
                <property name="text">
                 <string>Linkage ID</string>
+               </property>
+               <property name="background">
+                <color>
+                 <red>0</red>
+                 <green>0</green>
+                 <blue>0</blue>
+                </color>
                </property>
               </column>
               <column>
@@ -483,6 +473,9 @@
            <layout class="QFormLayout" name="formLayout_7">
             <item row="0" column="0" colspan="2">
              <widget class="QTableWidget" name="genotypingTable">
+              <property name="dragEnabled">
+               <bool>false</bool>
+              </property>
               <property name="rowCount">
                <number>0</number>
               </property>
@@ -822,6 +815,175 @@
                     </layout>
                    </widget>
                   </item>
+                  <item row="2" column="0">
+                   <widget class="QGroupBox" name="groupBox_3">
+                    <property name="font">
+                     <font>
+                      <pointsize>12</pointsize>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="title">
+                     <string>Linkage Group</string>
+                    </property>
+                    <property name="flat">
+                     <bool>true</bool>
+                    </property>
+                    <layout class="QFormLayout" name="formLayout_3">
+                     <item row="0" column="0" colspan="2">
+                      <layout class="QGridLayout" name="gridLayout_4">
+                       <property name="rightMargin">
+                        <number>5</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>1</number>
+                       </property>
+                       <property name="horizontalSpacing">
+                        <number>0</number>
+                       </property>
+                       <property name="verticalSpacing">
+                        <number>20</number>
+                       </property>
+                       <item row="3" column="1">
+                        <widget class="QCheckBox" name="lg_skeleton">
+                         <property name="enabled">
+                          <bool>true</bool>
+                         </property>
+                         <property name="text">
+                          <string/>
+                         </property>
+                         <property name="checkable">
+                          <bool>false</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="2" column="1">
+                        <widget class="QLineEdit" name="lg_markers">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background-color: rgb(255, 255, 255);</string>
+                         </property>
+                         <property name="readOnly">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="3" column="0">
+                        <widget class="QLabel" name="label_18">
+                         <property name="font">
+                          <font>
+                           <family>Georgia</family>
+                           <pointsize>10</pointsize>
+                           <weight>50</weight>
+                           <bold>false</bold>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>Skeleton Marker:</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="1" column="1">
+                        <widget class="QLineEdit" name="lg_name">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background-color: rgb(255, 255, 255);</string>
+                         </property>
+                         <property name="readOnly">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="2" column="0">
+                        <widget class="QLabel" name="label_23">
+                         <property name="font">
+                          <font>
+                           <family>Georgia</family>
+                           <pointsize>10</pointsize>
+                           <weight>50</weight>
+                           <bold>false</bold>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>Total number of markers:</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="1">
+                        <widget class="QLineEdit" name="lg_id">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="styleSheet">
+                          <string notr="true">background-color: rgb(255, 255, 255);</string>
+                         </property>
+                         <property name="readOnly">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="0">
+                        <widget class="QLabel" name="label_21">
+                         <property name="font">
+                          <font>
+                           <family>Georgia</family>
+                           <pointsize>10</pointsize>
+                           <weight>50</weight>
+                           <bold>false</bold>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>Linkage Group ID:</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="1" column="0">
+                        <widget class="QLabel" name="label_22">
+                         <property name="font">
+                          <font>
+                           <family>Georgia</family>
+                           <pointsize>10</pointsize>
+                           <weight>50</weight>
+                           <bold>false</bold>
+                           <strikeout>false</strikeout>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>Name:</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
                   <item row="1" column="0">
                    <widget class="QGroupBox" name="groupBox_2">
                     <property name="sizePolicy">
@@ -1049,174 +1211,23 @@
                     </layout>
                    </widget>
                   </item>
-                  <item row="2" column="0">
-                   <widget class="QGroupBox" name="groupBox_3">
-                    <property name="font">
-                     <font>
-                      <pointsize>12</pointsize>
-                      <weight>75</weight>
-                      <bold>true</bold>
-                     </font>
-                    </property>
-                    <property name="title">
-                     <string>Linkage Group</string>
-                    </property>
-                    <property name="flat">
-                     <bool>true</bool>
-                    </property>
-                    <layout class="QFormLayout" name="formLayout_3">
-                     <item row="0" column="0" colspan="2">
-                      <layout class="QGridLayout" name="gridLayout_4">
-                       <property name="rightMargin">
-                        <number>5</number>
-                       </property>
-                       <property name="bottomMargin">
-                        <number>1</number>
-                       </property>
-                       <property name="horizontalSpacing">
-                        <number>0</number>
-                       </property>
-                       <property name="verticalSpacing">
-                        <number>20</number>
-                       </property>
-                       <item row="3" column="1">
-                        <widget class="QCheckBox" name="lg_skeleton">
-                         <property name="enabled">
-                          <bool>true</bool>
-                         </property>
-                         <property name="text">
-                          <string/>
-                         </property>
-                         <property name="checkable">
-                          <bool>false</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="2" column="1">
-                        <widget class="QLineEdit" name="lg_markers">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="styleSheet">
-                          <string notr="true">background-color: rgb(255, 255, 255);</string>
-                         </property>
-                         <property name="readOnly">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="3" column="0">
-                        <widget class="QLabel" name="label_18">
-                         <property name="font">
-                          <font>
-                           <family>Georgia</family>
-                           <pointsize>10</pointsize>
-                           <weight>50</weight>
-                           <bold>false</bold>
-                          </font>
-                         </property>
-                         <property name="text">
-                          <string>Skeleton Marker:</string>
-                         </property>
-                         <property name="alignment">
-                          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="1" column="1">
-                        <widget class="QLineEdit" name="lg_name">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="styleSheet">
-                          <string notr="true">background-color: rgb(255, 255, 255);</string>
-                         </property>
-                         <property name="readOnly">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="2" column="0">
-                        <widget class="QLabel" name="label_23">
-                         <property name="font">
-                          <font>
-                           <family>Georgia</family>
-                           <pointsize>10</pointsize>
-                           <weight>50</weight>
-                           <bold>false</bold>
-                          </font>
-                         </property>
-                         <property name="text">
-                          <string>Total number of markers:</string>
-                         </property>
-                         <property name="alignment">
-                          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="1">
-                        <widget class="QLineEdit" name="lg_id">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="styleSheet">
-                          <string notr="true">background-color: rgb(255, 255, 255);</string>
-                         </property>
-                         <property name="readOnly">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="0">
-                        <widget class="QLabel" name="label_21">
-                         <property name="font">
-                          <font>
-                           <family>Georgia</family>
-                           <pointsize>10</pointsize>
-                           <weight>50</weight>
-                           <bold>false</bold>
-                          </font>
-                         </property>
-                         <property name="text">
-                          <string>Linkage Group ID:</string>
-                         </property>
-                         <property name="alignment">
-                          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="1" column="0">
-                        <widget class="QLabel" name="label_22">
-                         <property name="font">
-                          <font>
-                           <family>Georgia</family>
-                           <pointsize>10</pointsize>
-                           <weight>50</weight>
-                           <bold>false</bold>
-                           <strikeout>false</strikeout>
-                          </font>
-                         </property>
-                         <property name="text">
-                          <string>Name:</string>
-                         </property>
-                         <property name="alignment">
-                          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                     </item>
-                    </layout>
-                   </widget>
+                  <item row="3" column="0">
+                   <layout class="QVBoxLayout" name="verticalLayout_2">
+                    <item>
+                     <widget class="QPushButton" name="rename_alleles_btn">
+                      <property name="text">
+                       <string>Rename Alleles</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="save_alleles_btn">
+                      <property name="text">
+                       <string>Export Alleles Genotyping</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
                   </item>
                  </layout>
                 </item>
