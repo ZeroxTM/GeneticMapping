@@ -1,14 +1,15 @@
 """
  @Time : 30/11/2020 15:47
- @Author : Alaa Grable
+ @Author : Alaa Grable, Adam Mahameed
  """
+import copy
 from itertools import tee
-from operator import xor
 
 from PySide2 import QtCore, QtGui
-from PySide2.QtWidgets import QTableWidgetItem
+from PySide2.QtCore import Slot
+from PySide2.QtWidgets import QTableWidgetItem, QMessageBox, QFileDialog, QApplication
+from pandas import DataFrame, ExcelWriter
 
-from classes.Marker import Marker
 from Data import Data
 
 
@@ -18,7 +19,8 @@ class GraphicalGenotypeController:
         "1": QtGui.QColor(0, 77, 153, 180),
         "0": QtGui.QColor(112, 128, 144),
         "-": QtGui.QColor(134, 136, 138, 180),
-        "Empty": QtGui.QColor(211, 211, 211, 180)
+        "No Data": QtGui.QColor(211, 211, 211, 180),
+        "swapped": QtGui.QColor(125, 0, 0, 100)
     }
 
     @staticmethod
@@ -37,9 +39,9 @@ class GraphicalGenotypeController:
             # GraphicalGenotypeController.ui.genotypingTable.resizeColumnToContents(i)
         for row, marker in enumerate(MarkersTabController.markers):
             GraphicalGenotypeController.ui.genotypingTable.insertRow(row)
-            alleles = marker.alleles[0] if len(marker.alleles) != 0 else 'Empty'
+            alleles = marker.alleles[0] if len(marker.alleles) != 0 else 'No Data'
             orig_alleles_dict[row] = [marker.id, alleles]
-            if alleles == 'Empty':
+            if alleles == 'No Data':
                 pass
                 # for col_index in range(gen_length):
                 #     item = QTableWidgetItem()
@@ -54,19 +56,31 @@ class GraphicalGenotypeController:
                     item.setFlags(QtCore.Qt.ItemIsEnabled)
                     GraphicalGenotypeController.ui.genotypingTable.setItem(row, col_index, item)
         Data.orig_alleles_dict = orig_alleles_dict
-        GraphicalGenotypeController.rename_alleles(orig_alleles_dict)
 
     @staticmethod
-    def rename_alleles(alleles_dict):
+    def update_graphical_genotype_map(updated_alleles_dict, swapped_rows):
+        for index in swapped_rows:
+            data = updated_alleles_dict[index]
+            for i in range(len(data[1])):
+                item = QTableWidgetItem(data[1][i])
+                item.setBackground(GraphicalGenotypeController.colors['swapped'])
+                item.setFlags(QtCore.Qt.ItemIsEnabled)
+                GraphicalGenotypeController.ui.genotypingTable.setItem(index, i, item)
+        QMessageBox.information(GraphicalGenotypeController.ui, "Info",
+                                str(len(updated_alleles_dict)) + " alleles were renamed successfully.")
+
+    @staticmethod
+    def rename_alleles():
         # Filter out markers without alleles info
-        alleles_dict = alleles_dict.copy()
+        alleles_dict = copy.deepcopy(Data.orig_alleles_dict)
+        swapped_rows = list()
         for k in list(alleles_dict):
-            if alleles_dict[k][1] == 'Empty':
+            if alleles_dict[k][1] == 'No Data':
                 del alleles_dict[k]
         Data.mod_alleles_dict = alleles_dict
         # Time for the real work here
         tuples_list = list()
-        for x, y in GraphicalGenotypeController.pairwise(list(alleles_dict)):
+        for x, y in pairwise(list(alleles_dict)):
             tuples_list.append(tuple((int(x), int(y))))
         for tup in tuples_list:
             jumps = 0
@@ -76,28 +90,36 @@ class GraphicalGenotypeController:
                 elif int(alleles_dict[tup[0]][1][i]) != int(alleles_dict[tup[1]][1][i]):
                     jumps += 1
             print(str(tup) + ', Number of differences: ' + str(jumps))
-            if jumps >= min(len(alleles_dict[tup[0]][1]), len(alleles_dict[tup[1]][1])) - jumps:#This condition may be wrong
-                # print(alleles_dict[tup[1]])
-                alleles_dict[tup[1]][1] = GraphicalGenotypeController.swap_gene(alleles_dict[tup[1]][1])
-                # print(alleles_dict[tup[1]])
+            if jumps >= min(len(alleles_dict[tup[0]][1]),
+                            len(alleles_dict[tup[1]][1])) - jumps:  # This condition may be wrong
+                alleles_dict[tup[1]][1] = swap_gene(alleles_dict[tup[1]][1])
+                swapped_rows.append(tup[1])
+        Data.mod_alleles_dict = alleles_dict
+        GraphicalGenotypeController.update_graphical_genotype_map(alleles_dict, swapped_rows)
 
     @staticmethod
-    def pairwise(iterable):
-        """s -> (s0, s1), (s2, s3), (s4, s5), ..."""
-        a, b = tee(iterable)
-        next(b, None)
-        return zip(a, b)
+    def export_alleles():
+        path, _ = QFileDialog().getSaveFileName(QApplication.activeWindow(), filter='*.xlsx')
+        df = DataFrame.from_dict(Data.orig_alleles_dict, orient='index', columns=['Marker ID', 'Allele'])
+        with ExcelWriter(path) as writer:
+            df.to_excel(writer)
 
-    @staticmethod
-    def swap_gene(allele2):
-        print(allele2)
-        allele2 = list(allele2)
-        for i in range(0, len(allele2)):
-            if allele2[i] != '-':
-                if allele2[i] == '1':
-                    allele2[i] = '0'
-                else:
-                    allele2[i] = '1'
-        allele2 = ''.join(allele2)
-        print('swapped: ' + allele2)
-        return allele2
+
+def pairwise(iterable):
+    """s -> (s0, s1), (s1, s2), (s2, s3), ..."""
+    a, b = tee(iterable)
+    next(b, None)
+    return zip(a, b)
+
+
+def swap_gene(allele2):
+    allele2 = list(allele2)
+    for i in range(0, len(allele2)):
+        if allele2[i] != '-':
+            if allele2[i] == '1':
+                allele2[i] = '0'
+            else:
+                allele2[i] = '1'
+    allele2 = ''.join(allele2)
+    print('swapped: ' + allele2)
+    return allele2
