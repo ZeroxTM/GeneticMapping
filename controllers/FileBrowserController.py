@@ -13,13 +13,7 @@ class FileBrowserController:
     def load_file(path):
         dff = None
         if (path[-4:] == '.txt'):
-            df = pd.read_csv(path, sep="\t", header=None)
-            df.columns = df.iloc[0]
-            df = df.drop(df.index[0])
-            df = df.drop(['indexOnPath'], axis=1)
-            QMessageBox.information(FileBrowserController.ui, "Info", "File was loaded successfully.")
-            df = df.drop_duplicates(subset=['marker'], keep='first')
-
+            df = FileBrowserController.read_map_file(path)
             if (os.path.exists(path[:-4] + '-data.txt')):
                 ddf = pd.read_csv(path[:-4] + '-data.txt', sep="\t", header=None)
                 print("found!")
@@ -34,3 +28,14 @@ class FileBrowserController:
         else:
             print("Invalid file type")
             QMessageBox.information(FileBrowserController.ui, "Warning", "Invalid file format, please choose .txt file")
+
+    @staticmethod
+    def read_map_file(path):
+        df = pd.read_csv(path, sep="\t", header=None)
+        df.columns = df.iloc[0]
+        df = df.drop(df.index[0])
+        df = df.drop(['indexOnPath'], axis=1)
+        QMessageBox.information(FileBrowserController.ui, "Info", "File was loaded successfully.")
+        df = df.drop_duplicates(subset=['marker'], keep='first')
+        return df
+
