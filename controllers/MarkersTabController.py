@@ -12,22 +12,13 @@ from controllers.StatisticsController import StatisticsController
 
 class MarkersTabController:
     ui = None
-    markers=list()
+    markers = list()
 
     @staticmethod
     def fetch_markers(data, ddf):  # Fetch data into table view markersTable
         if MarkersTabController.ui is None:
             QMessageBox.information(MarkersTabController.ui, "Warning", "Something went wrong with the .txt file.")
         else:
-            '''
-            # ~~~~~~~~~~~~~~ Read the markers from the file (Normal .txt file) ~~~~~~~~~~~~~~#
-            with open('geneticMap.txt') as fp:
-                fp.readline()  # ignore the first line in the file
-                for line in fp:
-                    temp_line = line.split()
-                    MarkersTabController.markers.append(Marker(temp_line[0], temp_line[1], temp_line[3]
-                                                               , temp_line[4], 0, temp_line[5]))
-            '''
             linkageGroupsDict = defaultdict(list)
             markers = list()
             # ~~~~~~~~~~~~~~ Read the markers from the file (Panda DataFrame) ~~~~~~~~~~~~~~#

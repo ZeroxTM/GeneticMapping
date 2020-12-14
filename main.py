@@ -1,19 +1,24 @@
 # This Python file uses the following encoding: utf-8
-import sys
 import os
+import sys
 
-from PySide2 import QtWidgets, QtGui, QtCore
-from PySide2.QtGui import QPalette, QColor
-from PySide2.QtWidgets import QApplication, QMainWindow, QFileSystemModel, QFileDialog
-from PySide2.QtCore import QFile, Qt, QDir
+import numpy as np
+import pandas as pd
+import seaborn as sns
+from PySide2 import QtWidgets, QtCore
+from PySide2.QtCore import QFile
 from PySide2.QtUiTools import QUiLoader
+from PySide2.QtWidgets import QApplication, QMainWindow, QFileSystemModel, QFileDialog
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
 
 from classes.LinkageGroup import LinkageGroup
+from controllers.FileBrowserController import FileBrowserController
 # from controllers.StatisticsController import StatisticsController
 from controllers.GraphicalGenotypeController import GraphicalGenotypeController
 from controllers.LinkagesController import LinkagesController
+from controllers.MapComparisonController import MapComparisonController
 from controllers.MarkersTabController import MarkersTabController
-from controllers.FileBrowserController import FileBrowserController
 from controllers.StatisticsController import StatisticsController
 
 
@@ -42,6 +47,22 @@ class main(QMainWindow):
         self.ui.markersTable.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.ui.markersTable.customContextMenuRequested.connect(self.on_right_click)
         self.ui.genotypingTable.cellEntered.connect(self.cellHover2)
+        self.ui.import_btn.clicked.connect(self.import_map2)
+        self.ui.mainTabs.currentChanged.connect(self.onChange)
+        self.ui.mainTabs.blockSignals(False)
+
+    #@pyqtSlot()
+    def onChange(self, i):
+        if i == 3:
+            self.ui.rename_alleles_btn.show()
+            self.ui.export_alleles_btn.show()
+        else:
+            self.ui.rename_alleles_btn.hide()
+            self.ui.export_alleles_btn.hide()
+
+    def import_map2(self):
+        path, _ = QFileDialog().getOpenFileName(QApplication.activeWindow(), "Select a file to open", filter="*.txt")
+        MapComparisonController.compare_maps(path) if path else print("a")
 
     def on_right_click(self, pos):
         it = self.ui.markersTable.itemAt(pos)
@@ -121,7 +142,12 @@ class main(QMainWindow):
         StatisticsController.ui = self.ui
         GraphicalGenotypeController.ui = self.ui
         LinkagesController.ui = self.ui
+        MapComparisonController.ui = self.ui
         self.ui.mainTabs.setCurrentIndex(0)
+
+    def initialize_clicks(self):
+        self.ui.rename_alleles_btn.clicked.connect(GraphicalGenotypeController.rename_alleles)
+        self.ui.export_alleles_btn.clicked.connect(GraphicalGenotypeController.export_alleles)
 
 
 if __name__ == "__main__":
@@ -130,5 +156,6 @@ if __name__ == "__main__":
     widget.init_file_system_tree()
     widget.set_menu_functionality()
     widget.set_controllers_ui_ref()
-    # widget.show()
+    widget.initialize_clicks()
+    #widget.show()
     sys.exit(app.exec_())
