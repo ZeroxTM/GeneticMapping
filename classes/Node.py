@@ -1,5 +1,8 @@
+from classes.Marker import Marker
+
+
 class Node:
-    def __init__(self, id=None, marker=None, edge=[]):
+    def __init__(self, id=-1, marker=Marker(), edges=[], caption="", bCoorKnown=False, x=0, y=0):
         """
         Graph node initialization
         :param id: ID of graph node
@@ -8,7 +11,14 @@ class Node:
         """
         self.id = id
         self.marker = marker
-        self.edge = edge
+        self.edges = edges
+        self.caption = caption
+        self.bCoorKnown = bCoorKnown
+        self.x = x
+        self.y = y
+        self.ic = "red"
+        self.bc = "black"
+        self.shape = "ellipse"
 
     def check(self):
         print()

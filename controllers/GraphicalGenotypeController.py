@@ -20,7 +20,6 @@ class GraphicalGenotypeController:
         "0": QtGui.QColor(112, 128, 144),
         "-": QtGui.QColor(134, 136, 138, 180),
         "No Data": QtGui.QColor(211, 211, 211, 180),
-        "swapped": QtGui.QColor(125, 0, 0, 100)
     }
 
     @staticmethod
@@ -63,11 +62,17 @@ class GraphicalGenotypeController:
             data = updated_alleles_dict[index]
             for i in range(len(data[1])):
                 item = QTableWidgetItem(data[1][i])
-                item.setBackground(GraphicalGenotypeController.colors['swapped'])
+                color = GraphicalGenotypeController.colors[data[1][i]]
+                if data[1][i] == '1':
+                    color.setAlpha(150)
+                if data[1][i] == '0':
+                    color.setAlpha(220)
+                item.setBackground(color)
                 item.setFlags(QtCore.Qt.ItemIsEnabled)
                 GraphicalGenotypeController.ui.genotypingTable.setItem(index, i, item)
         QMessageBox.information(GraphicalGenotypeController.ui, "Info",
                                 str(len(updated_alleles_dict)) + " alleles were renamed successfully.")
+        GraphicalGenotypeController.ui.rename_alleles_btn.setEnabled(False)
 
     @staticmethod
     def rename_alleles():
@@ -99,10 +104,36 @@ class GraphicalGenotypeController:
 
     @staticmethod
     def export_alleles():
-        path, _ = QFileDialog().getSaveFileName(QApplication.activeWindow(), filter='*.xlsx')
-        df = DataFrame.from_dict(Data.orig_alleles_dict, orient='index', columns=['Marker ID', 'Allele'])
-        with ExcelWriter(path) as writer:
-            df.to_excel(writer)
+        msgBox = QMessageBox(QApplication.activeWindow())
+        msgBox.setText("Data export")
+        msgBox.setInformativeText("What would you like to export?")
+        exp_orig = msgBox.addButton("Original Data", QMessageBox.ActionRole)
+        exp_renamed = msgBox.addButton("Renamed Alleles Data", QMessageBox.ActionRole)
+        if len(Data.mod_alleles_dict) == 0:
+            msgBox.removeButton(msgBox.buttons()[1])
+        msgBox.addButton(QMessageBox.Cancel)
+        export = True
+        msgBox.exec_()
+        if msgBox.clickedButton() == exp_orig:
+            data = Data.orig_alleles_dict
+            print("Exporting renames alleles data...")
+        elif msgBox.clickedButton() == exp_renamed:
+            data = Data.mod_alleles_dict
+            print("Exporting renamed alleles data...")
+        else:
+            export = False
+            print("Cancel")
+        if export:
+            try:
+                path, _ = QFileDialog().getSaveFileName(QApplication.activeWindow(), filter='*.xlsx')
+                df = DataFrame.from_dict(data, orient='index', columns=['Marker ID', 'Allele'])
+                with ExcelWriter(path) as writer:
+                    df.to_excel(writer)
+                QMessageBox.information(GraphicalGenotypeController.ui, "Info", "Export Success\nAlleles data was "
+                                                                                "exported successfully to path")
+            except():
+                QMessageBox.information(GraphicalGenotypeController.ui, "Warning",
+                                        "Export Failed\nAn error has occurred!")
 
 
 def pairwise(iterable):

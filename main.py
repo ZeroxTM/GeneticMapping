@@ -2,19 +2,13 @@
 import os
 import sys
 
-import numpy as np
-import pandas as pd
-import seaborn as sns
 from PySide2 import QtWidgets, QtCore
 from PySide2.QtCore import QFile
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtWidgets import QApplication, QMainWindow, QFileSystemModel, QFileDialog
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.figure import Figure
 
 from classes.LinkageGroup import LinkageGroup
 from controllers.FileBrowserController import FileBrowserController
-# from controllers.StatisticsController import StatisticsController
 from controllers.GraphicalGenotypeController import GraphicalGenotypeController
 from controllers.LinkagesController import LinkagesController
 from controllers.MapComparisonController import MapComparisonController
@@ -51,7 +45,7 @@ class main(QMainWindow):
         self.ui.mainTabs.currentChanged.connect(self.onChange)
         self.ui.mainTabs.blockSignals(False)
 
-    #@pyqtSlot()
+    # @pyqtSlot()
     def onChange(self, i):
         if i == 3:
             self.ui.rename_alleles_btn.show()
@@ -148,6 +142,12 @@ class main(QMainWindow):
     def initialize_clicks(self):
         self.ui.rename_alleles_btn.clicked.connect(GraphicalGenotypeController.rename_alleles)
         self.ui.export_alleles_btn.clicked.connect(GraphicalGenotypeController.export_alleles)
+        self.ui.rename_alleles_btn.hide()
+        self.ui.export_alleles_btn.hide()
+
+    def disable_tabs(self):
+        for i in range(1, 6):
+            self.ui.mainTabs.setTabEnabled(i, False)
 
 
 if __name__ == "__main__":
@@ -157,5 +157,6 @@ if __name__ == "__main__":
     widget.set_menu_functionality()
     widget.set_controllers_ui_ref()
     widget.initialize_clicks()
-    #widget.show()
+    widget.disable_tabs()
+    # widget.show()
     sys.exit(app.exec_())
