@@ -1,11 +1,15 @@
 # This Python file uses the following encoding: utf-8
 import os
+import subprocess
 import sys
-
+import time
+import pandas as pd
+import pyautogui
 from PySide2 import QtWidgets, QtCore
-from PySide2.QtCore import QFile
+from PySide2.QtCore import QFile, Slot
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtWidgets import QApplication, QMainWindow, QFileSystemModel, QFileDialog
+from pajek_tools import PajekWriter
 
 from classes.LinkageGroup import LinkageGroup
 from controllers.FileBrowserController import FileBrowserController
@@ -44,6 +48,22 @@ class main(QMainWindow):
         self.ui.import_btn.clicked.connect(self.import_map2)
         self.ui.mainTabs.currentChanged.connect(self.onChange)
         self.ui.mainTabs.blockSignals(False)
+        self.ui.actionOpen_Graph_with_Pajek.triggered.connect(self.load_pajek)
+
+    @Slot()
+    def load_pajek(self):
+        df = pd.DataFrame([["a", "b"], ["a", "c"], ["c", "a"], ["c", "d"], ["a", "d"], ["b", "p"], ["z", "c"],
+                           ["x", "z"], ["z", "x"], ["y", "x"], ["t", "z"], ["a", "t"], ["a", "p"], ["a", "y"],
+                           ["y", "d"], ["y", "p"], ["y", "t"], ["y", "a"]], columns=["source", "target"])
+        writer = PajekWriter(df, directed=True, citing_colname="source", cited_colname="target")
+        writer.write("output.net")
+        pajek_path = os.getcwd() + '\Pajek64\Pajek.exe'
+        subprocess.Popen([pajek_path, r'output.net'])
+
+        time.sleep(3)
+        (x, y) = pyautogui.position()
+        pyautogui.click(pyautogui.locateCenterOnScreen('icon.png'))
+        pyautogui.moveTo(x, y)
 
     # @pyqtSlot()
     def onChange(self, i):
