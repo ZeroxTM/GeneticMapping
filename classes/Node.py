@@ -7,7 +7,7 @@ class Node:
         Graph node initialization
         :param id: ID of graph node
         :param marker: Marker of this node
-        :param edge: Edges connected to the node(marker)
+        :param edge(edge): Edges connected to the node(marker)
         """
         self.id = id
         self.marker = marker
@@ -25,3 +25,9 @@ class Node:
 
     def print(self):
         print()
+
+    def add_edge(self, edge):
+        self.edges.append(edge)
+
+    def __eq__(self, other):
+        return self.id == other.id
