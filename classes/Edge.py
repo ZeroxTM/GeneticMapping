@@ -1,5 +1,5 @@
 class Edge:
-    def __init__(self, id, start_node=-1, end_node=-1, recombination_rate=1.0, width=1, shape="Solid",
+    def __init__(self, id=-1, start_node=-1, end_node=-1, recombination_rate=1.0, width=1, shape="Solid",
                  description=""):
         """
         Edge connected to 2 nodes
@@ -11,15 +11,14 @@ class Edge:
         self.start_node = start_node  # idStart
         self.end_node = end_node  # idEnd
         self.recombination_rate = recombination_rate  # self.val
-        #self.color = color  # self.cs
+        # self.color = color  # self.cs
         self.color = self.colorGet(self.recombination_rate)
         self.width = width
         self.shape = shape
         self.description = description
 
-    def copy(self, start_node, end_node, parent):
-        return parent.Edge(start_node, end_node, self.recombination_rate, self.color, self.width, self.shape,
-                           self.description)
+    def copy(self, start_node, end_node):
+        return Edge(self.id, start_node, end_node, self.recombination_rate, self.width, self.shape, self.description)
 
     def colorGet(self, r):
         if r <= 0.01:
@@ -90,7 +89,7 @@ class Edge:
 
         color = "black"
         width = 1
-        sp = "Solid"
+        shape = "Solid"
         description = ""
         for i, char in enumerate(split_line):
             if char == "c":
@@ -98,7 +97,7 @@ class Edge:
             if char == "w":
                 width = int(split_line[i + 1])
             if char == "p":
-                sp = split_line[i + 1]
+                shape = split_line[i + 1]
             if char == "l":
                 k = len(split_line[i + 1]) - 1
                 if k > 0:
@@ -125,13 +124,16 @@ class Edge:
                     self.end_node))
                 return -1
 
+    # undirected edge
+    def __eq__(self, other):
+        return self.id == other.id or (self.start_node == other.start_node and self.end_node == other.end_node) or \
+               (self.start_node == other.end_node and self.end_node == other.start_node)
+
+    def sort2(self, a, b):
+        return a, b if a <= b else b, a
+
     def check(self):
         print()
 
     def print(self):
         print()
-
-    # undirected edge
-    def __eq__(self, other):
-        return self.id == other.id or (self.start_node == other.start_node and self.end_node == other.end_node) or \
-               (self.start_node == other.end_node and self.end_node == other.start_node)
