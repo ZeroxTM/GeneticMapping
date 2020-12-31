@@ -1,3 +1,6 @@
+from classes.Node import Node
+
+
 class Edge:
     def __init__(self, id=-1, start_node=-1, end_node=-1, recombination_rate=1.0, width=1, shape="Solid",
                  description=""):
@@ -7,9 +10,9 @@ class Edge:
         :param node2: second end [Node]
         :param recombinationRate: Recombination Rate between nodes (cM) [float]
         """
-        self.id = id  # should be static and incremented with each new edge
-        self.start_node = start_node  # idStart
-        self.end_node = end_node  # idEnd
+        self.id = id  # should be static and incremented with each new edge , arbitrary number [IDs are sequenced]
+        self.start_node = start_node  # idStart #NODE
+        self.end_node = end_node  # idEnd #NODE
         self.recombination_rate = recombination_rate  # self.val
         # self.color = color  # self.cs
         self.color = self.colorGet(self.recombination_rate)
@@ -33,7 +36,7 @@ class Edge:
             return "yellow"
         return "white"  # "LightGray"
 
-    def printToFilePajek(self, file, start_node, end_node):
+    def get_edge_data(self):
         """
         write a line in pajek file about this edge
         :param file: the file to write the edge to (pajek file)
@@ -50,7 +53,7 @@ class Edge:
         # Validate the width of the edge
         if self.width > 0:
             sw = " w " + str(self.width)
-        s = str(start_node) + ' ' + str(end_node)
+        s = str(self.start_node) + ' ' + str(self.end_node)
         bSimple = False
         if bSimple:
             # 2 3 1 c black
@@ -63,7 +66,7 @@ class Edge:
             sp = " p " + self.shape  # "Solid"
             sl = " l \"" + '{:1.2f}'.format(self.recombination_rate) + "\""
             s = s + sv + sw + sc + sp + sl + '\n'
-        file.write(s)
+        return s
 
     def update_edge(self, start_node=-1, end_node=-1, recombination_rate=1.0, color="black", width=1, shape="Solid",
                     description=""):
@@ -108,21 +111,16 @@ class Edge:
         self.update_edge(start_node=int(split_line[0]) - 1, end_node=int(split_line[1]) - 1, recombination_rate=value,
                          color=color, width=width, shape="Solid", description=description)
 
-    def idNodeEnd(self, start_node):
+    def get_end_node(self, start_node=Node()):
         """
         if gotten where this edge starts, returns where it ends
-        :param iBegin:
+        :param
         :return:
         """
         if self.start_node == start_node:
             return self.end_node
         else:
-            if self.end_node == start_node:
-                return self.start_node
-            else:
-                print("idNodeEnd: iBegin=" + str(start_node) + ", s=" + str(self.start_node) + ", e=" + str(
-                    self.end_node))
-                return -1
+            return self.start_node
 
     # undirected edge
     def __eq__(self, other):
@@ -130,7 +128,7 @@ class Edge:
                (self.start_node == other.end_node and self.end_node == other.start_node)
 
     def sort2(self, a, b):
-        return a, b if a <= b else b, a
+        return a, b if a.id <= b.id else b, a
 
     def check(self):
         print()

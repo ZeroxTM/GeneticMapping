@@ -66,11 +66,11 @@ class Network:
                     if recombination_rate <= 0.15:
                         id += 1
                         print("\nRecombination rate: " + str(recombination_rate) + "\n")
-                        edge = Edge(id=id, start_node=comb[0], end_node=comb[1], recombination_rate=recombination_rate)
-                        self.addEdge(edge)
-                        print("\nAdded Edge to network.\n")
                         node1 = next((node for node in self.nodes if node.marker == comb[0]), None)
                         node2 = next((node for node in self.nodes if node.marker == comb[1]), None)
+                        edge = Edge(id=id, start_node=node1, end_node=node2, recombination_rate=recombination_rate)
+                        self.addEdge(edge)
+                        print("\nAdded Edge to network.\n")
                         node1.add_edge(edge)
                         node2.add_edge(edge)
                         print("\nAdded edge to nodes.\n")
@@ -95,55 +95,59 @@ class Network:
     write the network to pajek file (upper file before edges)
     """
 
-    def printToFilePajek__shapka(self, file, nodes_length):
-        file.write("*Network" + '\n')
-        file.write("*Vertices " + str(nodes_length) + '\n')
+    # def printToFilePajek__shapka(self, file, nodes_length):
+    #     file.write("*Network" + '\n')
+    #   file.write("*Vertices " + str(nodes_length) + '\n')
 
-    def printToFilePajek__shapkaEdges(self, file, nEdges=-1):
-        s = ""
-        if nEdges >= 0:
-            s = ' ' + str(nEdges)
-        file.write("*Edges" + s + '\n')
+    # def printToFilePajek__shapkaEdges(self, file, nEdges=-1):
+    #   s = ""
+    #   if nEdges >= 0:
+    #       s = ' ' + str(nEdges)
+    #   file.write("*Edges" + s + '\n')
 
     """
     print the network to pajek file
     """
 
-    def printToFilePajek(self, sFileName, dMax, bPrint=False, bPrintDetails=False):
+    def print_pajek_network(self, sFileName, bPrint=False, bPrintDetails=False):
+        # *Network
+        # *Vertices 3
+        # 1 "pe0" ic LightGreen 0.5 0.5 box
+        # 2 "pe1" ic LightYellow 0.8473 0.4981 ellipse
+        # 3 "pe2" ic LightYellow 0.6112 0.8387 triangle
+        # *Arcs
+        # 1 2 1 c black
+        # 1 3 -1 c red
+        # *Edges
+        # 2 3 1 c black w 1
         if bPrint:
             print("\nprint net to file " + sFileName + "...\n")
-        # file = open(sFileName, 'w')
-        with open(sFileName, 'w') as file:
-            # *Network
-            # *Vertices 3
-            # 1 "pe0" ic LightGreen 0.5 0.5 box
-            # 2 "pe1" ic LightYellow 0.8473 0.4981 ellipse
-            # 3 "pe2" ic LightYellow 0.6112 0.8387 triangle
-            # *Arcs
-            # 1 2 1 c black
-            # 1 3 -1 c red
-            # *Edges
-            # 2 3 1 c black w 1
 
-            # Printing nodes to pajek file
-            self.printToFilePajek__shapka(file, len(self.nodes))
-            for i in range(len(self.nodes)):
-                self.nodes[i].printToFilePajek(i + 1, file)
+        with open(sFileName, 'w') as file:
+            # Print Pajek file header
+            file.write("*Network" + '\n')
+            file.write("*Vertices " + str(len(self.nodes)) + '\n')
+
+            # Print nodes data
+            for node in self.nodes:
+                file.write(node.get_node_data() + '\n')
+
             # Printing edges to pajek file
-            i = 0
-            for edge in self.edges:
-                if (dMax < 0 or edge.recombination_rate <= dMax) and (edge.start_node < edge.end_node):
-                    i += 1
-            self.printToFilePajek__shapkaEdges(file, i)
-            i = 0
-            for edge in self.edges:
-                if (dMax < 0 or edge.val <= dMax) and (edge.start_node < edge.end_node):
-                    edge.printToFilePajek(file, edge.start_node + 1, edge.end_node + 1)
-                i += 1
+            # i = 0
+            # for edge in self.edges:
+            #   if (dMax < 0 or edge.recombination_rate <= dMax) and (edge.start_node < edge.end_node):
+            #      i += 1
+
+            file.write("*Edges " + str(len(self.edges)) + '\n')
+            for i, edge in enumerate(self.edges):
+                # if (dMax < 0 or edge.recombination_rate <= dMax) and (edge.start_node < edge.end_node):
+                file.write(edge.get_edge_data())
+                # edge.printToFilePajek(file, edge.start_node + 1, edge.end_node + 1)
+
                 if bPrintDetails and len(self.edges) > 10000:
                     if i % 1000 == 1:
                         print(str(i) + " of " + str(len(self.edges)) + " edges are processed")
-        # file.close()
+
         if bPrint:
             print("print net to file " + sFileName + "...Finished")
 
@@ -151,89 +155,94 @@ class Network:
     write to pajek file not all networks, but a specific (selected) nodes
     """
 
-    def printToFilePajek__selectedNodesOnly(self, sFileName, dMax, listOfIndexesToSelect, bPrint=False,
-                                            bPrintDetails=False):
-        if bPrint:
-            print("print net to file " + sFileName + "...")
-        #file = open(sFileName, 'w')
-        with open(sFileName, 'w') as file:
-
-            g = [-1] * len(self.nodes)
-
-            for a in listOfIndexesToSelect:
-                if 0 <= a < len(self.nodes):
-                    g[a] = 0
-            n_Corrected = 0
-            for i in range(len(self.nodes)):
-                if g[i] >= 0:
-                    g[i] = n_Corrected
-                    n_Corrected += 1
-
-            self.printToFilePajek__shapka(file, n_Corrected)
-            for i in range(len(self.nodes)):
-                if g[i] >= 0:
-                    self.nodes[i].printToFilePajek(g[i] + 1, file)
-
-            '''
-            self.printToFilePajek__shapkaEdges(file)
-            i=0
-            for e in self.edge:
-                if (dMax<0 or e.val<=dMax)and(e.idStart<e.idEnd): 
-                    if g[e.idStart]>=0 and g[e.idEnd]>=0:
-                        e.printToFilePajek(file,g[e.idStart]+1,g[e.idEnd]+1)
-                i+=1
-    
-                if bPrintDetails:
-                    if i%100==1:
-                        print(str(i)+" of "+str(self.nEdges)+" edges are processed")
-            '''
-            i = 0
-            for edge in self.edges:
-                if (dMax < 0 or edge.recombination_rate <= dMax) and (edge.start_node < edge.end_node):
-                    if g[edge.start_node] >= 0 and g[edge.end_node] >= 0:
-                        # e.printToFilePajek(file,g[e.idStart]+1,g[e.idEnd]+1)
-                        i += 1
-
-                if bPrintDetails:
-                    if i % 1000 == 1:
-                        print(str(i) + " of " + str(len(self.edges)) + " edges are processed")
-
-            self.printToFilePajek__shapkaEdges(file, i)
-            i = 0
-            for edge in self.edges:
-                if (dMax < 0 or edge.recombination_rate <= dMax) and (edge.start_node < edge.end_node):
-                    if g[edge.start_node] >= 0 and g[edge.end_node] >= 0:
-                        edge.printToFilePajek(file, g[edge.start_node] + 1, g[edge.end_node] + 1)
-                i += 1
-                if bPrintDetails:
-                    if i % 1000 == 1:
-                        print(str(i) + " of " + str(len(self.edges)) + " edges are processed")
-
-        #file.close()
-
-        if bPrint:
-            print("print net to file " + sFileName + "...Finished")
+    # def printToFilePajek__selectedNodesOnly(self, sFileName, dMax, listOfIndexesToSelect, bPrint=False,
+    #                                         bPrintDetails=False):
+    #     if bPrint:
+    #         print("print net to file " + sFileName + "...")
+    #     # file = open(sFileName, 'w')
+    #     with open(sFileName, 'w') as file:
+    #
+    #         g = [-1] * len(self.nodes)
+    #
+    #         for a in listOfIndexesToSelect:
+    #             if 0 <= a < len(self.nodes):
+    #                 g[a] = 0
+    #         n_Corrected = 0
+    #         for i in range(len(self.nodes)):
+    #             if g[i] >= 0:
+    #                 g[i] = n_Corrected
+    #                 n_Corrected += 1
+    #
+    #         file.write("*Network" + '\n')
+    #         file.write("*Vertices " + str(n_Corrected) + '\n')
+    #         for i in range(len(self.nodes)):
+    #             if g[i] >= 0:
+    #                 self.nodes[i].printToFilePajek(g[i] + 1, file)
+    #
+    #         '''
+    #         self.printToFilePajek__shapkaEdges(file)
+    #         i=0
+    #         for e in self.edge:
+    #             if (dMax<0 or e.val<=dMax)and(e.idStart<e.idEnd):
+    #                 if g[e.idStart]>=0 and g[e.idEnd]>=0:
+    #                     e.printToFilePajek(file,g[e.idStart]+1,g[e.idEnd]+1)
+    #             i+=1
+    #
+    #             if bPrintDetails:
+    #                 if i%100==1:
+    #                     print(str(i)+" of "+str(self.nEdges)+" edges are processed")
+    #         '''
+    #         i = 0
+    #         for edge in self.edges:
+    #             if (dMax < 0 or edge.recombination_rate <= dMax) and (edge.start_node < edge.end_node):
+    #                 if g[edge.start_node] >= 0 and g[edge.end_node] >= 0:
+    #                     # e.printToFilePajek(file,g[e.idStart]+1,g[e.idEnd]+1)
+    #                     i += 1
+    #
+    #             if bPrintDetails:
+    #                 if i % 1000 == 1:
+    #                     print(str(i) + " of " + str(len(self.edges)) + " edges are processed")
+    #
+    #         file.write("*Edges " + str(i) + '\n')
+    #         i = 0
+    #         for edge in self.edges:
+    #             if (dMax < 0 or edge.recombination_rate <= dMax) and (edge.start_node < edge.end_node):
+    #                 if g[edge.start_node] >= 0 and g[edge.end_node] >= 0:
+    #                     edge.printToFilePajek(file, g[edge.start_node] + 1, g[edge.end_node] + 1)
+    #             i += 1
+    #             if bPrintDetails:
+    #                 if i % 1000 == 1:
+    #                     print(str(i) + " of " + str(len(self.edges)) + " edges are processed")
+    #
+    #     # file.close()
+    #
+    #     if bPrint:
+    #         print("print net to file " + sFileName + "...Finished")
 
     """
     divide the whole network to parts that the edges between these parts has recombination rate > cutoff
     """
+
+    ##NEED MORE EXPLAINATION
     def singleLinkageClustering(self, cutoff, bPrint=False, bPrintDetails=False):
         clusters = []
-        in_cluster = [-1]*len(self.nodes)
-        rank_max = []
+        in_cluster = [-1] * len(self.nodes)
+        rank_max = [0] * len(self.nodes)
         n_clusters = 0
 
         if bPrint:
-            print("clustering of net with nNodes=" + str(len(self.nodes)) + " and nEdges=" + str(len(self.edges)) + "...")
+            print(
+                "clustering of net with nNodes=" + str(len(self.nodes)) + " and nEdges=" + str(len(self.edges)) + "...")
 
         for i in range(len(self.nodes)):
             if in_cluster[i] < 0:
                 if bPrintDetails:
                     print("started from " + str(i) + " ...")
+
+                iCluster = n_clusters
                 n_clusters += 1
-                iCluster = n_clusters - 1
                 in_cluster[i] = iCluster
-                rank_max.append(0)
+
                 r = 0
                 current_set = [i]
                 sett = [i]
@@ -258,7 +267,8 @@ class Network:
                 if bPrintDetails:
                     print("started from " + str(i) + " ...Finished: n=" + str(len(sett)))
         if bPrint:
-            print("clustering of net with nNodes=" + str(len(self.nodes)) + " and nEdges=" + str(len(self.edges)) + "...Finished")
+            print("clustering of net with nNodes=" + str(len(self.nodes)) + " and nEdges=" + str(
+                len(self.edges)) + "...Finished")
             print("nClusters=" + str(len(clusters)))
             if bPrintDetails:
                 print("Sizes:")
@@ -269,44 +279,41 @@ class Network:
     """
     find mst fo this network
     """
+
     def MST(self, bPrint=False, bPrintDetails=False):
-        net = Network()
-        i = 0
-        for node in self.nodes:
-            vpp = node.copy(i)
-            i += 1
-            net.addNode(vpp)
-            #net.nodes.append(vpp)
-            #net.nNodes += 1
+        mst_net = Network()
+        for i, node in enumerate(self.nodes):
+            mst_net.addNode(node.copy(i))
+
         if len(self.edges) < 1:
-            return net
+            return mst_net
 
         # rank in MST
-        rankInMST = [-1]*len(self.nodes)
-        idEdgeShortestFromMST = [-1]*len(self.nodes)
+        rankInMST = [-1] * len(self.nodes)
+        idEdgeShortestFromMST = [-1] * len(self.nodes)
         if bPrint:
-            print("Minimal spanning tree (MST) for net with nNodes=" + str(len(self.nodes)) + " and nEdges=" + str(len(self.edges)) + "...")
+            print("Minimal spanning tree (MST) for net with nNodes=" + str(len(self.nodes)) + " and nEdges=" + str(
+                len(self.edges)) + "...")
         '''
         idEdgeShortest=0
-        lenMin=self.edge[idEdgeShortest].val
+        lenMin=self.edge[idEdgeShortest].val  #val = recombinationRate
         for e in self.edge:
             if e.val<lenMin:
                 idEdgeShortest=e.id
                 lenMin=e.val
-        idV=self.edge[idEdgeShortest].idStart
-        >=0 and e.idEnd
+        idV=self.edge[idEdgeShortest].idStart >=0 and e.idEnd
         '''
         i = 0
-        r = 0
-        rankInMST[i] = r
+        rankInMST[i] = 0  # rankInMST[i] = r = 0
         linkedWithMST = []
         node = self.nodes[i]
         idsNodeInMST = [i]
         for edge in node.edges:
-            k = node.idNodeEnd(i)
-            if k > i:
-                linkedWithMST.append(k)
-                idEdgeShortestFromMST[k] = edge.id
+            end_node_id = edge.get_end_node(node).id  # k = edge.idNodeEnd(i) #
+            if end_node_id > i:
+                linkedWithMST.append(end_node_id)
+                idEdgeShortestFromMST[end_node_id] = edge.id
+
         # print("1138: linkedWithMST: "+str(linkedWithMST))
         # print("ne="+str(len(m.edges))+" N="+str(len(linkedWithMST)))
         while len(linkedWithMST) > 0:
@@ -326,11 +333,11 @@ class Network:
 
             # add
             edge = self.edges[idEdgeShortestFromMST[iNodeAdd]]
-            k = edge.idNodeEnd(iNodeAdd)
-            idStart, idEnd = edge.sort2(edge.start_node, edge.end_node)
+            k = edge.get_end_node(iNodeAdd).id
+            idStart, idEnd = edge.sort2(edge.start_node, edge.end_node) #ReturnS NODES NOT ID
             eNew = edge.copy(idStart, idEnd)
             #
-            net.addEdge(eNew)
+            mst_net.addEdge(eNew)
             rankInMST[iNodeAdd] = rankInMST[k] + 1
             if rankInMST[iNodeAdd] < 0:
                 print("problem")
@@ -361,18 +368,20 @@ class Network:
             if bStop:
                 linkedWithMST = []
         if bPrint:
-            print("Minimal spanning tree (MST) for net with nNodes=" + str(len(self.nodes)) + " and nEdges=" + str(len(self.edges)) + "...Finished")
+            print("Minimal spanning tree (MST) for net with nNodes=" + str(len(self.nodes)) + " and nEdges=" + str(
+                len(self.edges)) + "...Finished")
             if bPrintDetails:
                 idsNodeInMST.sort()
                 print(str(idsNodeInMST))
                 print(str(rankInMST))
-        return net
+        return mst_net
 
     """
     calculate the rank of nodes bya7as to another node that we chose (idNodeStart)
     """
+
     def calcRanksOfNodes(self, idNodeStart, bPrint):
-        rank = [-1]*len(self.nodes)
+        rank = [-1] * len(self.nodes)
         if bPrint:
             print("calcRanksOfNodes=" + str(len(self.nodes)) + " and nEdges=" + str(len(self.edges)) + "...")
         rank[idNodeStart] = 0
@@ -414,7 +423,8 @@ class Network:
     """
     Find which nodes are on the longest path of mst
     """
-    def idNodesOnPathLongest(self, bPrint, bPrintDetails):
+
+    def idNodesOnPathLongest(self, bPrint=False, bPrintDetails=False):
         if bPrint:
             print("idNodesOnPathLongest for net of " + str(len(self.nodes)) + " nodes...")
         netMST = self.MST(bPrint=False, bPrintDetails=False)
@@ -463,15 +473,16 @@ class Network:
     """
     after clusterization, we can write that cluster(linkage group) to pajek file
     """
+
     def printToFilePajek_allCluster(self, dMax, sName, clusters, inCluster, sPath):
         sFileName = sPath + sName + "_in_" + str(len(clusters)) + "_Clusters.txt"
-        #file = open(sFileName, 'w')
+        # file = open(sFileName, 'w')
         with open(sFileName, 'w') as file:
             file.write("i\tmarker\tLG\tn\n")
             for i in range(len(self.nodes)):
                 file.write(str(i) + '\t' + self.nodes[i].caption + '\t' + str(inCluster[i]) + '\t' + str(
                     len(clusters[inCluster[i]])) + '\n')
-        #file.close()
+        # file.close()
         n = len(clusters)
         for i in range(n):
             sFileNamePajekPP = sPath + sName + "_cl" + str(i + 1) + "_" + str(len(clusters[i])) + ".net"
@@ -481,6 +492,7 @@ class Network:
     """
     retuns all nodes that these nodes doesn't have a prove with edges 5offot ?
     """
+
     def nodesIDUnprovenByParallelpaths(self, cutoff, cutoffParallel):
         ids = []
         print("nodesIDUnprovenByParallelpaths...")
@@ -506,6 +518,7 @@ class Network:
     """
     remove nodes from net according to nodes in the list(idsExclude)
     """
+
     def netWithoutNodesFromList(self, idsExclude, cutoff):
         idsOk = []
         for i in range(len(self.nodes)):
@@ -516,9 +529,10 @@ class Network:
     """
     sub-network according to cutoff (r < cutoff) -> (default cutoff = 15%)
     """
+
     def subnet(self, ids, cutoff):
         net = Network()
-        idnew = [-1]*len(self.nodes)
+        idnew = [-1] * len(self.nodes)
         idsPP = []
         idMy = []
         i = 0
@@ -530,8 +544,8 @@ class Network:
                 idMy.append(node.id)
                 i += 1
                 net.addNode(vpp)
-                #net.node.append(vpp)
-                #net.nNodes += 1
+                # net.node.append(vpp)
+                # net.nNodes += 1
             # if i==1:
             #	print("nEdges0="+str(len(vpp.edges)))
         if False:
