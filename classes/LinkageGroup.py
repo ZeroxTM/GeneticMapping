@@ -1,6 +1,7 @@
 """
 Class of Linkage Groups
 """
+from Data import Data
 
 
 class LinkageGroup:
@@ -45,3 +46,6 @@ class LinkageGroup:
     def create_linkages(linkageGroupsDict=dict()):
         for key in linkageGroupsDict:
             LinkageGroup.LinkageGroups[key] = LinkageGroup(linkageGroupsDict[key][0].id, key, linkageGroupsDict[key],[],[], None)
+
+        Data.linkage_groups = LinkageGroup.LinkageGroups
+

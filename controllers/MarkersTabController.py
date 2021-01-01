@@ -1,11 +1,12 @@
 from collections import defaultdict
 
 from PySide2 import QtCore
-from PySide2.QtWidgets import QTableWidgetItem
+from PySide2.QtWidgets import QTableWidgetItem, QComboBox
 from PySide2.QtWidgets import QMessageBox
 
 from classes.LinkageGroup import LinkageGroup
 from classes.Marker import Marker
+from controllers.NetworkTabController import NetworkTabController
 from controllers.GraphicalGenotypeController import GraphicalGenotypeController
 from controllers.StatisticsController import StatisticsController
 
@@ -42,6 +43,9 @@ class MarkersTabController:
                         variable[1]) == 0 else QTableWidgetItem(str(variable[1])[2:-2])
                     item.setFlags(QtCore.Qt.ItemIsEnabled)
                     MarkersTabController.ui.markersTable.setItem(row, column, item)
+
+            NetworkTabController.initialize_combobox(LinkageGroup.LinkageGroups)
+
 
             # Display statistics
             StatisticsController.display_stat(markers, LinkageGroup.LinkageGroups)

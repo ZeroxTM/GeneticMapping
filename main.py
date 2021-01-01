@@ -12,6 +12,7 @@ from PySide2.QtWidgets import QApplication, QMainWindow, QFileSystemModel, QFile
 from pajek_tools import PajekWriter
 
 from classes.LinkageGroup import LinkageGroup
+from controllers.NetworkTabController import NetworkTabController
 from controllers.FileBrowserController import FileBrowserController
 from controllers.GraphicalGenotypeController import GraphicalGenotypeController
 from controllers.LinkagesController import LinkagesController
@@ -157,6 +158,7 @@ class main(QMainWindow):
         GraphicalGenotypeController.ui = self.ui
         LinkagesController.ui = self.ui
         MapComparisonController.ui = self.ui
+        NetworkTabController.ui = self.ui
         self.ui.mainTabs.setCurrentIndex(0)
 
     def initialize_clicks(self):
@@ -164,6 +166,7 @@ class main(QMainWindow):
         self.ui.export_alleles_btn.clicked.connect(GraphicalGenotypeController.export_alleles)
         self.ui.rename_alleles_btn.hide()
         self.ui.export_alleles_btn.hide()
+        self.ui.draw_network_btn.clicked.connect(NetworkTabController.build_network)
 
     def disable_tabs(self):
         for i in range(1, 6):

@@ -1,8 +1,6 @@
-from classes.Marker import Marker
-
 
 class Node:
-    def __init__(self, id=-1, index=-1, marker=Marker(), edges=[], caption="", bCoorKnown=False, x=0, y=0, ic="red",
+    def __init__(self, id=-1, index=-1, marker=None, edges=[], caption="", bCoorKnown=False, x=0, y=0, ic="red",
                  bc="black", shape="ellipse"):
         """
         Graph node initialization

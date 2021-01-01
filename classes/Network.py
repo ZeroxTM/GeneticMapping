@@ -6,7 +6,6 @@ import itertools
 from Macros import calculate_recombination_rate
 from classes.Edge import Edge
 from classes.Linkage import get_shared_alleles
-from classes.Marker import Marker
 from classes.Node import Node
 
 
@@ -26,9 +25,6 @@ class Network:
         self.skeleton = skeleton
         self.cutoff = cutoff
 
-    def MST(self):
-        print()
-
     def calcRanksOfNodes(self, idNodeStart, bPrint):
         pass
 
@@ -41,7 +37,7 @@ class Network:
     def addEdge(self, edge):
         self.edges.append(edge)
 
-    def create_edges(self, linkage_groups):
+    def initialize_network(self, linkage_groups):
         """
         :param indexes_of_linkages: list of linkage (linkageGroup)
         :return:
@@ -49,31 +45,31 @@ class Network:
         id = -1
         node_id = -1
         print("\nAdding Nodes to the network ..\n")
-        for linkage in linkage_groups:
-            print("\nAdding nodes to network from linkage: " + str(linkage.linkage_id) + "\n")
-            for marker in linkage:
+        for linkage_group in linkage_groups:
+            print("\nAdding nodes to network from linkage: " + str(linkage_group.id) + "\n")
+            for marker in linkage_group.markers:
                 node_id += 1
                 self.addNode(Node(id=node_id, index=marker.id, marker=marker))
         print("\nDone Adding Nodes to the network!")
-        print("\nAdding Edges to the network ..\n")
-        for linkage in linkage_groups:
-            print("\nAdding Edges to network from linkage: " + str(linkage.linkage_id) + "\n")
-            combinations = itertools.combinations(linkage, 2)
+        print("\nAdding edges to the network ..\n")
+        for linkage_group in linkage_groups:
+            print("\nAdding Edges to network from linkage group: " + str(linkage_group.id))
+            combinations = itertools.combinations(linkage_group.markers, 2)
             for comb in combinations:
                 ns = get_shared_alleles(comb[0].alleles, comb[1].alleles)
                 if type(ns) != str:
                     recombination_rate = calculate_recombination_rate(ns[0], ns[1], ns[2], ns[3])
                     if recombination_rate <= 0.15:
                         id += 1
-                        print("\nRecombination rate: " + str(recombination_rate) + "\n")
+                        print("Recombination rate: " + str(recombination_rate) + "")
                         node1 = next((node for node in self.nodes if node.marker == comb[0]), None)
                         node2 = next((node for node in self.nodes if node.marker == comb[1]), None)
                         edge = Edge(id=id, start_node=node1, end_node=node2, recombination_rate=recombination_rate)
                         self.addEdge(edge)
-                        print("\nAdded Edge to network.\n")
+                        print("Added edge ID " + str(edge.id) + " to network.")
                         node1.add_edge(edge)
                         node2.add_edge(edge)
-                        print("\nAdded edge to nodes.\n")
+                        print("Added edge to nodes[" + str(node1.id) + "," + str(node2.id) + "]")
 
         """
         combinations = itertools.combinations(self.nodes, 2)
@@ -104,6 +100,106 @@ class Network:
     #   if nEdges >= 0:
     #       s = ' ' + str(nEdges)
     #   file.write("*Edges" + s + '\n')
+
+    """
+        find mst fo this network
+        """
+
+    def calc_MST_net(self, bPrint=False, bPrintDetails=False):
+        mst_net = Network(nodes=[], edges=[], mst=None, skeleton=None, cutoff=0.5)
+        for i, node in enumerate(self.nodes):
+            mst_net.addNode(node.copy(i))
+
+        if len(self.edges) < 1:
+            return mst_net
+
+        # rank in MST
+        rankInMST = [-1] * len(self.nodes)
+        idEdgeShortestFromMST = [-1] * len(self.nodes)
+        if bPrint:
+            print("Minimal spanning tree (MST) for net with nNodes=" + str(len(self.nodes)) + " and nEdges=" + str(
+                len(self.edges)) + "...")
+        '''
+        idEdgeShortest=0
+        lenMin=self.edge[idEdgeShortest].val  #val = recombinationRate
+        for e in self.edge:
+            if e.val<lenMin:
+                idEdgeShortest=e.id
+                lenMin=e.val
+        idV=self.edge[idEdgeShortest].idStart >=0 and e.idEnd
+        '''
+        i = 0
+        rankInMST[i] = 0  # rankInMST[i] = r = 0
+        linkedWithMST = []
+        node = self.nodes[i]
+        idsNodeInMST = [i]
+        for edge in node.edges:
+            end_node_id = edge.get_end_node(node).id  # k = edge.idNodeEnd(i) #
+            if end_node_id > i:
+                linkedWithMST.append(end_node_id)
+                idEdgeShortestFromMST[end_node_id] = edge.id
+
+        # print("1138: linkedWithMST: "+str(linkedWithMST))
+        # print("ne="+str(len(m.edges))+" N="+str(len(linkedWithMST)))
+        while len(linkedWithMST) > 0:
+            bStop = False
+            iNodeAdd = linkedWithMST[0]
+            minLength = self.edges[idEdgeShortestFromMST[iNodeAdd]].recombination_rate
+            for i in linkedWithMST:
+                myLen = self.edges[idEdgeShortestFromMST[i]].recombination_rate
+                if i in idsNodeInMST:
+                    print("problem here: i=" + str(i))
+                    bStop = True
+                    print("idsNodeInMST: " + str(idsNodeInMST))
+                    print("linkedWithMST: " + str(linkedWithMST))
+                if minLength > myLen:
+                    minLength = myLen
+                    iNodeAdd = i
+
+            # add
+            edge = self.edges[idEdgeShortestFromMST[iNodeAdd]]
+            k = edge.get_end_node(iNodeAdd).id
+            nodeStart, nodeEnd = edge.sort2(edge.start_node, edge.end_node)  # Returns NODES NOT ID
+            eNew = edge.copy(nodeStart, nodeEnd)
+            #
+            mst_net.addEdge(eNew)
+            rankInMST[iNodeAdd] = rankInMST[k] + 1
+            if rankInMST[iNodeAdd] < 0:
+                print("problem")
+            idsNodeInMST.append(iNodeAdd)
+
+            # update arrays
+            # print(str(iNodeAdd))
+            # print("1166: linkedWithMST: "+str(linkedWithMST))
+            linkedWithMST.remove(iNodeAdd)
+            # print("1168: linkedWithMST: "+str(linkedWithMST))
+            node = self.nodes[iNodeAdd]
+            for edge in node.edges:
+                k = edge.idNodeEnd(iNodeAdd)
+                if rankInMST[k] < 0:
+                    if not (k in linkedWithMST):
+                        if (k in linkedWithMST) or (k in idsNodeInMST):
+                            print("problem: k=" + str(k) + ", rank=" + str(rankInMST[k]))
+                            print(str(linkedWithMST))
+                            print(idsNodeInMST)
+                        linkedWithMST.append(k)
+                        idEdgeShortestFromMST[k] = edge.id
+                    else:
+                        edge1 = self.edges[idEdgeShortestFromMST[k]]
+                        if edge.recombination_rate < edge1.recombination_rate:
+                            idEdgeShortestFromMST[k] = edge.id
+            if bPrintDetails:
+                print("in MST " + str(len(idsNodeInMST)) + " of n=" + str(len(self.nodes)))
+            if bStop:
+                linkedWithMST = []
+        if bPrint:
+            print("Minimal spanning tree (MST) for net with nNodes=" + str(len(self.nodes)) + " and nEdges=" + str(
+                len(self.edges)) + "...Finished")
+            if bPrintDetails:
+                idsNodeInMST.sort()
+                print(str(idsNodeInMST))
+                print(str(rankInMST))
+        return mst_net
 
     """
     print the network to pajek file
@@ -275,106 +371,6 @@ class Network:
                 for c in clusters:
                     print(" " + str(len(c)) + ": " + str(c))
         return clusters, in_cluster
-
-    """
-    find mst fo this network
-    """
-
-    def MST(self, bPrint=False, bPrintDetails=False):
-        mst_net = Network()
-        for i, node in enumerate(self.nodes):
-            mst_net.addNode(node.copy(i))
-
-        if len(self.edges) < 1:
-            return mst_net
-
-        # rank in MST
-        rankInMST = [-1] * len(self.nodes)
-        idEdgeShortestFromMST = [-1] * len(self.nodes)
-        if bPrint:
-            print("Minimal spanning tree (MST) for net with nNodes=" + str(len(self.nodes)) + " and nEdges=" + str(
-                len(self.edges)) + "...")
-        '''
-        idEdgeShortest=0
-        lenMin=self.edge[idEdgeShortest].val  #val = recombinationRate
-        for e in self.edge:
-            if e.val<lenMin:
-                idEdgeShortest=e.id
-                lenMin=e.val
-        idV=self.edge[idEdgeShortest].idStart >=0 and e.idEnd
-        '''
-        i = 0
-        rankInMST[i] = 0  # rankInMST[i] = r = 0
-        linkedWithMST = []
-        node = self.nodes[i]
-        idsNodeInMST = [i]
-        for edge in node.edges:
-            end_node_id = edge.get_end_node(node).id  # k = edge.idNodeEnd(i) #
-            if end_node_id > i:
-                linkedWithMST.append(end_node_id)
-                idEdgeShortestFromMST[end_node_id] = edge.id
-
-        # print("1138: linkedWithMST: "+str(linkedWithMST))
-        # print("ne="+str(len(m.edges))+" N="+str(len(linkedWithMST)))
-        while len(linkedWithMST) > 0:
-            bStop = False
-            iNodeAdd = linkedWithMST[0]
-            minLength = self.edges[idEdgeShortestFromMST[iNodeAdd]].recombination_rate
-            for i in linkedWithMST:
-                myLen = self.edges[idEdgeShortestFromMST[i]].recombination_rate
-                if i in idsNodeInMST:
-                    print("problem here: i=" + str(i))
-                    bStop = True
-                    print("idsNodeInMST: " + str(idsNodeInMST))
-                    print("linkedWithMST: " + str(linkedWithMST))
-                if minLength > myLen:
-                    minLength = myLen
-                    iNodeAdd = i
-
-            # add
-            edge = self.edges[idEdgeShortestFromMST[iNodeAdd]]
-            k = edge.get_end_node(iNodeAdd).id
-            idStart, idEnd = edge.sort2(edge.start_node, edge.end_node) #ReturnS NODES NOT ID
-            eNew = edge.copy(idStart, idEnd)
-            #
-            mst_net.addEdge(eNew)
-            rankInMST[iNodeAdd] = rankInMST[k] + 1
-            if rankInMST[iNodeAdd] < 0:
-                print("problem")
-            idsNodeInMST.append(iNodeAdd)
-
-            # update arrays
-            # print(str(iNodeAdd))
-            # print("1166: linkedWithMST: "+str(linkedWithMST))
-            linkedWithMST.remove(iNodeAdd)
-            # print("1168: linkedWithMST: "+str(linkedWithMST))
-            node = self.nodes[iNodeAdd]
-            for edge in node.edges:
-                k = edge.idNodeEnd(iNodeAdd)
-                if rankInMST[k] < 0:
-                    if not (k in linkedWithMST):
-                        if (k in linkedWithMST) or (k in idsNodeInMST):
-                            print("problem: k=" + str(k) + ", rank=" + str(rankInMST[k]))
-                            print(str(linkedWithMST))
-                            print(idsNodeInMST)
-                        linkedWithMST.append(k)
-                        idEdgeShortestFromMST[k] = edge.id
-                    else:
-                        edge1 = self.edges[idEdgeShortestFromMST[k]]
-                        if edge.recombination_rate < edge1.recombination_rate:
-                            idEdgeShortestFromMST[k] = edge.id
-            if bPrintDetails:
-                print("in MST " + str(len(idsNodeInMST)) + " of n=" + str(len(self.nodes)))
-            if bStop:
-                linkedWithMST = []
-        if bPrint:
-            print("Minimal spanning tree (MST) for net with nNodes=" + str(len(self.nodes)) + " and nEdges=" + str(
-                len(self.edges)) + "...Finished")
-            if bPrintDetails:
-                idsNodeInMST.sort()
-                print(str(idsNodeInMST))
-                print(str(rankInMST))
-        return mst_net
 
     """
     calculate the rank of nodes bya7as to another node that we chose (idNodeStart)
