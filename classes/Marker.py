@@ -54,3 +54,6 @@ class Marker:
         :return:
         """
         print("Stats")
+
+    def __eq__(self, other):
+        return self.id == other.id and self.name == other.name

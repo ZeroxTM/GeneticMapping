@@ -1,6 +1,7 @@
 """
 Genetic map network structure
 """
+import copy
 import itertools
 
 from Macros import calculate_recombination_rate
@@ -49,7 +50,7 @@ class Network:
             print("\nAdding nodes to network from linkage: " + str(linkage_group.id) + "\n")
             for marker in linkage_group.markers:
                 node_id += 1
-                self.addNode(Node(id=node_id, index=marker.id, marker=marker))
+                self.addNode(Node(id=node_id, index=marker.id, marker=marker, edges=[]))
         print("\nDone Adding Nodes to the network!")
         print("\nAdding edges to the network ..\n")
         for linkage_group in linkage_groups:
@@ -70,7 +71,8 @@ class Network:
                         node1.add_edge(edge)
                         node2.add_edge(edge)
                         print("Added edge to nodes[" + str(node1.id) + "," + str(node2.id) + "]")
-
+        print("Network was built successfully")
+        print(f"Network:\n\t#Nodes: {len(self.nodes)}\n\t#Edges:{len(self.edges)}")
         """
         combinations = itertools.combinations(self.nodes, 2)
         for comb in combinations:
@@ -101,6 +103,11 @@ class Network:
     #       s = ' ' + str(nEdges)
     #   file.write("*Edges" + s + '\n')
 
+    def get_node(self, node_id):
+        for node in self.nodes:
+            if node.id == node_id:
+                return node
+
     """
         find mst fo this network
         """
@@ -108,7 +115,7 @@ class Network:
     def calc_MST_net(self, bPrint=False, bPrintDetails=False):
         mst_net = Network(nodes=[], edges=[], mst=None, skeleton=None, cutoff=0.5)
         for i, node in enumerate(self.nodes):
-            mst_net.addNode(node.copy(i))
+            mst_net.addNode(node.copy(i, edges=[]))
 
         if len(self.edges) < 1:
             return mst_net
@@ -119,15 +126,7 @@ class Network:
         if bPrint:
             print("Minimal spanning tree (MST) for net with nNodes=" + str(len(self.nodes)) + " and nEdges=" + str(
                 len(self.edges)) + "...")
-        '''
-        idEdgeShortest=0
-        lenMin=self.edge[idEdgeShortest].val  #val = recombinationRate
-        for e in self.edge:
-            if e.val<lenMin:
-                idEdgeShortest=e.id
-                lenMin=e.val
-        idV=self.edge[idEdgeShortest].idStart >=0 and e.idEnd
-        '''
+
         i = 0
         rankInMST[i] = 0  # rankInMST[i] = r = 0
         linkedWithMST = []
@@ -139,8 +138,6 @@ class Network:
                 linkedWithMST.append(end_node_id)
                 idEdgeShortestFromMST[end_node_id] = edge.id
 
-        # print("1138: linkedWithMST: "+str(linkedWithMST))
-        # print("ne="+str(len(m.edges))+" N="+str(len(linkedWithMST)))
         while len(linkedWithMST) > 0:
             bStop = False
             iNodeAdd = linkedWithMST[0]
@@ -158,24 +155,26 @@ class Network:
 
             # add
             edge = self.edges[idEdgeShortestFromMST[iNodeAdd]]
-            k = edge.get_end_node(iNodeAdd).id
-            nodeStart, nodeEnd = edge.sort2(edge.start_node, edge.end_node)  # Returns NODES NOT ID
+            k = edge.get_end_node(mst_net.get_node(iNodeAdd)).id
+            nodeStart, nodeEnd = Edge.sort2(edge.start_node, edge.end_node)  # Returns NODES NOT ID
+            #### Find MST net reference of Start and End that is identical to Net node
+            nodeStart = mst_net.nodes[nodeStart.id]
+            nodeEnd = mst_net.nodes[nodeEnd.id]
+
             eNew = edge.copy(nodeStart, nodeEnd)
             #
             mst_net.addEdge(eNew)
+            nodeStart.add_edge(eNew)
+            nodeEnd.add_edge(eNew)
             rankInMST[iNodeAdd] = rankInMST[k] + 1
             if rankInMST[iNodeAdd] < 0:
                 print("problem")
             idsNodeInMST.append(iNodeAdd)
-
-            # update arrays
-            # print(str(iNodeAdd))
-            # print("1166: linkedWithMST: "+str(linkedWithMST))
             linkedWithMST.remove(iNodeAdd)
-            # print("1168: linkedWithMST: "+str(linkedWithMST))
             node = self.nodes[iNodeAdd]
+
             for edge in node.edges:
-                k = edge.idNodeEnd(iNodeAdd)
+                k = edge.get_end_node(mst_net.get_node(iNodeAdd)).id
                 if rankInMST[k] < 0:
                     if not (k in linkedWithMST):
                         if (k in linkedWithMST) or (k in idsNodeInMST):
@@ -194,7 +193,7 @@ class Network:
                 linkedWithMST = []
         if bPrint:
             print("Minimal spanning tree (MST) for net with nNodes=" + str(len(self.nodes)) + " and nEdges=" + str(
-                len(self.edges)) + "...Finished")
+                len(self.edges)) + f"...Finished \n\t#Nodes in MST: {len(mst_net.nodes)}\n\t#Edges in MST: {len(mst_net.edges)}")
             if bPrintDetails:
                 idsNodeInMST.sort()
                 print(str(idsNodeInMST))

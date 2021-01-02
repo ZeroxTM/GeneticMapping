@@ -3,3 +3,4 @@ class Data:
     mod_alleles_dict = dict()
     markers = list()
     linkage_groups = dict()
+    network = None

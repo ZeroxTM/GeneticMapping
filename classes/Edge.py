@@ -119,16 +119,19 @@ class Edge:
         """
         if self.start_node == start_node:
             return self.end_node
-        else:
+        elif self.end_node == start_node:
             return self.start_node
+        else:
+            return 0
 
     # undirected edge
     def __eq__(self, other):
         return self.id == other.id or (self.start_node == other.start_node and self.end_node == other.end_node) or \
                (self.start_node == other.end_node and self.end_node == other.start_node)
 
-    def sort2(self, a, b):
-        return a, b if a.id <= b.id else b, a
+    @staticmethod
+    def sort2(node1, node2):
+        return (node1, node2) if node1.id <= node2.id else (node2, node1)
 
     def check(self):
         print()

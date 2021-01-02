@@ -1,4 +1,3 @@
-
 class Node:
     def __init__(self, id=-1, index=-1, marker=None, edges=[], caption="", bCoorKnown=False, x=0, y=0, ic="red",
                  bc="black", shape="ellipse"):
@@ -20,8 +19,10 @@ class Node:
         self.bc = bc
         self.shape = shape
 
-    def copy(self, idSet):
-        return Node(id=idSet, index=self.index, marker=self.marker, edges=self.edges, caption=self.caption,
+    def copy(self, idSet, edges=None):
+        if edges is None:
+            edges = self.edges
+        return Node(id=idSet, index=self.index, marker=self.marker, edges=edges, caption=self.caption,
                     bCoorKnown=self.bCoorKnown, x=self.x, y=self.y, ic=self.ic, bc=self.bc, shape=self.shape)
 
     def edge_exist_to_node(self, node):  # def bExistEdgeToNodeID(self,idTo):

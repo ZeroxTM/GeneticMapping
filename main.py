@@ -167,6 +167,10 @@ class main(QMainWindow):
         self.ui.rename_alleles_btn.hide()
         self.ui.export_alleles_btn.hide()
         self.ui.draw_network_btn.clicked.connect(NetworkTabController.build_network)
+        self.ui.calc_mst_btn.clicked.connect(NetworkTabController.calculate_mst)
+        self.ui.calc_mst_btn.setEnabled(False)
+        self.ui.draw_pajek_btn.setEnabled(False)
+        self.ui.subdivide_btn.setEnabled(False)
 
     def disable_tabs(self):
         for i in range(1, 6):
