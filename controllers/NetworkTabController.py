@@ -49,7 +49,7 @@ class NetworkTabController:
 
     @staticmethod
     def subdivide_network():
-        # subdivided_net = Data.network.singleLinkageClustering()
+        Data.network.idNodesOnPathLongest()
         pass
 
     @staticmethod
@@ -77,7 +77,7 @@ class NetworkTabController:
         if plot:
             Network.print_pajek_network(plot_net=to_plot, sFileName="output.net")
             pajek_path = os.getcwd() + '\Pajek64\Pajek.exe'
-            subprocess.Popen([pajek_path, r'output.net'])
+            subprocess.Popen([pajek_path, r'networks/output.net'])
             time.sleep(5)
         # (x, y) = pyautogui.position()
     # pyautogui.click(pyautogui.locateCenterOnScreen('icon.png'))

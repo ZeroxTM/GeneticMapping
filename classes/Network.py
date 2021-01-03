@@ -33,9 +33,6 @@ class Network:
         self.skeleton = skeleton
         self.cutoff = cutoff
 
-    def calcRanksOfNodes(self, idNodeStart, bPrint):
-        pass
-
     def checkConnection(self):
         print()
 
@@ -255,7 +252,7 @@ class Network:
                     for j in current_set:
                         node = self.nodes[j]
                         for edge in node.edges:
-                            k = edge.idNodeEnd(j)
+                            k = edge.get_end_node(node).id
                             if in_cluster[k] < 0:
                                 if edge.recombination_rate <= cutoff:
                                     next_set.append(k)
@@ -283,11 +280,9 @@ class Network:
     """
     calculate the rank of nodes bya7as to another node that we chose (idNodeStart)
     """
-
-    def calcRanksOfNodes(self, idNodeStart, bPrint):
+    def calcRanksOfNodes(self, idNodeStart):
         rank = [-1] * len(self.nodes)
-        if bPrint:
-            print("calcRanksOfNodes=" + str(len(self.nodes)) + " and nEdges=" + str(len(self.edges)) + "...")
+        print("calcRanksOfNodes=" + str(len(self.nodes)) + " and nEdges=" + str(len(self.edges)) + "...")
         rank[idNodeStart] = 0
         currentSet = [idNodeStart]
         # set=[idNodeStart]
@@ -298,7 +293,7 @@ class Network:
             for j in currentSet:
                 node = self.nodes[j]
                 for edge in node.edges:
-                    k = edge.idNodeEnd(j)
+                    k = edge.get_end_node(node).id
                     if rank[k] < 0:
                         nextSet.append(k)
                         rank[k] = r + 1
@@ -319,25 +314,23 @@ class Network:
             # rank[i]
             withRank[rank[i]].append(i)
         # print("withRank: "+str(withRank))
-        if bPrint:
-            print("rankMax: " + str(rankMax))
-            print("calcRanksOfNodes=" + str(len(self.nodes)) + " and nEdges=" + str(len(self.edges)) + "...Finished")
+
+        print(f"rankMax: {str(rankMax)} \n rank: {rank} \n withRank: {withRank}")
+        print("calcRanksOfNodes=" + str(len(self.nodes)) + " and nEdges=" + str(len(self.edges)) + "...Finished\n")
         return rank, rankMax, withRank
 
     """
     Find which nodes are on the longest path of mst
     """
-
-    def idNodesOnPathLongest(self, bPrint=False, bPrintDetails=False):
-        if bPrint:
-            print("idNodesOnPathLongest for net of " + str(len(self.nodes)) + " nodes...")
-        netMST = self.MST(bPrint=False, bPrintDetails=False)
-        rank, rankMax, withRank = netMST.calcRanksOfNodes(0, False)
+    def idNodesOnPathLongest(self, bPrintDetails=False):
+        print("idNodesOnPathLongest for net of " + str(len(self.nodes)) + " nodes...")
+        mst_net = self.calc_MST_net()
+        rank, rankMax, withRank = mst_net.calcRanksOfNodes(self.nodes[0].id)
         starts = withRank[rankMax]
         myList = []
         argMax = -1
         for start in starts:
-            rank, rankMax, withRank = netMST.calcRanksOfNodes(start, False)
+            rank, rankMax, withRank = mst_net.calcRanksOfNodes(self.nodes[start].id)
             if argMax < 1:
                 argMax = 0
                 myList = [rank, rankMax, withRank]
@@ -352,8 +345,8 @@ class Network:
         r = rankMax
         while r > 0:
             idNodeNext = -1
-            for edge in netMST.nodes[idNode].edges:
-                k = edge.idNodeEnd(idNode)
+            for edge in mst_net.nodes[idNode].edges:
+                k = edge.get_end_node(mst_net.nodes[idNode]).id
                 if rank[k] < r:
                     idNodeNext = k
             idNodes.append(idNodeNext)
@@ -370,33 +363,13 @@ class Network:
                 print(str(i) + " " + str(id) + " " + self.nodes[id].caption)
         # begin: NODE_11323_length_3805_cov_2.15481_B0
         # end: NODE_7765_length_7967_cov_2.01428_B0
-        if bPrint:
-            print("idNodesOnPathLongest for net of " + str(len(self.nodes)) + " nodes...Finished")
+        print("idNodesOnPathLongest for net of " + str(len(self.nodes)) + " nodes...\n"+str(idNodes)+"\nFinished\n")
+        print(len(idNodes))
         return idNodes
-
-    """
-    after clusterization, we can write that cluster(linkage group) to pajek file
-    """
-
-    def printToFilePajek_allCluster(self, dMax, sName, clusters, inCluster, sPath):
-        sFileName = sPath + sName + "_in_" + str(len(clusters)) + "_Clusters.txt"
-        # file = open(sFileName, 'w')
-        with open(sFileName, 'w') as file:
-            file.write("i\tmarker\tLG\tn\n")
-            for i in range(len(self.nodes)):
-                file.write(str(i) + '\t' + self.nodes[i].caption + '\t' + str(inCluster[i]) + '\t' + str(
-                    len(clusters[inCluster[i]])) + '\n')
-        # file.close()
-        n = len(clusters)
-        for i in range(n):
-            sFileNamePajekPP = sPath + sName + "_cl" + str(i + 1) + "_" + str(len(clusters[i])) + ".net"
-            self.printToFilePajek__selectedNodesOnly(sFileNamePajekPP, dMax, clusters[i], True, False)
-        print("all clusters are printed")
 
     """
     retuns all nodes that these nodes doesn't have a prove with edges 5offot ?
     """
-
     def nodesIDUnprovenByParallelpaths(self, cutoff, cutoffParallel):
         ids = []
         print("nodesIDUnprovenByParallelpaths...")
@@ -404,7 +377,7 @@ class Network:
             n_nodes = []
             for edge in node.edges:
                 if edge.recombination_rate <= cutoff:
-                    k = edge.idNodeEnd(node.id)
+                    k = edge.get_end_node(node).id
                     if not (k in n_nodes):
                         n_nodes.append(k)
             net1 = self.subnet(n_nodes, cutoffParallel)
@@ -435,7 +408,7 @@ class Network:
     """
 
     def subnet(self, ids, cutoff):
-        net = Network()
+        net = Network(nodes=[], edges=[], mst=None, skeleton=None, cutoff=0.5)
         idnew = [-1] * len(self.nodes)
         idsPP = []
         idMy = []
@@ -474,7 +447,7 @@ class Network:
             for edge in self.nodes[j].edges:
                 # print(str(i)+" "+str(idnew[i])+" "+str(idnew[k])+" "+str(k))
                 if edge.recombination_rate <= cutoff:
-                    k = edge.idNodeEnd(j)
+                    k = edge.get_end_node(self.nodes[j]).id
                     if idnew[k] >= 0:
                         # print(str(i)+" "+str(idnew[j])+" "+str(idnew[k])+" "+str(k))
                         if idnew[j] < idnew[k]:
