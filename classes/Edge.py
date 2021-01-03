@@ -53,7 +53,7 @@ class Edge:
         # Validate the width of the edge
         if self.width > 0:
             sw = " w " + str(self.width)
-        s = str(self.start_node.id) + ' ' + str(self.end_node.id)
+        s = str(self.start_node.id+1) + ' ' + str(self.end_node.id)
         bSimple = False
         if bSimple:
             # 2 3 1 c black
@@ -120,6 +120,7 @@ class Edge:
         if self.start_node == start_node:
             return self.end_node
         elif self.end_node == start_node:
+        #else:
             return self.start_node
         else:
             return 0

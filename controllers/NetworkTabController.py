@@ -4,6 +4,7 @@ import subprocess
 import time
 
 import pyautogui
+from PySide2.QtWidgets import QFileDialog, QApplication, QMessageBox
 
 from Data import Data
 from classes.CheckableComboBox import CheckableComboBox
@@ -52,15 +53,36 @@ class NetworkTabController:
 
     @staticmethod
     def subdivide_network():
-        subdivided_net = Data.network.singleLinkageClustering()
+        #subdivided_net = Data.network.singleLinkageClustering()
+        pass
 
     @staticmethod
     def draw_pajek():
-        Data.network.print_pajek_network("output.net")
-        pajek_path = os.getcwd() + '\Pajek64\Pajek.exe'
-        subprocess.Popen([pajek_path, r'output.net'])
+        msgBox = QMessageBox(QApplication.activeWindow())
+        msgBox.setText("Plot network with Pajek")
+        msgBox.setInformativeText("Which network would you like to plot?")
+        net_plot = msgBox.addButton("Network", QMessageBox.ActionRole)
+        mst_plot = msgBox.addButton("MST of Network", QMessageBox.ActionRole)
+        plot = True
+        if Data.network.mst == None:
+            msgBox.removeButton(msgBox.buttons()[1])
+        msgBox.addButton(QMessageBox.Cancel)
+        msgBox.exec_()
+        if msgBox.clickedButton() == net_plot:
+            to_plot = Data.network
+            print("Plotting network with Pajek...")
+        elif msgBox.clickedButton() == mst_plot:
+            to_plot = Data.network.mst
+            print("Plotting MST with Pajek...")
+        else:
+            plot = False
+            print("Cancel")
 
-        time.sleep(3)
+        if plot:
+            Network.print_pajek_network(plot_net= to_plot,sFileName="output.net")
+            pajek_path = os.getcwd() + '\Pajek64\Pajek.exe'
+            subprocess.Popen([pajek_path, r'output.net'])
+            time.sleep(5)
         #(x, y) = pyautogui.position()
        # pyautogui.click(pyautogui.locateCenterOnScreen('icon.png'))
        # pyautogui.moveTo(x, y)

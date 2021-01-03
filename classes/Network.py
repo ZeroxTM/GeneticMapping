@@ -51,7 +51,7 @@ class Network:
         :return:
         """
         id = -1
-        node_id = 0
+        node_id = -1
         print("\nAdding Nodes to the network ..\n")
         random.shuffle(Network.pajek_color)
         for i, linkage_group in enumerate(linkage_groups):
@@ -129,8 +129,8 @@ class Network:
             return mst_net
 
         # rank in MST
-        rankInMST = [-1] * len(self.nodes)
-        idEdgeShortestFromMST = [-1] * len(self.nodes)
+        rankInMST = [-1] * (len(self.nodes))
+        idEdgeShortestFromMST = [-1] * (len(self.nodes))
         if bPrint:
             print("Minimal spanning tree (MST) for net with nNodes=" + str(len(self.nodes)) + " and nEdges=" + str(
                 len(self.edges)) + "...")
@@ -212,8 +212,8 @@ class Network:
     """
     print the network to pajek file
     """
-
-    def print_pajek_network(self, sFileName, bPrint=False, bPrintDetails=False):
+    @staticmethod
+    def print_pajek_network(plot_net, sFileName='output.net', bPrint=False, bPrintDetails=False):
         # *Network
         # *Vertices 3
         # 1 "pe0" ic LightGreen 0.5 0.5 box
@@ -229,10 +229,10 @@ class Network:
         with open(sFileName, 'w') as file:
             # Print Pajek file header
             file.write("*Network" + '\n')
-            file.write("*Vertices " + str(len(self.nodes)) + '\n')
+            file.write("*Vertices " + str(len(plot_net.nodes)) + '\n')
 
             # Print nodes data
-            for node in self.nodes:
+            for node in plot_net.nodes:
                 file.write(node.get_node_data() + '\n')
 
             # Printing edges to pajek file
@@ -241,15 +241,15 @@ class Network:
             #   if (dMax < 0 or edge.recombination_rate <= dMax) and (edge.start_node < edge.end_node):
             #      i += 1
 
-            file.write("*Edges " + str(len(self.edges)) + '\n')
-            for i, edge in enumerate(self.edges):
+            file.write("*Edges " + str(len(plot_net.edges)) + '\n')
+            for i, edge in enumerate(plot_net.edges):
                 # if (dMax < 0 or edge.recombination_rate <= dMax) and (edge.start_node < edge.end_node):
                 file.write(edge.get_edge_data())
                 # edge.printToFilePajek(file, edge.start_node + 1, edge.end_node + 1)
 
-                if bPrintDetails and len(self.edges) > 10000:
+                if bPrintDetails and len(plot_net.edges) > 10000:
                     if i % 1000 == 1:
-                        print(str(i) + " of " + str(len(self.edges)) + " edges are processed")
+                        print(str(i) + " of " + str(len(plot_net.edges)) + " edges are processed")
 
         if bPrint:
             print("print net to file " + sFileName + "...Finished")

@@ -42,7 +42,7 @@ class Node:
     def get_node_data(self):
         # 1 "pe0" ic LightGreen 0.5 0.5 box
         # 1 "NODE_1000_length_42440_cov_2.75993_B0" 16.165 -0.638 sh ellipse x_fact 1 y_fact 1 ic red bc black
-        s = str(self.id) + " \"" + self.caption + "\"" # s = str(self.index) + " \"" + self.caption + "\""
+        s = str(self.id+1) + " \"" + self.caption + "\"" # s = str(self.index) + " \"" + self.caption + "\""
         if self.bCoorKnown:
             s += ' ' + str(self.x)
             s += ' ' + str(self.y)
