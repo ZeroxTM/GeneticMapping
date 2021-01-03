@@ -4,6 +4,7 @@ import subprocess
 import time
 
 import pyautogui
+from PySide2 import QtCore
 from PySide2.QtWidgets import QFileDialog, QApplication, QMessageBox
 
 from Data import Data
@@ -14,10 +15,11 @@ from classes.Network import Network
 class NetworkTabController:
     ui = None
     linkages_comboBox = None
+    linkages_selected = list()
 
     @staticmethod
     def initialize_combobox(linkage_groups):
-        NetworkTabController.linkages_comboBox = CheckableComboBox(NetworkTabController.ui.linkages_comboBox)
+        #NetworkTabController.linkages_comboBox = CheckableComboBox(NetworkTabController.ui.linkages_comboBox)
         NetworkTabController.linkages_comboBox.addItem("Select linkages for drawing", checkable=False)
         for key in list(linkage_groups.keys()):
             NetworkTabController.linkages_comboBox.addItem(
@@ -31,29 +33,23 @@ class NetworkTabController:
         print("Selected linakge groups:" + str(selected_linkages_ids))
         print(Data.linkage_groups.values())
         print(Data.linkage_groups.keys())
-        if len(selected_linkages_ids) > 0:
-            for i in range(0, len(list(Data.linkage_groups))+1):
-                if i in selected_linkages_ids:
-                    selected_linkages.append(list(Data.linkage_groups.values())[i-1])
-            print(selected_linkages)
-            net.initialize_network(selected_linkages)
-            Data.network = net
-            NetworkTabController.ui.calc_mst_btn.setEnabled(True)
-            NetworkTabController.ui.draw_pajek_btn.setEnabled(True)
-            NetworkTabController.ui.subdivide_btn.setEnabled(True)
-        else:
-            print("No linkages were selected")
-            NetworkTabController.ui.calc_mst_btn.setEnabled(False)
-            NetworkTabController.ui.draw_pajek_btn.setEnabled(False)
-            NetworkTabController.ui.subdivide_btn.setEnabled(False)
+        for i in range(0, len(list(Data.linkage_groups)) + 1):
+            if i in selected_linkages_ids:
+                selected_linkages.append(list(Data.linkage_groups.values())[i - 1])
+        print(selected_linkages)
+        net.initialize_network(selected_linkages)
+        Data.network = net
+        NetworkTabController.ui.calc_mst_btn.setEnabled(True)
+        NetworkTabController.ui.draw_pajek_btn.setEnabled(True)
+        NetworkTabController.ui.subdivide_btn.setEnabled(True)
 
     @staticmethod
     def calculate_mst():
-        Data.network.mst = Data.network.calc_MST_net(bPrint=True,bPrintDetails=True)
+        Data.network.mst = Data.network.calc_MST_net(bPrint=True, bPrintDetails=True)
 
     @staticmethod
     def subdivide_network():
-        #subdivided_net = Data.network.singleLinkageClustering()
+        # subdivided_net = Data.network.singleLinkageClustering()
         pass
 
     @staticmethod
@@ -79,11 +75,10 @@ class NetworkTabController:
             print("Cancel")
 
         if plot:
-            Network.print_pajek_network(plot_net= to_plot,sFileName="output.net")
+            Network.print_pajek_network(plot_net=to_plot, sFileName="output.net")
             pajek_path = os.getcwd() + '\Pajek64\Pajek.exe'
             subprocess.Popen([pajek_path, r'output.net'])
             time.sleep(5)
-        #(x, y) = pyautogui.position()
-       # pyautogui.click(pyautogui.locateCenterOnScreen('icon.png'))
-       # pyautogui.moveTo(x, y)
-
+        # (x, y) = pyautogui.position()
+    # pyautogui.click(pyautogui.locateCenterOnScreen('icon.png'))
+    # pyautogui.moveTo(x, y)

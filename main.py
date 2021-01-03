@@ -11,6 +11,7 @@ from PySide2.QtUiTools import QUiLoader
 from PySide2.QtWidgets import QApplication, QMainWindow, QFileSystemModel, QFileDialog
 from pajek_tools import PajekWriter
 
+from classes.CheckableComboBox import CheckableComboBox
 from classes.LinkageGroup import LinkageGroup
 from controllers.NetworkTabController import NetworkTabController
 from controllers.FileBrowserController import FileBrowserController
@@ -38,6 +39,8 @@ class main(QMainWindow):
         ui_file.close()
 
     def set_menu_functionality(self):
+        NetworkTabController.linkages_comboBox = CheckableComboBox(self.ui.linkages_comboBox)
+        NetworkTabController.linkages_comboBox.ComboBox.view().pressed.connect(self.handleItemPressed)
         self.ui.actionImport_Map_Data.triggered.connect(self.import_file)
         self.ui.actionQuit.triggered.connect(self.ui.close)
         self.ui.markersTable.setMouseTracking(True)
@@ -51,6 +54,29 @@ class main(QMainWindow):
         self.ui.mainTabs.blockSignals(False)
         self.ui.actionOpen_Graph_with_Pajek.triggered.connect(self.load_pajek)
 
+    def handleItemPressed(self, index):
+        item = self.ui.linkages_comboBox.model().itemFromIndex(index)
+        linkage_name = item.text().split()[1]
+        if index.row() != 0:
+            if item.checkState() == QtCore.Qt.Checked:
+                if linkage_name in NetworkTabController.linkages_selected:
+                    NetworkTabController.linkages_selected.remove(linkage_name)
+                self.display_linkages()
+                item.setCheckState(QtCore.Qt.Unchecked)
+                self.ui.draw_network_btn.setEnabled(False)
+                self.ui.calc_mst_btn.setEnabled(False)
+                self.ui.draw_pajek_btn.setEnabled(False)
+                self.ui.subdivide_btn.setEnabled(False)
+            else:
+                if linkage_name not in NetworkTabController.linkages_selected:
+                    NetworkTabController.linkages_selected.append(linkage_name)
+                self.display_linkages()
+                item.setCheckState(QtCore.Qt.Checked)
+                self.ui.draw_network_btn.setEnabled(True)
+
+    def display_linkages(self):
+        self.ui.selected_linkages_textEdit.setText(', '.join(NetworkTabController.linkages_selected))
+        self.ui.total_markers_textEdit.setText(str(len(NetworkTabController.linkages_selected)))
     @Slot()
     def load_pajek(self):
         df = pd.DataFrame([["a", "b"], ["a", "c"], ["c", "a"], ["c", "d"], ["a", "d"], ["b", "p"], ["z", "c"],
@@ -170,6 +196,7 @@ class main(QMainWindow):
         self.ui.calc_mst_btn.clicked.connect(NetworkTabController.calculate_mst)
         self.ui.subdivide_btn.clicked.connect(NetworkTabController.subdivide_network)
         self.ui.draw_pajek_btn.clicked.connect(NetworkTabController.draw_pajek)
+        self.ui.draw_network_btn.setEnabled(False)
         self.ui.calc_mst_btn.setEnabled(False)
         self.ui.draw_pajek_btn.setEnabled(False)
         self.ui.subdivide_btn.setEnabled(False)
