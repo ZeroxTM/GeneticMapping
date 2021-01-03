@@ -25,16 +25,16 @@ class Edge:
 
     def colorGet(self, r):
         if r <= 0.01:
-            return "black"
+            return "Black"
         if r <= 0.03:
-            return "blue"
+            return "Blue"
         if r <= 0.05:
-            return "red"
+            return "Red"
         if r <= 0.1:
             return "LightGreen"
         if r <= 0.15:
-            return "yellow"
-        return "white"  # "LightGray"
+            return "Yellow"
+        return "White"  # "LightGray"
 
     def get_edge_data(self):
         """
@@ -53,7 +53,7 @@ class Edge:
         # Validate the width of the edge
         if self.width > 0:
             sw = " w " + str(self.width)
-        s = str(self.start_node) + ' ' + str(self.end_node)
+        s = str(self.start_node.id) + ' ' + str(self.end_node.id)
         bSimple = False
         if bSimple:
             # 2 3 1 c black
@@ -90,7 +90,7 @@ class Edge:
         # 19 182 0.15 w 1 c yellow p Solid l ""
         split_line = line.split(' ')
 
-        color = "black"
+        color = "Black"
         width = 1
         shape = "Solid"
         description = ""

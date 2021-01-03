@@ -3,6 +3,7 @@ Genetic map network structure
 """
 import copy
 import itertools
+import random
 
 from Macros import calculate_recombination_rate
 from classes.Edge import Edge
@@ -11,6 +12,12 @@ from classes.Node import Node
 
 
 class Network:
+    pajek_color = ['GreenYellow', 'Yellow', 'Goldenrod', 'Dandelion', 'Apricot', 'Peach', 'Melon', 'YellowOrange',
+                   'Orange', 'BurntOrange', 'Bittersweet', 'RedOrange', 'Mahogany', 'Red', 'OrangeRed', 'RubineRed',
+                   'WildStrawberry', 'Fuchsia', 'Lavender', 'Thistle', 'Orchid', 'DarkOrchid', 'Purple', 'Plum',
+                   'Violet', 'RoyalPurple', 'BlueViolet', 'Periwinkle', 'CadetBlue', 'CornflowerBlue', 'MidnightBlue',
+                   'NavyBlue', 'RoyalBlue', 'Blue', 'Cerulean', 'Cyan', 'ProcessBlue', 'SkyBlue']
+
     def __init__(self, nodes=[], edges=[], mst=None, skeleton=None, cutoff=0.5):
         """
         Genetic map network initialization
@@ -44,13 +51,14 @@ class Network:
         :return:
         """
         id = -1
-        node_id = -1
+        node_id = 0
         print("\nAdding Nodes to the network ..\n")
-        for linkage_group in linkage_groups:
+        random.shuffle(Network.pajek_color)
+        for i, linkage_group in enumerate(linkage_groups):
             print("\nAdding nodes to network from linkage: " + str(linkage_group.id) + "\n")
             for marker in linkage_group.markers:
                 node_id += 1
-                self.addNode(Node(id=node_id, index=marker.id, marker=marker, edges=[]))
+                self.addNode(Node(id=node_id, index=marker.id, marker=marker, edges=[], ic=Network.pajek_color[i]))
         print("\nDone Adding Nodes to the network!")
         print("\nAdding edges to the network ..\n")
         for linkage_group in linkage_groups:
@@ -193,7 +201,8 @@ class Network:
                 linkedWithMST = []
         if bPrint:
             print("Minimal spanning tree (MST) for net with nNodes=" + str(len(self.nodes)) + " and nEdges=" + str(
-                len(self.edges)) + f"...Finished \n\t#Nodes in MST: {len(mst_net.nodes)}\n\t#Edges in MST: {len(mst_net.edges)}")
+                len(
+                    self.edges)) + f"...Finished \n\t#Nodes in MST: {len(mst_net.nodes)}\n\t#Edges in MST: {len(mst_net.edges)}")
             if bPrintDetails:
                 idsNodeInMST.sort()
                 print(str(idsNodeInMST))
@@ -215,8 +224,7 @@ class Network:
         # 1 3 -1 c red
         # *Edges
         # 2 3 1 c black w 1
-        if bPrint:
-            print("\nprint net to file " + sFileName + "...\n")
+        print("\nPrinting network to file " + sFileName + "...\n")
 
         with open(sFileName, 'w') as file:
             # Print Pajek file header

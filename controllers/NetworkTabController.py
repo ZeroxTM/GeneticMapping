@@ -1,4 +1,9 @@
 import copy
+import os
+import subprocess
+import time
+
+import pyautogui
 
 from Data import Data
 from classes.CheckableComboBox import CheckableComboBox
@@ -44,4 +49,19 @@ class NetworkTabController:
     @staticmethod
     def calculate_mst():
         Data.network.mst = Data.network.calc_MST_net(bPrint=True,bPrintDetails=True)
+
+    @staticmethod
+    def subdivide_network():
+        subdivided_net = Data.network.singleLinkageClustering()
+
+    @staticmethod
+    def draw_pajek():
+        Data.network.print_pajek_network("output.net")
+        pajek_path = os.getcwd() + '\Pajek64\Pajek.exe'
+        subprocess.Popen([pajek_path, r'output.net'])
+
+        time.sleep(3)
+        #(x, y) = pyautogui.position()
+       # pyautogui.click(pyautogui.locateCenterOnScreen('icon.png'))
+       # pyautogui.moveTo(x, y)
 

@@ -168,6 +168,8 @@ class main(QMainWindow):
         self.ui.export_alleles_btn.hide()
         self.ui.draw_network_btn.clicked.connect(NetworkTabController.build_network)
         self.ui.calc_mst_btn.clicked.connect(NetworkTabController.calculate_mst)
+        self.ui.subdivide_btn.clicked.connect(NetworkTabController.subdivide_network)
+        self.ui.draw_pajek_btn.clicked.connect(NetworkTabController.draw_pajek)
         self.ui.calc_mst_btn.setEnabled(False)
         self.ui.draw_pajek_btn.setEnabled(False)
         self.ui.subdivide_btn.setEnabled(False)

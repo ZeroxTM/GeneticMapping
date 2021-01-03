@@ -1,6 +1,6 @@
 class Node:
-    def __init__(self, id=-1, index=-1, marker=None, edges=[], caption="", bCoorKnown=False, x=0, y=0, ic="red",
-                 bc="black", shape="ellipse"):
+    def __init__(self, id=-1, index=-1, marker=None, edges=[], caption="", bCoorKnown=False, x=0, y=0, ic="Red",
+                 bc="Black", shape="ellipse"):
         """
         Graph node initialization
         :param id: ID of graph node
@@ -42,7 +42,7 @@ class Node:
     def get_node_data(self):
         # 1 "pe0" ic LightGreen 0.5 0.5 box
         # 1 "NODE_1000_length_42440_cov_2.75993_B0" 16.165 -0.638 sh ellipse x_fact 1 y_fact 1 ic red bc black
-        s = str(self.index) + " \"" + self.caption + "\""
+        s = str(self.id) + " \"" + self.caption + "\"" # s = str(self.index) + " \"" + self.caption + "\""
         if self.bCoorKnown:
             s += ' ' + str(self.x)
             s += ' ' + str(self.y)
