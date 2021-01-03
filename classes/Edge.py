@@ -34,7 +34,7 @@ class Edge:
             return "LightGreen"
         if r <= 0.15:
             return "Yellow"
-        return "White"  # "LightGray"
+        return "Gray10"  # "LightGray"
 
     def get_edge_data(self):
         """
@@ -53,7 +53,7 @@ class Edge:
         # Validate the width of the edge
         if self.width > 0:
             sw = " w " + str(self.width)
-        s = str(self.start_node.id+1) + ' ' + str(self.end_node.id)
+        s = str(self.start_node.id+1) + ' ' + str(self.end_node.id+1)
         bSimple = False
         if bSimple:
             # 2 3 1 c black
