@@ -5,10 +5,11 @@ import sys
 import time
 import pandas as pd
 import pyautogui
-from PySide2 import QtWidgets, QtCore
-from PySide2.QtCore import QFile, Slot
+from PySide2 import QtWidgets, QtCore, QtGui
+from PySide2.QtCore import QFile, Slot, Qt
+from PySide2.QtGui import QIcon
 from PySide2.QtUiTools import QUiLoader
-from PySide2.QtWidgets import QApplication, QMainWindow, QFileSystemModel, QFileDialog
+from PySide2.QtWidgets import QApplication, QMainWindow, QFileSystemModel, QFileDialog, QDialog
 from pajek_tools import PajekWriter
 
 from classes.CheckableComboBox import CheckableComboBox
@@ -31,12 +32,12 @@ class main(QMainWindow):
 
     def load_ui(self):
         loader = QUiLoader()
-        path = os.path.join(os.path.dirname(__file__), "form.ui")
-        ui_file = QFile(path)
+        ui_file = QFile(os.path.join(os.path.dirname(__file__), "form.ui"))
         ui_file.open(QFile.ReadOnly)
-        self.ui = loader.load(ui_file, self)
-        self.ui.show()
+        self.ui = loader.load(ui_file)
         ui_file.close()
+        self.ui.show()
+
 
     def set_menu_functionality(self):
         NetworkTabController.linkages_comboBox = CheckableComboBox(self.ui.linkages_comboBox)
@@ -57,10 +58,13 @@ class main(QMainWindow):
     def handleItemPressed(self, index):
         item = self.ui.linkages_comboBox.model().itemFromIndex(index)
         linkage_name = item.text().split()[1]
+        linkages_markers = item.text().split()[6]
         if index.row() != 0:
             if item.checkState() == QtCore.Qt.Checked:
                 if linkage_name in NetworkTabController.linkages_selected:
                     NetworkTabController.linkages_selected.remove(linkage_name)
+                if linkages_markers in NetworkTabController.linkages_markers:
+                    NetworkTabController.linkages_markers.remove(linkages_markers)
                 self.display_linkages()
                 item.setCheckState(QtCore.Qt.Unchecked)
                 self.ui.draw_network_btn.setEnabled(False)
@@ -70,13 +74,19 @@ class main(QMainWindow):
             else:
                 if linkage_name not in NetworkTabController.linkages_selected:
                     NetworkTabController.linkages_selected.append(linkage_name)
+                if linkages_markers not in NetworkTabController.linkages_markers:
+                    NetworkTabController.linkages_markers.append(linkages_markers)
                 self.display_linkages()
                 item.setCheckState(QtCore.Qt.Checked)
                 self.ui.draw_network_btn.setEnabled(True)
 
     def display_linkages(self):
         self.ui.selected_linkages_textEdit.setText(', '.join(NetworkTabController.linkages_selected))
-        self.ui.total_markers_textEdit.setText(str(len(NetworkTabController.linkages_selected)))
+        markers = 0
+        for length in NetworkTabController.linkages_markers:
+            markers += int(length)
+        self.ui.total_markers_textEdit.setText(str(markers))
+
     @Slot()
     def load_pajek(self):
         df = pd.DataFrame([["a", "b"], ["a", "c"], ["c", "a"], ["c", "d"], ["a", "d"], ["b", "p"], ["z", "c"],
@@ -97,9 +107,18 @@ class main(QMainWindow):
         if i == 3:
             self.ui.rename_alleles_btn.show()
             self.ui.export_alleles_btn.show()
+            self.ui.groupBox_2.setVisible(True)
+            self.ui.groupBox_3.setVisible(True)
+        elif i == 2:
+            self.ui.groupBox_2.setVisible(False)
+            self.ui.groupBox_3.setVisible(False)
+            self.ui.rename_alleles_btn.hide()
+            self.ui.export_alleles_btn.hide()
         else:
             self.ui.rename_alleles_btn.hide()
             self.ui.export_alleles_btn.hide()
+            self.ui.groupBox_2.setVisible(True)
+            self.ui.groupBox_3.setVisible(True)
 
     def import_map2(self):
         path, _ = QFileDialog().getOpenFileName(QApplication.activeWindow(), "Select a file to open", filter="*.txt")
@@ -207,7 +226,15 @@ class main(QMainWindow):
 
 
 if __name__ == "__main__":
+
+    try:
+        from PySide2.QtWinExtras import QtWin
+        myappid = 'mycompany.myproduct.subproduct.version'
+        QtWin.setCurrentProcessExplicitAppUserModelID(myappid)
+    except ImportError:
+        pass
     app = QApplication(sys.argv)
+    app.setWindowIcon(QtGui.QIcon("images/DNA.png"))
     widget = main()
     widget.init_file_system_tree()
     widget.set_menu_functionality()

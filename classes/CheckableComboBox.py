@@ -1,4 +1,6 @@
 import sys
+
+from PySide2 import QtCore
 from PySide2.QtCore import Qt
 from PySide2.QtWidgets import QComboBox, QApplication, QLabel, QMainWindow, QWidget
 
@@ -31,10 +33,8 @@ class CheckableComboBox:
         self.ComboBox.addItem(item)
         item = self.ComboBox.model().item(self.ComboBox.count() - 1, 0)
         if checkable:
-            item.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
             item.setCheckState(Qt.Unchecked)
-        else:
-            item.setFlags(Qt.ItemIsEnabled)
+        item.setFlags(Qt.ItemIsEnabled)
 
     def itemChecked(self, index):
         item = self.ComboBox.model().item(index, 0)

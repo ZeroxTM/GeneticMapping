@@ -16,6 +16,7 @@ class NetworkTabController:
     ui = None
     linkages_comboBox = None
     linkages_selected = list()
+    linkages_markers = list()
 
     @staticmethod
     def initialize_combobox(linkage_groups):
