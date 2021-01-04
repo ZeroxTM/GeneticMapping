@@ -426,21 +426,15 @@ class Network:
             # if i==1:
             #	print("nEdges0="+str(len(vpp.edges)))
         if False:
-            print
-            len(idMy)
-            print
-            len(ids)
+            print(len(idMy))
+            print(len(ids))
             for i in ids:
                 if not (i in idMy):
                     print(str(i))
-            print
-            ids
-            print
-            str(self.node[0].id)
-            print
-            str(self.node[1].id)
-            print
-            str(self.node[2].id)
+            print(ids)
+            print(str(self.node[0].id))
+            print(str(self.node[1].id))
+            print(str(self.node[2].id))
 
         for i in idsPP:
             j = idMy[i]

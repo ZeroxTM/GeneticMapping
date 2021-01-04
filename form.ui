@@ -27,7 +27,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>images/pngegg (59).png</normaloff>images/pngegg (59).png</iconset>
+    <normaloff>images/DNA.png</normaloff>images/DNA.png</iconset>
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>
@@ -522,7 +522,7 @@
                       <x>10</x>
                       <y>20</y>
                       <width>441</width>
-                      <height>61</height>
+                      <height>71</height>
                      </rect>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_7">
