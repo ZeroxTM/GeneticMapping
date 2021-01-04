@@ -119,11 +119,9 @@ class Edge:
         """
         if self.start_node == start_node:
             return self.end_node
-        elif self.end_node == start_node:
-        #else:
-            return self.start_node
+        #elif self.end_node == start_node:
         else:
-            return 0
+            return self.start_node
 
     # undirected edge
     def __eq__(self, other):

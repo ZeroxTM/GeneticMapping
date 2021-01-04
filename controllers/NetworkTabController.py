@@ -28,7 +28,7 @@ class NetworkTabController:
 
     @staticmethod
     def build_network():
-        net = Network(nodes=[], edges=[], mst=None, skeleton=None, cutoff=0.5)
+        net = Network(nodes=[], edges=[], mst=None, skeleton=None, cutoff=float(NetworkTabController.ui.cutoff_textfield.toPlainText()))
         selected_linkages_ids = NetworkTabController.linkages_comboBox.get_selected()
         selected_linkages = list()
         print("Selected linakge groups:" + str(selected_linkages_ids))
@@ -46,12 +46,16 @@ class NetworkTabController:
 
     @staticmethod
     def calculate_mst():
-        Data.network.mst = Data.network.calc_MST_net(bPrint=True, bPrintDetails=True)
+        net = Data.network
+        net.mst = net.calc_MST_net(bPrint=True, bPrintDetails=False)
+        #net.mst = net.calc_max_MST()
+        print(net.mst.idNodesOnPathLongest())
 
     @staticmethod
     def subdivide_network():
-        Data.network.idNodesOnPathLongest()
-        pass
+        Data.network.makeLinearContigClusters(bExcludeNodesCausingNonLinearClusters=True)
+        pajek_path = os.getcwd() + '\Pajek64\Pajek.exe'
+        subprocess.Popen([pajek_path, r'networks/linear.net'])
 
     @staticmethod
     def draw_pajek():

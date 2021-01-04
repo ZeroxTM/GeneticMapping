@@ -18,7 +18,7 @@ class Network:
                    'Violet', 'RoyalPurple', 'BlueViolet', 'Periwinkle', 'CadetBlue', 'CornflowerBlue', 'MidnightBlue',
                    'NavyBlue', 'RoyalBlue', 'Blue', 'Cerulean', 'Cyan', 'ProcessBlue', 'SkyBlue']
 
-    def __init__(self, nodes=[], edges=[], mst=None, skeleton=None, cutoff=0.5):
+    def __init__(self, nodes=[], edges=[], mst=None, skeleton=None, cutoff=0.15):
         """
         Genetic map network initialization
         :param node: list of Nodes in the network [Node[]]
@@ -54,21 +54,23 @@ class Network:
         for i, linkage_group in enumerate(linkage_groups):
             print("\nAdding nodes to network from linkage: " + str(linkage_group.id) + "\n")
             for marker in linkage_group.markers:
-                node_id += 1
-                self.addNode(Node(id=node_id, index=marker.id, marker=marker, edges=[], ic=Network.pajek_color[i], caption=marker.name))
+                if len(marker.alleles) != 0:
+                    node_id += 1
+                    self.addNode(Node(id=node_id, index=marker.id, marker=marker, edges=[], ic=Network.pajek_color[i],
+                                      caption=marker.name))
         print("\nDone Adding Nodes to the network!")
         print("\nAdding edges to the network ..\n")
         l = []
         for linkage_group in linkage_groups:
             print("\nAdding Edges to network from linkage group: " + str(linkage_group.id))
             l.append(linkage_group.markers)
-        l = [marker for linkage_markers in l for marker in linkage_markers]
+        l = [marker for linkage_markers in l for marker in linkage_markers if len(marker.alleles) != 0]
         combinations = itertools.combinations(l, 2)
         for comb in combinations:
             ns = get_shared_alleles(comb[0].alleles, comb[1].alleles)
             if type(ns) != str:
                 recombination_rate = calculate_recombination_rate(ns[0], ns[1], ns[2], ns[3])
-                if recombination_rate <= 0.15:
+                if recombination_rate <= self.cutoff:
                     id += 1
                     print("Recombination rate: " + str(recombination_rate) + "")
                     node1 = next((node for node in self.nodes if node.marker == comb[0]), None)
@@ -174,19 +176,122 @@ class Network:
                 linkedWithMST = []
 
         if bPrint:
-            print("Minimal spanning tree (MST) for net with nNodes=" + str(len(self.nodes)) + " and nEdges=" + str(
-                len(
-                    self.edges)) + f"...Finished \n\t#Nodes in MST: {len(mst_net.nodes)}\n\t#Edges in MST: {len(mst_net.edges)}")
-            if bPrintDetails:
-                idsNodeInMST.sort()
-                print(f"#Nodes in MST: {len(idsNodeInMST)}\nNodes IDs:"+str(idsNodeInMST))
-                print(str(rankInMST))
+            idsNodeInMST.sort()
+            print(
+                f"...Finished \n\t#Total nodes in MST: {len(mst_net.nodes)}\n\t#Nodes in MST: {len(idsNodeInMST)}\n\t#Edges in MST: {len(mst_net.edges)}\n\tNodes IDs: {str(idsNodeInMST)}")
 
         return mst_net
+
+    # def calc_max_MST(self):
+    #     max_mst = None
+    #     longest_path = 0
+    #    # l = []
+    #     for node in self.nodes:
+    #         mst_net = self.calc_MST_net(from_node=node, bPrint=True)
+    #         mst_nodes = mst_net.idNodesOnPathLongest()
+    #         if len(mst_nodes) > longest_path:
+    #             longest_path = len(mst_nodes)
+    #             max_mst = mst_net
+    #             ids = mst_nodes
+    #     print(f"\nCalculate Max MST:\n\tNodes on longest path: {ids}\n\tLongest MST path: {longest_path}")
+    #     return max_mst
+
+    """
+        calculate the rank of nodes bya7as to another node that we chose (idNodeStart)
+        """
+
+    def calcRanksOfNodes(self, idNodeStart, bPrint=False):
+        rank = [-1] * len(self.nodes)
+        if bPrint:
+            print("calcRanksOfNodes=" + str(len(self.nodes)) + " and nEdges=" + str(len(self.edges)) + "...")
+        rank[idNodeStart] = 0
+        currentSet = [idNodeStart]
+        # set=[idNodeStart]
+        set = []
+        r = 0
+        while len(currentSet) > 0:
+            nextSet = []
+            for j in currentSet:
+                node = self.nodes[j]
+                for edge in node.edges:
+                    k = edge.get_end_node(node).id
+                    if rank[k] < 0:
+                        nextSet.append(k)
+                        rank[k] = r + 1
+                        set.append(k)
+            if len(nextSet) > 0:
+                r += 1
+            currentSet = nextSet
+        rankMax = max(rank)
+        withRank = []
+        # print("rank: "+str(rank))
+        # print("rankMax: "+str(rankMax))
+        for i in range(rankMax + 1):
+            withRank.append([])
+        for i in range(len(self.nodes)):
+            # rank[i]
+            withRank[rank[i]].append(i)
+        # print("withRank: "+str(withRank))
+
+        if bPrint:
+            print(f"rankMax: {str(rankMax)} \n rank: {rank} \n withRank: {withRank}")
+            print("calcRanksOfNodes=" + str(len(self.nodes)) + " and nEdges=" + str(len(self.edges)) + "...Finished\n")
+
+        return rank, rankMax, withRank
+
+    """
+    Find which nodes are on the longest path of mst
+    """
+
+    def idNodesOnPathLongest(self, bPrintDetails=False):
+        print("\nidNodesOnPathLongest for net of " + str(len(self.nodes)) + " nodes...")
+        mst_net = self  # self.calc_MST_net()
+        rank, rankMax, withRank = mst_net.calcRanksOfNodes(self.nodes[0].id)
+        starts = withRank[rankMax]
+        myList = []
+        argMax = -1
+        for start in starts:
+            rank, rankMax, withRank = mst_net.calcRanksOfNodes(self.nodes[start].id)
+            if argMax < 1:
+                argMax = 0
+                myList = [rank, rankMax, withRank]
+            else:
+                if argMax > myList[1]:
+                    myList = [rank, rankMax, withRank]
+        if bPrintDetails:
+            print("LenOfLongestPath=" + str(rankMax + 1) + " nodes")
+
+        idNode = withRank[rankMax][0]
+        idNodes = [idNode]
+        r = rankMax
+        while r > 0:
+            idNodeNext = -1
+            for edge in mst_net.nodes[idNode].edges:
+                k = edge.get_end_node(mst_net.nodes[idNode]).id
+                if rank[k] < r:
+                    idNodeNext = k
+            idNodes.append(idNodeNext)
+            r -= 1
+            idNode = idNodeNext
+        if bPrintDetails:
+            print("Nodes of path: " + str(idNodes))
+        i = 0
+        if bPrintDetails:
+            print("i\tidInLG\tnameOfNode")
+        for id in idNodes:
+            i += 1
+            if bPrintDetails:
+                print(str(i) + " " + str(id) + " " + self.nodes[id].caption)
+        # begin: NODE_11323_length_3805_cov_2.15481_B0
+        # end: NODE_7765_length_7967_cov_2.01428_B0
+        print(
+            "\tLongest path length:" + str(len(idNodes)) + "\n\tNodes on longest path:" + str(idNodes) + "\nFinished\n")
+        return idNodes
 
     """
     print the network to pajek file
     """
+
     @staticmethod
     def print_pajek_network(plot_net, sFileName='output.net', bPrintDetails=False):
         # *Network
@@ -228,7 +333,7 @@ class Network:
     def singleLinkageClustering(self, cutoff, bPrint=False, bPrintDetails=False):
         clusters = []
         in_cluster = [-1] * len(self.nodes)
-        rank_max = [0] * len(self.nodes)
+        rank_max = []  # [0] * len(self.nodes)
         n_clusters = 0
 
         if bPrint:
@@ -240,9 +345,13 @@ class Network:
                 if bPrintDetails:
                     print("started from " + str(i) + " ...")
 
-                iCluster = n_clusters
+                # iCluster = n_clusters
+                # n_clusters += 1
+                # in_cluster[i] = iCluster
                 n_clusters += 1
+                iCluster = n_clusters - 1
                 in_cluster[i] = iCluster
+                rank_max.append(0)
 
                 r = 0
                 current_set = [i]
@@ -278,103 +387,15 @@ class Network:
         return clusters, in_cluster
 
     """
-    calculate the rank of nodes bya7as to another node that we chose (idNodeStart)
-    """
-    def calcRanksOfNodes(self, idNodeStart):
-        rank = [-1] * len(self.nodes)
-        print("calcRanksOfNodes=" + str(len(self.nodes)) + " and nEdges=" + str(len(self.edges)) + "...")
-        rank[idNodeStart] = 0
-        currentSet = [idNodeStart]
-        # set=[idNodeStart]
-        set = []
-        r = 0
-        while len(currentSet) > 0:
-            nextSet = []
-            for j in currentSet:
-                node = self.nodes[j]
-                for edge in node.edges:
-                    k = edge.get_end_node(node).id
-                    if rank[k] < 0:
-                        nextSet.append(k)
-                        rank[k] = r + 1
-                        set.append(k)
-            if len(nextSet) > 0:
-                r += 1
-                bPrintDetails = False
-                if bPrintDetails:
-                    print("rank=" + str(r) + ", nAdd=" + str(len(nextSet)))
-            currentSet = nextSet
-        rankMax = max(rank)
-        withRank = []
-        # print("rank: "+str(rank))
-        # print("rankMax: "+str(rankMax))
-        for i in range(rankMax + 1):
-            withRank.append([])
-        for i in range(len(self.nodes)):
-            # rank[i]
-            withRank[rank[i]].append(i)
-        # print("withRank: "+str(withRank))
-
-        print(f"rankMax: {str(rankMax)} \n rank: {rank} \n withRank: {withRank}")
-        print("calcRanksOfNodes=" + str(len(self.nodes)) + " and nEdges=" + str(len(self.edges)) + "...Finished\n")
-        return rank, rankMax, withRank
-
-    """
-    Find which nodes are on the longest path of mst
-    """
-    def idNodesOnPathLongest(self, bPrintDetails=False):
-        print("idNodesOnPathLongest for net of " + str(len(self.nodes)) + " nodes...")
-        mst_net = self.calc_MST_net()
-        rank, rankMax, withRank = mst_net.calcRanksOfNodes(self.nodes[0].id)
-        starts = withRank[rankMax]
-        myList = []
-        argMax = -1
-        for start in starts:
-            rank, rankMax, withRank = mst_net.calcRanksOfNodes(self.nodes[start].id)
-            if argMax < 1:
-                argMax = 0
-                myList = [rank, rankMax, withRank]
-            else:
-                if argMax > myList[1]:
-                    myList = [rank, rankMax, withRank]
-        if bPrintDetails:
-            print("LenOfLongestPath=" + str(rankMax + 1)) + " nodes"
-
-        idNode = withRank[rankMax][0]
-        idNodes = [idNode]
-        r = rankMax
-        while r > 0:
-            idNodeNext = -1
-            for edge in mst_net.nodes[idNode].edges:
-                k = edge.get_end_node(mst_net.nodes[idNode]).id
-                if rank[k] < r:
-                    idNodeNext = k
-            idNodes.append(idNodeNext)
-            r -= 1
-            idNode = idNodeNext
-        if bPrintDetails:
-            print("Nodes of path: " + str(idNodes))
-        i = 0
-        if bPrintDetails:
-            print("i\tidInLG\tnameOfNode")
-        for id in idNodes:
-            i += 1
-            if bPrintDetails:
-                print(str(i) + " " + str(id) + " " + self.nodes[id].caption)
-        # begin: NODE_11323_length_3805_cov_2.15481_B0
-        # end: NODE_7765_length_7967_cov_2.01428_B0
-        print("idNodesOnPathLongest for net of " + str(len(self.nodes)) + " nodes...\n"+str(idNodes)+"\nFinished\n")
-        print(len(idNodes))
-        return idNodes
-
-    """
     retuns all nodes that these nodes doesn't have a prove with edges 5offot ?
     """
-    def nodesIDUnprovenByParallelpaths(self, cutoff, cutoffParallel):
+
+    def nodesIDUnprovenByParallelpaths(self, cutoff=0.15, cutoffParallel=0.25):
         ids = []
         print("nodesIDUnprovenByParallelpaths...")
         for node in self.nodes:
             n_nodes = []
+            # For every edge in node, check if recombination_rate <= cutoff, if True, add edge end node to n_nodes
             for edge in node.edges:
                 if edge.recombination_rate <= cutoff:
                     k = edge.get_end_node(node).id
@@ -390,32 +411,34 @@ class Network:
         print(str(len(ids)) + " nodes to exclude:")
         for id in ids:
             print(str(id) + " " + self.nodes[id].caption)
-        return ids
+        return ids  # list of IDs that should be removed from network
 
     """
     remove nodes from net according to nodes in the list(idsExclude)
     """
 
-    def netWithoutNodesFromList(self, idsExclude, cutoff):
+    def netWithoutNodesFromList(self, idsExclude, cutoff):  # Build new network without excluded nodes
         idsOk = []
         for i in range(len(self.nodes)):
             if not (i in idsExclude):
                 idsOk.append(i)
         return self.subnet(idsOk, cutoff)
 
-    """
-    sub-network according to cutoff (r < cutoff) -> (default cutoff = 15%)
-    """
-
-    def subnet(self, ids, cutoff):
-        net = Network(nodes=[], edges=[], mst=None, skeleton=None, cutoff=0.5)
+    def subnet(self, idsInclude, cutoff):
+        """
+        sub-network according to cutoff (r < cutoff) -> (default cutoff = 15%)
+        :param ids: IDs of nodes to be included in the subnet
+        :param cutoff:
+        :return:
+        """
+        net = Network(nodes=[], edges=[], mst=None, skeleton=None, cutoff=cutoff)
         idnew = [-1] * len(self.nodes)
         idsPP = []
         idMy = []
         i = 0
         for node in self.nodes:
-            if node.id in ids:
-                vpp = node.copy(i)
+            if node.id in idsInclude:
+                vpp = node.copy(i, edges=[])
                 idnew[node.id] = i
                 idsPP.append(i)
                 idMy.append(node.id)
@@ -445,6 +468,46 @@ class Network:
                     if idnew[k] >= 0:
                         # print(str(i)+" "+str(idnew[j])+" "+str(idnew[k])+" "+str(k))
                         if idnew[j] < idnew[k]:
-                            epp = edge.copy(idnew[j], idnew[k])
+                            startNode = net.nodes[idnew[j]]  # self.get_node(idnew[j])
+                            endNode = net.nodes[idnew[k]]  # self.get_node(idnew[k])
+                            epp = edge.copy(startNode, endNode)
+                            startNode.add_edge(epp)
+                            endNode.add_edge(epp)
                             net.addEdge(epp)
         return net
+
+    def makeLinearContigClusters(self, bExcludeNodesCausingNonLinearClusters=False, sPath="networks/cluster",
+                                 bPrintClusters=False):
+        # clusters, inCluster
+        if bExcludeNodesCausingNonLinearClusters:  # BOOLEAN
+            # self.readFromFilePajek(sFileNamePajek, True, True)
+
+            # dealing with non-linear cluster: subdivide automatically
+            # dMax=0.2
+            # net1=net.subnet(clusters[0],dMax)
+            # net1.printToFilePajek(sFileNamePajekPP,dMax,True,True)
+            idsExclude = self.nodesIDUnprovenByParallelpaths(0.15, 0.25)
+            net1 = self.netWithoutNodesFromList(idsExclude, 0.25)
+            Network.print_pajek_network(net1, sFileName="linear.net")
+            # net1.printToFilePajek(, 0.2, True, True)
+        # two nodes were excluded (correctly)
+        # NODE_9542_length_5590_cov_9.67185_B0
+        # NODE_4626_length_15504_cov_4.52318_B1
+        # self.readFromFilePajek(sFileNamePajekPP, True, True)
+        # print("ne0="+str(len(net.node[0].edges)))
+        # clustering with cutoff 0.5 (to split non-linear, 2 of 16-1 also splited - no matter, seem ok to split: too large gap)
+        clusters, inCluster = self.singleLinkageClustering(0.15, True, False)
+        # TEMPORARILY DISABLED####if bPrintClusters:
+        #    self.printToFilePajek_allCluster(0.20, "clusters_0p15", clusters, inCluster, sPath)
+
+        # print(len(clusters))
+        # result:
+        # 27 linear clusters
+        #
+        # was 5466 markers
+        #
+        # data in QTL format:
+        # see Drive/Cataglyphis/117males/map/Data/data.txt
+        # Genetic map and assembly Cnig_gn2:
+        # see Drive/Cataglyphis/117males/map/transferMapToAssembly/Cnig_gn2.concatScaf2ChrByMap.3.map
+        return clusters, inCluster
