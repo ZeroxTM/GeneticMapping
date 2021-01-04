@@ -22,13 +22,14 @@ class FileBrowserController:
                 else:
                     QMessageBox.information(FileBrowserController.ui, "Warning",
                                             "Map data was not found.\n Please locate map data file.")
-                    path2 = QFileDialog.getOpenFileName(FileBrowserController.ui, "Import", filter="*.txt")
-                    ddf = pd.read_csv(path2[0], sep="\t", header=None)
+                    path2, _ = QFileDialog().getOpenFileName(FileBrowserController.ui, "Import", filter="*.txt")
+                    if not path2: return
+                    ddf = pd.read_csv(path2, sep="\t", header=None)
                     ddf.columns = ['marker_name', 'properties']
                     FileBrowserController.validate_map_data(ddf)
                 mtc.fetch_markers(df, ddf)
                 FileBrowserController.enable_tabs()
-                FileBrowserController.ui.importStatus.setText("Imported map: " + path+"\nData: " + path2[0])
+                FileBrowserController.ui.importStatus.setText("Imported map: " + path+"\nData: " + path2)
                 FileBrowserController.ui.importStatus.setFixedWidth(900)
                 FileBrowserController.ui.importStatus.setFixedHeight(30)
             except ValueError:
