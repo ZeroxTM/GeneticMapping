@@ -10,6 +10,7 @@ from controllers.MarkersTabController import MarkersTabController as mtc
 class FileBrowserController:
     ui = None  # Static UI reference variable
     file_chosen = False
+
     @staticmethod
     def load_file(path):
         dff = None
@@ -30,7 +31,7 @@ class FileBrowserController:
                     FileBrowserController.validate_map_data(ddf)
                 mtc.fetch_markers(df, ddf)
                 FileBrowserController.enable_tabs()
-                FileBrowserController.ui.importStatus.setText("Imported map: " + path+"\nData: " + path2)
+                FileBrowserController.ui.importStatus.setText("Imported map: " + path + "\nData: " + path2)
                 FileBrowserController.ui.importStatus.setFixedWidth(900)
                 FileBrowserController.ui.importStatus.setFixedHeight(30)
             except ValueError:
@@ -47,7 +48,7 @@ class FileBrowserController:
         df = df.drop(df.index[0])
         df = df.drop(['indexOnPath'], axis=1)
         QMessageBox.information(FileBrowserController.ui, "Info", "File was loaded successfully.")
-        df = df.drop_duplicates(subset=['marker'], keep='first')
+        df = df.drop_duplicates(subset=['marker'], keep='first')  # Filtrate duplicate markers
         return df
 
     @staticmethod

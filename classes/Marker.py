@@ -57,3 +57,6 @@ class Marker:
 
     def __eq__(self, other):
         return self.id == other.id and self.name == other.name
+
+    def __lt__(self, other):
+        return self.coordinateGenet < other.coordinateGenet

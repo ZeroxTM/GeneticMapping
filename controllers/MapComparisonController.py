@@ -29,26 +29,27 @@ import pandas as pd
 # map_widget
 class MapComparisonController:
     ui = None
-    map2_markers = list()
+
 
     @staticmethod
     def compare_maps(path):
-        """map1 = list()
+        map1 = list()
         map2 = list()
+        map2_markers = list()
         data = FileBrowserController.read_map_file(path)
         for _, row in data.iterrows():
-            MapComparisonController.map2_markers.append((row['im'], row['coorGenet']))
-        map1_markes = MarkersTabController.markers
+            map2_markers.append((row['marker'], row['coorGenet']))
+        map1_markers = MarkersTabController.markers
 
-        for marker1 in map1_markes:
-            for marker2 in MapComparisonController.map2_markers:
-                if marker1.name == marker2.name:
+        for marker1 in map1_markers:
+            for marker2 in map2_markers:
+                if marker1.name == marker2[0]:
                     map1.append(marker1.coordinateGenet)
-                    map2.append(marker2.coordinateGenet)
-                    break"""
-        map1_markes = [1, 3, 5, 7]
-        MapComparisonController.map2_markers = [20, 9, 11, 25]
-        df = pd.DataFrame({'Map A': map1_markes, 'Map B': MapComparisonController.map2_markers})
+                    map2.append(marker2[1])
+                    break
+        #map1_markers = [1, 3, 5, 7]
+        #MapComparisonController.map2_markers = [20, 9, 11, 25]
+        df = pd.DataFrame({'Map A': map1, 'Map B': map2})
         data = pd.melt(df)
         # Initialize the plot
         MapComparisonController.ui.map_widget.figure = Figure()
@@ -64,13 +65,13 @@ class MapComparisonController:
         # Get the location of both maps on the plot
         locs1 = ax.get_children()[0].get_offsets()
         locs2 = ax.get_children()[1].get_offsets()
-        temp_markers = map1_markes.copy()
+        temp_markers = map1.copy()
         temp_markers.sort()
         line_list = list()
-        for p_index, i in enumerate(map1_markes):
+        for p_index, i in enumerate(map1):
             for index, j in enumerate(temp_markers):
                 if j == i:
-                    line_list.append(([locs1[index, 0], locs2[index, 0]], [map1_markes[p_index], MapComparisonController.map2_markers[p_index]]))
+                    line_list.append(([locs1[index, 0], locs2[index, 0]], [map1[p_index], map2[p_index]]))
                     break
         # Plotting the lines between the points
         for i in range(len(line_list)):
@@ -83,3 +84,7 @@ class MapComparisonController:
         """plt.xlabel('')
         plt.ylabel('Coordinates')
         plt.show()"""
+        """
+        
+        """
+
