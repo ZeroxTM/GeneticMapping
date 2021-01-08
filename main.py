@@ -9,7 +9,7 @@ from PySide2 import QtWidgets, QtCore, QtGui
 from PySide2.QtCore import QFile, Slot, Qt
 from PySide2.QtGui import QIcon
 from PySide2.QtUiTools import QUiLoader
-from PySide2.QtWidgets import QApplication, QMainWindow, QFileSystemModel, QFileDialog, QDialog
+from PySide2.QtWidgets import QApplication, QMainWindow, QFileSystemModel, QFileDialog, QDialog, QMessageBox
 from pajek_tools import PajekWriter
 
 from classes.CheckableComboBox import CheckableComboBox
@@ -53,7 +53,12 @@ class main(QMainWindow):
         self.ui.import_btn.clicked.connect(self.import_map2)
         self.ui.mainTabs.currentChanged.connect(self.onChange)
         self.ui.mainTabs.blockSignals(False)
-        self.ui.actionOpen_Graph_with_Pajek.triggered.connect(self.load_pajek)
+        self.ui.actionOpen_Graph_with_Pajek.triggered.connect(self.Network_structure)
+        self.ui.actionInspect_Parallel_Linkage.triggered.connect(self.Network_structure)
+        self.ui.actionTest_Cluster_Linear_Structure.triggered.connect(self.Network_structure)
+        self.ui.actionSubdivide_Cluster_Into.triggered.connect(self.Network_structure)
+        self.ui.actionCompare_Maps.triggered.connect(lambda _: self.ui.mainTabs.setCurrentIndex(5) if FileBrowserController.file_chosen else None)
+        self.ui.actionAbout.triggered.connect(lambda _: QMessageBox().information(self.ui, "About..", "Copyright (c) 2020 Alaa Grable, Adam Mahamed."))
 
     def handleItemPressed(self, index):
         item = self.ui.linkages_comboBox.model().itemFromIndex(index)
@@ -191,10 +196,15 @@ class main(QMainWindow):
         path = self.sender().model().filePath(index)
         if path is not None:
             FileBrowserController.load_file(path)
+        else:
+            QMessageBox().warning(self.ui, "Warning", "No File Has Been Chosen!")
 
     def import_file(self):
         path, _ = QFileDialog().getOpenFileName(QApplication.activeWindow(), "Select a file to open", filter="*.txt")
-        print(path) if path else print("No path")
+        if path is not None:
+            FileBrowserController.load_file(path)
+        else:
+            QMessageBox().warning(self.ui, "Warning", "No File Has Been Chosen!")
 
     def set_controllers_ui_ref(self):
         FileBrowserController.ui = self.ui
@@ -205,6 +215,10 @@ class main(QMainWindow):
         MapComparisonController.ui = self.ui
         NetworkTabController.ui = self.ui
         self.ui.mainTabs.setCurrentIndex(0)
+
+    @Slot()
+    def Network_structure(self):
+        self.ui.mainTabs.setCurrentIndex(2) if FileBrowserController.file_chosen else None
 
     def initialize_clicks(self):
         self.ui.rename_alleles_btn.clicked.connect(GraphicalGenotypeController.rename_alleles)

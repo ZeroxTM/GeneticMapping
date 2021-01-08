@@ -9,7 +9,7 @@ from controllers.MarkersTabController import MarkersTabController as mtc
 
 class FileBrowserController:
     ui = None  # Static UI reference variable
-
+    file_chosen = False
     @staticmethod
     def load_file(path):
         dff = None
@@ -24,6 +24,7 @@ class FileBrowserController:
                                             "Map data was not found.\n Please locate map data file.")
                     path2, _ = QFileDialog().getOpenFileName(FileBrowserController.ui, "Import", filter="*.txt")
                     if not path2: return
+                    FileBrowserController.file_chosen = not FileBrowserController.file_chosen
                     ddf = pd.read_csv(path2, sep="\t", header=None)
                     ddf.columns = ['marker_name', 'properties']
                     FileBrowserController.validate_map_data(ddf)
