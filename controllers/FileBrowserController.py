@@ -19,6 +19,8 @@ class FileBrowserController:
                 df = FileBrowserController.read_map_file(path)
                 if os.path.exists(path[:-4] + '-data.txt'):
                     ddf = pd.read_csv(path[:-4] + '-data.txt', sep="\t", header=None)
+                    ddf.columns = ['marker_name', 'properties']
+                    FileBrowserController.validate_map_data(ddf)
                     print("found!")
                 else:
                     QMessageBox.information(FileBrowserController.ui, "Warning",

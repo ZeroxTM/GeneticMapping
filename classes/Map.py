@@ -1,5 +1,5 @@
 class Map:
-    def __init__(self, network=None, linkageGroup=[], length=0, numOfMarkers=0):
+    def __init__(self, network=None, linkage_groups=[], length=0, numOfMarkers=0):
         """
 
         :param network: network
@@ -8,12 +8,5 @@ class Map:
         :param numOfMarkers: [int]
         """
         self.network = network
-        self.linkageGroup = linkageGroup
-        self.lenght = length
+        self.linkage_groups = linkage_groups
         self.numOfMarkers = numOfMarkers
-
-    def ordering(self):
-        print()
-
-    def test(self):
-        print()

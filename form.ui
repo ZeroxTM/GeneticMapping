@@ -199,7 +199,7 @@
            <string notr="true"/>
           </property>
           <property name="currentIndex">
-           <number>4</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="markersTab">
            <attribute name="title">
@@ -525,17 +525,17 @@
                    <widget class="QWidget" name="gridLayoutWidget">
                     <property name="geometry">
                      <rect>
-                      <x>20</x>
+                      <x>10</x>
                       <y>20</y>
-                      <width>881</width>
-                      <height>61</height>
+                      <width>901</width>
+                      <height>71</height>
                      </rect>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_7">
                      <property name="sizeConstraint">
                       <enum>QLayout::SetDefaultConstraint</enum>
                      </property>
-                     <item row="1" column="1">
+                     <item row="2" column="1">
                       <widget class="QTextEdit" name="total_markers_textEdit">
                        <property name="enabled">
                         <bool>true</bool>
@@ -551,7 +551,43 @@
                        </property>
                       </widget>
                      </item>
-                     <item row="0" column="3">
+                     <item row="2" column="4">
+                      <widget class="QCheckBox" name="filterate_checkBox">
+                       <property name="text">
+                        <string>Filter low quality markers (segregation quality X^2 &gt; 3.84 or pmissing &gt; 20%) </string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QTextEdit" name="selected_linkages_textEdit">
+                       <property name="enabled">
+                        <bool>true</bool>
+                       </property>
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="readOnly">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="text">
+                        <string>Selelcted Linkages:</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="4">
                       <widget class="QTextEdit" name="cutoff_textfield">
                        <property name="sizePolicy">
                         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -572,35 +608,6 @@
                        </property>
                       </widget>
                      </item>
-                     <item row="1" column="0">
-                      <widget class="QLabel" name="label_2">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="text">
-                        <string>Total Number Of Markers:</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="1">
-                      <widget class="QTextEdit" name="selected_linkages_textEdit">
-                       <property name="enabled">
-                        <bool>true</bool>
-                       </property>
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="readOnly">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
                      <item row="0" column="2">
                       <widget class="QLabel" name="label_9">
                        <property name="sizePolicy">
@@ -614,8 +621,8 @@
                        </property>
                       </widget>
                      </item>
-                     <item row="0" column="0">
-                      <widget class="QLabel" name="label">
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="label_2">
                        <property name="sizePolicy">
                         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                          <horstretch>0</horstretch>
@@ -623,7 +630,17 @@
                         </sizepolicy>
                        </property>
                        <property name="text">
-                        <string>Selelcted Linkages:</string>
+                        <string>Total Number Of Markers:</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="2">
+                      <widget class="QLabel" name="label_15">
+                       <property name="statusTip">
+                        <string>Filter out low quality markers</string>
+                       </property>
+                       <property name="text">
+                        <string>Filterate:</string>
                        </property>
                       </widget>
                      </item>
@@ -666,7 +683,7 @@
                     </size>
                    </property>
                    <property name="text">
-                    <string>Subdivide Linkages</string>
+                    <string>Test for Linear Structure</string>
                    </property>
                   </widget>
                  </item>

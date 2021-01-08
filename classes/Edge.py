@@ -131,9 +131,3 @@ class Edge:
     @staticmethod
     def sort2(node1, node2):
         return (node1, node2) if node1.id <= node2.id else (node2, node1)
-
-    def check(self):
-        print()
-
-    def print(self):
-        print()

@@ -24,24 +24,6 @@ class LinkageGroup:
         self.markerOrd = markerOrd
         self.network = network
 
-    def calcRec(self):
-        print("")
-
-    def buildNetwork(self):
-        print()
-
-    def selectSkeleton(self):
-        print()
-
-    def calcCoordinates(self):
-        print()
-
-    def filtration(self):
-        print()
-
-    def grouping(self):
-        print()
-
     @staticmethod
     def create_linkages(linkageGroupsDict=dict()):
         for key in linkageGroupsDict:

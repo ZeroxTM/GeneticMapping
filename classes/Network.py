@@ -12,6 +12,8 @@ from classes.Node import Node
 
 
 class Network:
+    low_quality_markers = 0
+    no_data_markers = 0
     pajek_color = ['GreenYellow', 'Yellow', 'Goldenrod', 'Dandelion', 'Apricot', 'Peach', 'Melon', 'YellowOrange',
                    'Orange', 'BurntOrange', 'Bittersweet', 'RedOrange', 'Mahogany', 'Red', 'OrangeRed', 'RubineRed',
                    'WildStrawberry', 'Fuchsia', 'Lavender', 'Thistle', 'Orchid', 'DarkOrchid', 'Purple', 'Plum',
@@ -42,11 +44,13 @@ class Network:
     def addEdge(self, edge):
         self.edges.append(edge)
 
-    def initialize_network(self, linkage_groups):
+    def initialize_network(self, linkage_groups, filterate=False):
         """
         :param indexes_of_linkages: list of linkage (linkageGroup)
         :return:
         """
+        Network.low_quality_markers = 0
+        Network.no_data_markers = 0
         id = -1
         node_id = -1
         print("\nAdding Nodes to the network ..\n")
@@ -55,16 +59,31 @@ class Network:
             print("\nAdding nodes to network from linkage: " + str(linkage_group.id) + "\n")
             for marker in linkage_group.markers:
                 if len(marker.alleles) != 0:
-                    node_id += 1
-                    self.addNode(Node(id=node_id, index=marker.id, marker=marker, edges=[], ic=Network.pajek_color[i],
-                                      caption=marker.name))
+                    if filterate:
+                        if marker.segregation < 3.84 and marker.p_missing < 0.2:  # Filter out markers with no data, and low quality markers (segregation quality X^2 > 3.84 or pmiss > 20%)
+                            node_id += 1
+                            self.addNode(
+                                Node(id=node_id, index=marker.id, marker=marker, edges=[], ic=Network.pajek_color[i],
+                                     caption=marker.name))
+                        else:
+                            Network.low_quality_markers += 1
+                    else:
+                        node_id += 1
+                        self.addNode(
+                            Node(id=node_id, index=marker.id, marker=marker, edges=[], ic=Network.pajek_color[i],
+                                 caption=marker.name))
+                else:
+                    Network.no_data_markers += 1
         print("\nDone Adding Nodes to the network!")
         print("\nAdding edges to the network ..\n")
         l = []
         for linkage_group in linkage_groups:
             print("\nAdding Edges to network from linkage group: " + str(linkage_group.id))
             l.append(linkage_group.markers)
-        l = [marker for linkage_markers in l for marker in linkage_markers if len(marker.alleles) != 0]
+        if filterate:
+            l = [marker for linkage_markers in l for marker in linkage_markers if len(marker.alleles) != 0 if marker.segregation < 3.84 and marker.p_missing < 0.2]
+        else:
+            l = [marker for linkage_markers in l for marker in linkage_markers if len(marker.alleles) != 0]
         combinations = itertools.combinations(l, 2)
         for comb in combinations:
             ns = get_shared_alleles(comb[0].alleles, comb[1].alleles)
@@ -329,7 +348,6 @@ class Network:
     divide the whole network to parts that the edges between these parts has recombination rate > cutoff
     """
 
-    ##NEED MORE EXPLAINATION
     def singleLinkageClustering(self, cutoff, bPrint=False, bPrintDetails=False):
         clusters = []
         in_cluster = [-1] * len(self.nodes)
@@ -345,9 +363,6 @@ class Network:
                 if bPrintDetails:
                     print("started from " + str(i) + " ...")
 
-                # iCluster = n_clusters
-                # n_clusters += 1
-                # in_cluster[i] = iCluster
                 n_clusters += 1
                 iCluster = n_clusters - 1
                 in_cluster[i] = iCluster
@@ -476,8 +491,7 @@ class Network:
                             net.addEdge(epp)
         return net
 
-    def makeLinearContigClusters(self, bExcludeNodesCausingNonLinearClusters=False, sPath="networks/cluster",
-                                 bPrintClusters=False):
+    def makeLinearContigClusters(self, bExcludeNodesCausingNonLinearClusters=False, cutoff=0.15, cutoffParallel = 0.25):
         # clusters, inCluster
         if bExcludeNodesCausingNonLinearClusters:  # BOOLEAN
             # self.readFromFilePajek(sFileNamePajek, True, True)
@@ -486,9 +500,9 @@ class Network:
             # dMax=0.2
             # net1=net.subnet(clusters[0],dMax)
             # net1.printToFilePajek(sFileNamePajekPP,dMax,True,True)
-            idsExclude = self.nodesIDUnprovenByParallelpaths(0.15, 0.25)
-            linear_net = self.netWithoutNodesFromList(idsExclude, 0.25)
-            #Network.print_pajek_network(linear_net, sFileName="linear.net")
+            idsExclude = self.nodesIDUnprovenByParallelpaths(cutoff, cutoffParallel)
+            linear_net = self.netWithoutNodesFromList(idsExclude, cutoffParallel)
+            # Network.print_pajek_network(linear_net, sFileName="linear.net")
             # net1.printToFilePajek(, 0.2, True, True)
         # two nodes were excluded (correctly)
         # NODE_9542_length_5590_cov_9.67185_B0
@@ -496,7 +510,7 @@ class Network:
         # self.readFromFilePajek(sFileNamePajekPP, True, True)
         # print("ne0="+str(len(net.node[0].edges)))
         # clustering with cutoff 0.5 (to split non-linear, 2 of 16-1 also splited - no matter, seem ok to split: too large gap)
-        #clusters, inCluster = self.singleLinkageClustering(0.15, True, False)
+        # clusters, inCluster = self.singleLinkageClustering(0.15, True, False)
         # TEMPORARILY DISABLED####if bPrintClusters:
         #    self.printToFilePajek_allCluster(0.20, "clusters_0p15", clusters, inCluster, sPath)
 
@@ -510,4 +524,4 @@ class Network:
         # see Drive/Cataglyphis/117males/map/Data/data.txt
         # Genetic map and assembly Cnig_gn2:
         # see Drive/Cataglyphis/117males/map/transferMapToAssembly/Cnig_gn2.concatScaf2ChrByMap.3.map
-        return linear_net#clusters, inCluster
+        return linear_net  # clusters, inCluster

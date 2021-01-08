@@ -6,7 +6,7 @@ import numpy as np
 
 # p0 = n0/(n0+n1)
 calculate_p0 = lambda n0, n1: round(n0 / (n0 + n1), 2) if (n0 + n1) != 0 else 0
-# p1 = n1/(n0+n1)
+# p1 = n1/(n0+n1) # Allele frequency
 calculate_p1 = lambda n0, n1: round(n1 / (n0 + n1), 2) if (n0 + n1) != 0 else 0
 # pMissing = nMissing/n, n=n0+n1+nMissing=number of individuals
 calculate_p_missing = lambda n_missing, n: round(n_missing / n, 2) if n != 0 else 0
