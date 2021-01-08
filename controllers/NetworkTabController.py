@@ -20,7 +20,7 @@ class NetworkTabController:
 
     @staticmethod
     def initialize_combobox(linkage_groups):
-        #NetworkTabController.linkages_comboBox = CheckableComboBox(NetworkTabController.ui.linkages_comboBox)
+        # NetworkTabController.linkages_comboBox = CheckableComboBox(NetworkTabController.ui.linkages_comboBox)
         NetworkTabController.linkages_comboBox.addItem("Select linkages for drawing", checkable=False)
         for key in list(linkage_groups.keys()):
             NetworkTabController.linkages_comboBox.addItem(
@@ -28,10 +28,15 @@ class NetworkTabController:
 
     @staticmethod
     def build_network():
-        net = Network(nodes=[], edges=[], mst=None, skeleton=None, cutoff=float(NetworkTabController.ui.cutoff_textfield.toPlainText()))
+        net = Network(nodes=[], edges=[], mst=None, skeleton=None,
+                      cutoff=float(NetworkTabController.ui.cutoff_textfield.toPlainText()))
         selected_linkages_ids = NetworkTabController.linkages_comboBox.get_selected()
+        NetworkTabController.ui.log_plainTextEdit.clear()
+        NetworkTabController.ui.log_plainTextEdit.insertPlainText("Building network of selected linkages...")
+        NetworkTabController.ui.log_plainTextEdit.appendPlainText(
+            "Selected linkages IDs: " + str(selected_linkages_ids))
         selected_linkages = list()
-        print("Selected linakge groups:" + str(selected_linkages_ids))
+        print("Selected linkage groups:" + str(selected_linkages_ids))
         print(Data.linkage_groups.values())
         print(Data.linkage_groups.keys())
         for i in range(0, len(list(Data.linkage_groups)) + 1):
@@ -43,19 +48,36 @@ class NetworkTabController:
         NetworkTabController.ui.calc_mst_btn.setEnabled(True)
         NetworkTabController.ui.draw_pajek_btn.setEnabled(True)
         NetworkTabController.ui.subdivide_btn.setEnabled(True)
+        total = 0
+        [total := len(m.markers) + total for m in selected_linkages]
+        NetworkTabController.ui.log_plainTextEdit.appendPlainText(
+            f"Network was built successfully!"
+            f"\n\t{total - len(net.nodes)} out of {total} nodes were found without edges and were removed."
+            f"\n\t#Nodes: {len(net.nodes)}"
+            f"\n\t#Edges: {len(net.edges)}")
 
     @staticmethod
     def calculate_mst():
         net = Data.network
         net.mst = net.calc_MST_net(bPrint=True, bPrintDetails=False)
-        #net.mst = net.calc_max_MST()
+        # net.mst = net.calc_max_MST()
         print(net.mst.idNodesOnPathLongest())
 
     @staticmethod
     def subdivide_network():
-        Data.network.makeLinearContigClusters(bExcludeNodesCausingNonLinearClusters=True)
+        linear_net = Data.network.makeLinearContigClusters(bExcludeNodesCausingNonLinearClusters=True)
         pajek_path = os.getcwd() + '\Pajek64\Pajek.exe'
-        subprocess.Popen([pajek_path, r'networks/linear.net'])
+
+        try:
+            path, _ = QFileDialog().getSaveFileName(QApplication.activeWindow(), filter='*.net')
+            Network.print_pajek_network(plot_net=linear_net, sFileName=path)
+            QMessageBox.information(NetworkTabController.ui, "Info", "Save Success\nMap "
+                                                                     "was successfully saved to path")
+        except():
+            QMessageBox.information(NetworkTabController.ui, "Warning",
+                                    "Save Failed\nAn error has occurred!")
+
+        subprocess.Popen([pajek_path, path])
 
     @staticmethod
     def draw_pajek():
@@ -80,10 +102,19 @@ class NetworkTabController:
             print("Cancel")
 
         if plot:
-            Network.print_pajek_network(plot_net=to_plot, sFileName="output.net")
             pajek_path = os.getcwd() + '\Pajek64\Pajek.exe'
-            subprocess.Popen([pajek_path, r'networks/output.net'])
-            time.sleep(5)
-        # (x, y) = pyautogui.position()
-    # pyautogui.click(pyautogui.locateCenterOnScreen('icon.png'))
-    # pyautogui.moveTo(x, y)
+
+            try:
+                path, _ = QFileDialog().getSaveFileName(QApplication.activeWindow(), filter='*.net')
+                Network.print_pajek_network(plot_net=to_plot, sFileName=path)
+                QMessageBox.information(NetworkTabController.ui, "Info", "Save Success\nMap "
+                                                                         "was successfully saved to path")
+            except():
+                QMessageBox.information(NetworkTabController.ui, "Warning",
+                                        "Save Failed\nAn error has occurred!")
+
+            subprocess.Popen([pajek_path, path])
+            # time.sleep(5)
+            # (x, y) = pyautogui.position()
+            # pyautogui.click(pyautogui.locateCenterOnScreen('icon.png'))
+            # pyautogui.moveTo(x, y)
