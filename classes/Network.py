@@ -306,7 +306,7 @@ class Network:
         # 2 3 1 c black w 1
         print("\nPrinting network to file " + sFileName + "...\n")
 
-        with open('networks/' + sFileName, 'w') as file:
+        with open(sFileName, 'w') as file:
             # Print Pajek file header
             file.write("*Network" + '\n')
             file.write("*Vertices " + str(len(plot_net.nodes)) + '\n')
@@ -487,8 +487,8 @@ class Network:
             # net1=net.subnet(clusters[0],dMax)
             # net1.printToFilePajek(sFileNamePajekPP,dMax,True,True)
             idsExclude = self.nodesIDUnprovenByParallelpaths(0.15, 0.25)
-            net1 = self.netWithoutNodesFromList(idsExclude, 0.25)
-            Network.print_pajek_network(net1, sFileName="linear.net")
+            linear_net = self.netWithoutNodesFromList(idsExclude, 0.25)
+            #Network.print_pajek_network(linear_net, sFileName="linear.net")
             # net1.printToFilePajek(, 0.2, True, True)
         # two nodes were excluded (correctly)
         # NODE_9542_length_5590_cov_9.67185_B0
@@ -496,7 +496,7 @@ class Network:
         # self.readFromFilePajek(sFileNamePajekPP, True, True)
         # print("ne0="+str(len(net.node[0].edges)))
         # clustering with cutoff 0.5 (to split non-linear, 2 of 16-1 also splited - no matter, seem ok to split: too large gap)
-        clusters, inCluster = self.singleLinkageClustering(0.15, True, False)
+        #clusters, inCluster = self.singleLinkageClustering(0.15, True, False)
         # TEMPORARILY DISABLED####if bPrintClusters:
         #    self.printToFilePajek_allCluster(0.20, "clusters_0p15", clusters, inCluster, sPath)
 
@@ -510,4 +510,4 @@ class Network:
         # see Drive/Cataglyphis/117males/map/Data/data.txt
         # Genetic map and assembly Cnig_gn2:
         # see Drive/Cataglyphis/117males/map/transferMapToAssembly/Cnig_gn2.concatScaf2ChrByMap.3.map
-        return clusters, inCluster
+        return linear_net#clusters, inCluster
