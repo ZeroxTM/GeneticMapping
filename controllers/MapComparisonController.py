@@ -45,46 +45,30 @@ class MapComparisonController:
             for marker2 in map2_markers:
                 if marker1.name == marker2[0]:
                     map1.append(marker1.coordinateGenet)
-                    map2.append(marker2[1])
+                    map2.append(float(marker2[1]) * (-1))
                     break
         #map1_markers = [1, 3, 5, 7]
         #MapComparisonController.map2_markers = [20, 9, 11, 25]
         df = pd.DataFrame({'Map A': map1, 'Map B': map2})
         data = pd.melt(df)
         # Initialize the plot
-        MapComparisonController.ui.map_widget.figure = Figure()
+        MapComparisonController.ui.map_widget.figure = Figure(tight_layout=True)
         MapComparisonController.ui.map_widget.canvas = FigureCanvas(MapComparisonController.ui.map_widget.figure)
         MapComparisonController.ui.map_widget.graphLayout = QtWidgets.QVBoxLayout()
         MapComparisonController.ui.map_widget.graphLayout.addWidget(
             FigureCanvas(MapComparisonController.ui.map_widget.figure))
+        #MapComparisonController.ui.map_widget.graphLayout.addWidget(NavigationToolbar(MapComparisonController.ui.map_widget.canvas, MapComparisonController.ui))
         MapComparisonController.ui.map_widget.setLayout(MapComparisonController.ui.map_widget.graphLayout)
         ax = MapComparisonController.ui.map_widget.figure.add_subplot()
-
         # Scatter all the lines on the plot without lines between them
         sns.swarmplot(data=data, x='variable', y='value', ax=ax)
         # Get the location of both maps on the plot
         locs1 = ax.get_children()[0].get_offsets()
         locs2 = ax.get_children()[1].get_offsets()
-        temp_markers = map1.copy()
-        temp_markers.sort()
-        line_list = list()
-        for p_index, i in enumerate(map1):
-            for index, j in enumerate(temp_markers):
-                if j == i:
-                    line_list.append(([locs1[index, 0], locs2[index, 0]], [map1[p_index], map2[p_index]]))
-                    break
-        # Plotting the lines between the points
-        for i in range(len(line_list)):
-            x = line_list[i][0]
-            y = line_list[i][1]
+        for i in range(locs1.shape[0]):
+            x = [locs1[i, 0], locs2[i, 0]]
+            y = [locs1[i, 1], locs2[i, 1]]
             ax.plot(x, y, color='black', alpha=0.1)
-        # Show plot
         MapComparisonController.ui.map_widget.canvas.draw()
 
-        """plt.xlabel('')
-        plt.ylabel('Coordinates')
-        plt.show()"""
-        """
-        
-        """
 

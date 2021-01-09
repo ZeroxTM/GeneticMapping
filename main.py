@@ -3,17 +3,21 @@ import os
 import subprocess
 import sys
 import time
+
 import pandas as pd
 import pyautogui
 from PySide2 import QtWidgets, QtCore, QtGui
 from PySide2.QtCore import QFile, Slot, Qt
-from PySide2.QtGui import QIcon
+from PySide2.QtGui import QIcon, QPalette, QColor
 from PySide2.QtUiTools import QUiLoader
-from PySide2.QtWidgets import QApplication, QMainWindow, QFileSystemModel, QFileDialog, QDialog, QMessageBox
+from PySide2.QtWidgets import QApplication, QMainWindow, QFileSystemModel, QFileDialog, QDialog, QMessageBox, \
+    QTableWidgetItem
 from pajek_tools import PajekWriter
-
+import numpy as np
+from Data import Data
 from classes.CheckableComboBox import CheckableComboBox
 from classes.LinkageGroup import LinkageGroup
+from controllers.GeneticMapController import GeneticMapController
 from controllers.NetworkTabController import NetworkTabController
 from controllers.FileBrowserController import FileBrowserController
 from controllers.GraphicalGenotypeController import GraphicalGenotypeController
@@ -21,7 +25,6 @@ from controllers.LinkagesController import LinkagesController
 from controllers.MapComparisonController import MapComparisonController
 from controllers.MarkersTabController import MarkersTabController
 from controllers.StatisticsController import StatisticsController
-
 
 class main(QMainWindow):
     def __init__(self):
@@ -58,6 +61,7 @@ class main(QMainWindow):
         self.ui.actionTest_Cluster_Linear_Structure.triggered.connect(self.Network_structure)
         self.ui.actionSubdivide_Cluster_Into.triggered.connect(self.Network_structure)
         self.ui.actionCompare_Maps.triggered.connect(lambda _: self.ui.mainTabs.setCurrentIndex(5) if FileBrowserController.file_chosen else None)
+        self.ui.actionEdit_Input_Map.triggered.connect(lambda _: self.ui.mainTabs.setCurrentIndex(4) if FileBrowserController.file_chosen else None)
         self.ui.actionAbout.triggered.connect(lambda _: QMessageBox().information(self.ui, "About..", "Copyright (c) 2020 Alaa Grable, Adam Mahamed."))
 
     def handleItemPressed(self, index):
@@ -72,7 +76,8 @@ class main(QMainWindow):
                     NetworkTabController.linkages_markers.remove(linkages_markers)
                 self.display_linkages()
                 item.setCheckState(QtCore.Qt.Unchecked)
-                self.ui.draw_network_btn.setEnabled(False)
+                if len(NetworkTabController.linkages_comboBox.get_selected()) == 0:
+                    self.ui.draw_network_btn.setEnabled(False)
                 self.ui.calc_mst_btn.setEnabled(False)
                 self.ui.draw_pajek_btn.setEnabled(False)
                 self.ui.subdivide_btn.setEnabled(False)
@@ -112,14 +117,21 @@ class main(QMainWindow):
         if i == 3:
             self.ui.rename_alleles_btn.show()
             self.ui.export_alleles_btn.show()
+            self.ui.export_alleles_btn.setText("Export Alleles Genotyping")
             self.ui.groupBox_2.setVisible(True)
             self.ui.groupBox_3.setVisible(True)
         elif i == 2:
             self.ui.groupBox_2.setVisible(False)
             self.ui.groupBox_3.setVisible(False)
+            self.ui.export_alleles_btn.setText("Export Alleles Genotyping")
             self.ui.rename_alleles_btn.hide()
             self.ui.export_alleles_btn.hide()
+        elif i == 4:
+            self.ui.export_alleles_btn.show()
+            self.ui.export_alleles_btn.setText("Save")
+            self.ui.rename_alleles_btn.hide()
         else:
+            self.ui.export_alleles_btn.setText("Export Alleles Genotyping")
             self.ui.rename_alleles_btn.hide()
             self.ui.export_alleles_btn.hide()
             self.ui.groupBox_2.setVisible(True)
@@ -139,6 +151,7 @@ class main(QMainWindow):
         view_linkages = menu.addAction("View Linkages")
         action = menu.exec_(self.ui.markersTable.viewport().mapToGlobal(pos))
         if action == view_linkages:
+            self.ui.mainTabs.setTabEnabled(1, True)
             LinkagesController.display_linkages_of(marker)
 
     def cellHover2(self, row, column):
@@ -214,6 +227,7 @@ class main(QMainWindow):
         LinkagesController.ui = self.ui
         MapComparisonController.ui = self.ui
         NetworkTabController.ui = self.ui
+        GeneticMapController.ui = self.ui
         self.ui.mainTabs.setCurrentIndex(0)
 
     @Slot()
@@ -222,7 +236,7 @@ class main(QMainWindow):
 
     def initialize_clicks(self):
         self.ui.rename_alleles_btn.clicked.connect(GraphicalGenotypeController.rename_alleles)
-        self.ui.export_alleles_btn.clicked.connect(GraphicalGenotypeController.export_alleles)
+        self.ui.export_alleles_btn.clicked.connect(self.export_alleles_btn_clicked)
         self.ui.rename_alleles_btn.hide()
         self.ui.export_alleles_btn.hide()
         self.ui.draw_network_btn.clicked.connect(NetworkTabController.build_network)
@@ -233,6 +247,37 @@ class main(QMainWindow):
         self.ui.calc_mst_btn.setEnabled(False)
         self.ui.draw_pajek_btn.setEnabled(False)
         self.ui.subdivide_btn.setEnabled(False)
+        self.ui.lg_skeleton.stateChanged.connect(self.show_Skeleton_markers)
+
+    def export_alleles_btn_clicked(self):
+        if self.ui.mainTabs.currentIndex() == 3:
+            GraphicalGenotypeController.export_alleles()
+        else:
+            GeneticMapController.save_file()
+
+    def show_Skeleton_markers(self):
+        if Data.network is None:
+            QMessageBox().warning(self.ui, "Error", "You have to build the network first!")
+        else:
+            if Data.network.mst is None:
+                QMessageBox().warning(self.ui, "Error", "You have to calculate the MST of the network first!")
+            else:
+                color = list(np.ceil(np.random.random(size=3) * 256))
+                if color in Data.skeleton_colors:
+                    while color not in Data.skeleton_colors:
+                        color = list(np.ceil(np.random.random(size=3) * 256))
+                Data.skeleton_colors.append(color)
+                mst_markers = Data.network.mst.nodes
+                for node in mst_markers:
+                    for row in range(self.ui.markersTable.rowCount()):
+                        item = self.ui.markersTable.item(row, 1)
+                        if item.text() == node.marker.name:
+                            node.marker.skeleton_index = True
+                            self.ui.markersTable.setItem(row, 14, QTableWidgetItem(str(True)))
+                            for column in range(self.ui.markersTable.columnCount()):
+                                self.ui.markersTable.item(row, column).setBackground(QtGui.QColor(color[0], color[1],
+                                                                                                  color[2], 70))
+
 
     def disable_tabs(self):
         for i in range(1, 6):

@@ -4,6 +4,7 @@ import re
 import pandas as pd
 from PySide2.QtWidgets import QMessageBox, QFileDialog
 
+from controllers.GeneticMapController import GeneticMapController
 from controllers.MarkersTabController import MarkersTabController as mtc
 
 
@@ -32,6 +33,7 @@ class FileBrowserController:
                     ddf.columns = ['marker_name', 'properties']
                     FileBrowserController.validate_map_data(ddf)
                 mtc.fetch_markers(df, ddf)
+                GeneticMapController.load_file(path)
                 FileBrowserController.enable_tabs()
                 FileBrowserController.ui.importStatus.setText("Imported map: " + path + "\nData: " + path2)
                 FileBrowserController.ui.importStatus.setFixedWidth(900)
@@ -56,7 +58,7 @@ class FileBrowserController:
     @staticmethod
     def enable_tabs():
         for i in range(1, 6):
-            FileBrowserController.ui.mainTabs.setTabEnabled(i, True)
+            FileBrowserController.ui.mainTabs.setTabEnabled(i, True) if i != 1 else None
 
     @staticmethod
     def validate_map_data(ddf):
