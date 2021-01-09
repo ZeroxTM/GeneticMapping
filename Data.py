@@ -4,3 +4,4 @@ class Data:
     markers = list()
     linkage_groups = dict()
     network = None
+    skeleton_colors = list()
