@@ -48,13 +48,6 @@ class Marker:
         else:
             return 0, 0, 0
 
-    def calcStatistics(self):
-        """
-        statistics are calculated here
-        :return:
-        """
-        print("Stats")
-
     def __eq__(self, other):
         return self.id == other.id and self.name == other.name
 

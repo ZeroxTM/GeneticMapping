@@ -35,8 +35,6 @@ class Network:
         self.skeleton = skeleton
         self.cutoff = cutoff
 
-    def checkConnection(self):
-        print()
 
     def addNode(self, node):
         self.nodes.append(node)
@@ -461,18 +459,6 @@ class Network:
                 net.addNode(vpp)
                 # net.node.append(vpp)
                 # net.nNodes += 1
-            # if i==1:
-            #	print("nEdges0="+str(len(vpp.edges)))
-        if False:
-            print(len(idMy))
-            print(len(ids))
-            for i in ids:
-                if not (i in idMy):
-                    print(str(i))
-            print(ids)
-            print(str(self.node[0].id))
-            print(str(self.node[1].id))
-            print(str(self.node[2].id))
 
         for i in idsPP:
             j = idMy[i]
@@ -494,34 +480,7 @@ class Network:
     def makeLinearContigClusters(self, bExcludeNodesCausingNonLinearClusters=False, cutoff=0.15, cutoffParallel = 0.25):
         # clusters, inCluster
         if bExcludeNodesCausingNonLinearClusters:  # BOOLEAN
-            # self.readFromFilePajek(sFileNamePajek, True, True)
-
-            # dealing with non-linear cluster: subdivide automatically
-            # dMax=0.2
-            # net1=net.subnet(clusters[0],dMax)
-            # net1.printToFilePajek(sFileNamePajekPP,dMax,True,True)
             idsExclude = self.nodesIDUnprovenByParallelpaths(cutoff, cutoffParallel)
             linear_net = self.netWithoutNodesFromList(idsExclude, cutoffParallel)
             # Network.print_pajek_network(linear_net, sFileName="linear.net")
-            # net1.printToFilePajek(, 0.2, True, True)
-        # two nodes were excluded (correctly)
-        # NODE_9542_length_5590_cov_9.67185_B0
-        # NODE_4626_length_15504_cov_4.52318_B1
-        # self.readFromFilePajek(sFileNamePajekPP, True, True)
-        # print("ne0="+str(len(net.node[0].edges)))
-        # clustering with cutoff 0.5 (to split non-linear, 2 of 16-1 also splited - no matter, seem ok to split: too large gap)
-        # clusters, inCluster = self.singleLinkageClustering(0.15, True, False)
-        # TEMPORARILY DISABLED####if bPrintClusters:
-        #    self.printToFilePajek_allCluster(0.20, "clusters_0p15", clusters, inCluster, sPath)
-
-        # print(len(clusters))
-        # result:
-        # 27 linear clusters
-        #
-        # was 5466 markers
-        #
-        # data in QTL format:
-        # see Drive/Cataglyphis/117males/map/Data/data.txt
-        # Genetic map and assembly Cnig_gn2:
-        # see Drive/Cataglyphis/117males/map/transferMapToAssembly/Cnig_gn2.concatScaf2ChrByMap.3.map
         return linear_net  # clusters, inCluster
