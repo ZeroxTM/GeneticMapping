@@ -45,7 +45,7 @@ class MapComparisonController:
             for marker2 in map2_markers:
                 if marker1.name == marker2[0]:
                     map1.append(marker1.coordinateGenet)
-                    map2.append(float(marker2[1]) * (-1))
+                    map2.append(float(marker2[1]))
                     break
         #map1_markers = [1, 3, 5, 7]
         #MapComparisonController.map2_markers = [20, 9, 11, 25]
@@ -61,7 +61,8 @@ class MapComparisonController:
         MapComparisonController.ui.map_widget.setLayout(MapComparisonController.ui.map_widget.graphLayout)
         ax = MapComparisonController.ui.map_widget.figure.add_subplot()
         # Scatter all the lines on the plot without lines between them
-        sns.swarmplot(data=data, x='variable', y='value', ax=ax)
+        sns.stripplot(data=data, x='variable', y='value', ax=ax, jitter=0)
+        #sns.swarmplot(data=data, x='variable', y='value', ax=ax)
         # Get the location of both maps on the plot
         locs1 = ax.get_children()[0].get_offsets()
         locs2 = ax.get_children()[1].get_offsets()
