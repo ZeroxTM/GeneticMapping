@@ -2,6 +2,7 @@
  @Time : 30/11/2020 15:47
  @Author : Alaa Grable, Adam Mahameed
  """
+#TODO: add Restore button and Load current alleles
 import copy
 from itertools import tee
 
@@ -18,8 +19,8 @@ class GraphicalGenotypeController:
     ui = None
     is_changed = False
     colors = {
-        "1": QtGui.QColor(0, 77, 153, 180),
-        "0": QtGui.QColor(112, 128, 144),
+        "1": QtGui.QColor(128, 0, 0, 180),
+        "0": QtGui.QColor(0, 128, 0),
         "-": QtGui.QColor(134, 136, 138, 180),
         "No Data": QtGui.QColor(211, 211, 211, 180),
     }
