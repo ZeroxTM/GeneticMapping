@@ -24,9 +24,9 @@ class MarkersTabController:
             markers = list()
             # ~~~~~~~~~~~~~~ Read the markers from the file (Panda DataFrame) ~~~~~~~~~~~~~~#
             for index, row in data.iterrows():
-                marker = Marker(row['im'], row['marker'],
-                                (list(ddf.loc[ddf['marker_name'] == row['marker'], 'properties'])),
-                                row['iLG'], row['chr'], 0, row['coorGenet'])
+                marker = Marker(row['id'], row['marker_name'],
+                                (list(ddf.loc[ddf['marker_name'] == row['marker_name'], 'properties'])),
+                                row['linkage_id'], row['chr'], 0, row['genetic_coord'])
                 markers.append(marker)
                 linkageGroupsDict[marker.linkage_group].append(marker)
 

@@ -97,21 +97,6 @@ class main(QMainWindow):
             markers += int(length)
         self.ui.total_markers_textEdit.setText(str(markers))
 
-    @Slot()
-    def load_pajek(self):
-        df = pd.DataFrame([["a", "b"], ["a", "c"], ["c", "a"], ["c", "d"], ["a", "d"], ["b", "p"], ["z", "c"],
-                           ["x", "z"], ["z", "x"], ["y", "x"], ["t", "z"], ["a", "t"], ["a", "p"], ["a", "y"],
-                           ["y", "d"], ["y", "p"], ["y", "t"], ["y", "a"]], columns=["source", "target"])
-        writer = PajekWriter(df, directed=True, citing_colname="source", cited_colname="target")
-        writer.write("output.net")
-        pajek_path = os.getcwd() + '\Pajek64\Pajek.exe'
-        subprocess.Popen([pajek_path, r'output.net'])
-
-        time.sleep(3)
-        (x, y) = pyautogui.position()
-        pyautogui.click(pyautogui.locateCenterOnScreen('icon.png'))
-        pyautogui.moveTo(x, y)
-
     # @pyqtSlot()
     def onChange(self, i):
         if i == 3:
@@ -138,7 +123,7 @@ class main(QMainWindow):
             self.ui.groupBox_3.setVisible(True)
 
     def import_map2(self):
-        path, _ = QFileDialog().getOpenFileName(QApplication.activeWindow(), "Select a file to open", filter="*.txt")
+        path, _ = QFileDialog().getOpenFileName(QApplication.activeWindow(), "Select a file to open", filter="Map data (*.txt *.csv)")
         MapComparisonController.compare_maps(path) if path else print("a")
 
     def on_right_click(self, pos):
@@ -197,7 +182,7 @@ class main(QMainWindow):
     def init_file_system_tree(self):
         model = QFileSystemModel(nameFilterDisables=False)
         model.setRootPath("Desktop")
-        model.setNameFilters(["*.txt"])
+        model.setNameFilters(["*.txt", "*.csv"])
         self.ui.browserTreeView.setModel(model)
         self.ui.browserTreeView.setRootIndex(model.index("Desktop"))
         self.ui.browserTreeView.hideColumn(1)
@@ -213,7 +198,7 @@ class main(QMainWindow):
             QMessageBox().warning(self.ui, "Warning", "No File Has Been Chosen!")
 
     def import_file(self):
-        path, _ = QFileDialog().getOpenFileName(QApplication.activeWindow(), "Select a file to open", filter="*.txt")
+        path, _ = QFileDialog().getOpenFileName(QApplication.activeWindow(), "Select a file to open", filter="Map data (*.txt *.csv)")
         if path is not None:
             FileBrowserController.load_file(path)
         else:
