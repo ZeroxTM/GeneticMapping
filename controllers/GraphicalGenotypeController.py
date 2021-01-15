@@ -2,7 +2,7 @@
  @Time : 30/11/2020 15:47
  @Author : Alaa Grable, Adam Mahameed
  """
-#TODO: add Restore button and Load current alleles
+# TODO: add Restore button and Load current alleles
 import copy
 from itertools import tee
 
@@ -42,7 +42,7 @@ class GraphicalGenotypeController:
         for row, marker in enumerate(MarkersTabController.markers):
             GraphicalGenotypeController.ui.genotypingTable.insertRow(row)
             alleles = marker.alleles[0] if len(marker.alleles) != 0 else 'No Data'
-            orig_alleles_dict[row] = [marker.id, alleles]
+            orig_alleles_dict[row] = [marker.id, alleles, marker.name]
             if alleles == 'No Data':
                 pass
                 # for col_index in range(gen_length):
@@ -55,7 +55,7 @@ class GraphicalGenotypeController:
                 for col_index, char in enumerate(alleles):
                     item = QTableWidgetItem(char)
                     item.setBackground(GraphicalGenotypeController.colors[char])
-                    #item.setFlags(QtCore.Qt.ItemIsEnabled)
+                    # item.setFlags(QtCore.Qt.ItemIsEnabled)
                     GraphicalGenotypeController.ui.genotypingTable.setItem(row, col_index, item)
         Data.orig_alleles_dict = orig_alleles_dict
         GraphicalGenotypeController.ui.genotypingTable.cellChanged.connect(GraphicalGenotypeController.cell_changed)
@@ -71,7 +71,7 @@ class GraphicalGenotypeController:
         else:
             color.setAlpha(150)
         item.setBackground(color)
-        #item.setBackground(GraphicalGenotypeController.colors[str(item.text())])
+        # item.setBackground(GraphicalGenotypeController.colors[str(item.text())])
         new_allele = ""
         for column in range(GraphicalGenotypeController.ui.genotypingTable.columnCount()):
             new_allele += str(GraphicalGenotypeController.ui.genotypingTable.item(row, column).text())
@@ -80,6 +80,7 @@ class GraphicalGenotypeController:
 
     @staticmethod
     def update_graphical_genotype_map(updated_alleles_dict, swapped_rows):
+        GraphicalGenotypeController.ui.rename_alleles_btn.setEnabled(False)
         for index in swapped_rows:
             data = updated_alleles_dict[index]
             for i in range(len(data[1])):
@@ -90,11 +91,10 @@ class GraphicalGenotypeController:
                 if data[1][i] == '0':
                     color.setAlpha(220)
                 item.setBackground(color)
-                #item.setFlags(QtCore.Qt.ItemIsEnabled)
+                # item.setFlags(QtCore.Qt.ItemIsEnabled)
                 GraphicalGenotypeController.ui.genotypingTable.setItem(index, i, item)
         QMessageBox.information(GraphicalGenotypeController.ui, "Info",
-                                str(len(updated_alleles_dict)) + " alleles were renamed successfully.")
-        GraphicalGenotypeController.ui.rename_alleles_btn.setEnabled(False)
+                                str(len(swapped_rows)) + " alleles were renamed successfully.")
 
     @staticmethod
     def rename_alleles():
@@ -147,10 +147,13 @@ class GraphicalGenotypeController:
             print("Cancel")
         if export:
             try:
-                path, _ = QFileDialog().getSaveFileName(QApplication.activeWindow(), filter='*.xlsx')
-                df = DataFrame.from_dict(data, orient='index', columns=['Marker ID', 'Allele'])
-                with ExcelWriter(path) as writer:
-                    df.to_excel(writer)
+                path, _ = QFileDialog().getSaveFileName(QApplication.activeWindow(), filter='*.csv')
+                df = DataFrame.from_dict(data, orient='index', columns=['marker_id', 'allele', 'marker_name'])
+                df = df.drop(labels="marker_id", axis=1)
+                df = df.reindex(columns=["marker_name", "allele"])
+                df.to_csv(path_or_buf=path, sep="\t", header=False, index=False)
+                #with ExcelWriter(path) as writer:
+                  #  df.to_excel(writer)
                 QMessageBox.information(GraphicalGenotypeController.ui, "Info", "Export Success\nAlleles data was "
                                                                                 "exported successfully to path")
             except():

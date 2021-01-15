@@ -962,6 +962,16 @@
                        <property name="verticalSpacing">
                         <number>20</number>
                        </property>
+                       <item row="4" column="1">
+                        <widget class="QLineEdit" name="map_allele">
+                         <property name="styleSheet">
+                          <string notr="true">background-color: rgb(255, 255, 255);</string>
+                         </property>
+                         <property name="readOnly">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
                        <item row="1" column="0">
                         <widget class="QLabel" name="label_7">
                          <property name="font">
@@ -980,8 +990,8 @@
                          </property>
                         </widget>
                        </item>
-                       <item row="3" column="1">
-                        <widget class="QLineEdit" name="map_recombination">
+                       <item row="2" column="1">
+                        <widget class="QLineEdit" name="map_linkages">
                          <property name="styleSheet">
                           <string notr="true">background-color: rgb(255, 255, 255);</string>
                          </property>
@@ -990,8 +1000,36 @@
                          </property>
                         </widget>
                        </item>
-                       <item row="2" column="1">
-                        <widget class="QLineEdit" name="map_linkages">
+                       <item row="0" column="1">
+                        <widget class="QLineEdit" name="map_markers">
+                         <property name="styleSheet">
+                          <string notr="true">background-color: rgb(255, 255, 255);</string>
+                         </property>
+                         <property name="readOnly">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="4" column="0">
+                        <widget class="QLabel" name="label_6">
+                         <property name="font">
+                          <font>
+                           <family>Georgia</family>
+                           <pointsize>10</pointsize>
+                           <weight>50</weight>
+                           <bold>false</bold>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>Allele Frequency:</string>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="1" column="1">
+                        <widget class="QLineEdit" name="map_genotypes">
                          <property name="styleSheet">
                           <string notr="true">background-color: rgb(255, 255, 255);</string>
                          </property>
@@ -1024,36 +1062,6 @@
                          </property>
                         </widget>
                        </item>
-                       <item row="0" column="1">
-                        <widget class="QLineEdit" name="map_markers">
-                         <property name="styleSheet">
-                          <string notr="true">background-color: rgb(255, 255, 255);</string>
-                         </property>
-                         <property name="readOnly">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="4" column="1">
-                        <widget class="QLineEdit" name="map_allele">
-                         <property name="styleSheet">
-                          <string notr="true">background-color: rgb(255, 255, 255);</string>
-                         </property>
-                         <property name="readOnly">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="1" column="1">
-                        <widget class="QLineEdit" name="map_genotypes">
-                         <property name="styleSheet">
-                          <string notr="true">background-color: rgb(255, 255, 255);</string>
-                         </property>
-                         <property name="readOnly">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
                        <item row="2" column="0">
                         <widget class="QLabel" name="label_5">
                          <property name="font">
@@ -1072,8 +1080,11 @@
                          </property>
                         </widget>
                        </item>
-                       <item row="3" column="0">
-                        <widget class="QLabel" name="label_8">
+                       <item row="5" column="0">
+                        <widget class="QLabel" name="label_recomb">
+                         <property name="enabled">
+                          <bool>true</bool>
+                         </property>
                          <property name="font">
                           <font>
                            <family>Georgia</family>
@@ -1090,21 +1101,19 @@
                          </property>
                         </widget>
                        </item>
-                       <item row="4" column="0">
-                        <widget class="QLabel" name="label_6">
-                         <property name="font">
-                          <font>
-                           <family>Georgia</family>
-                           <pointsize>10</pointsize>
-                           <weight>50</weight>
-                           <bold>false</bold>
-                          </font>
+                       <item row="5" column="1">
+                        <widget class="QLineEdit" name="map_recombination">
+                         <property name="enabled">
+                          <bool>true</bool>
                          </property>
-                         <property name="text">
-                          <string>Allele Frequency:</string>
+                         <property name="styleSheet">
+                          <string notr="true">background-color: rgb(255, 255, 255);</string>
                          </property>
-                         <property name="alignment">
-                          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                         <property name="frame">
+                          <bool>true</bool>
+                         </property>
+                         <property name="readOnly">
+                          <bool>true</bool>
                          </property>
                         </widget>
                        </item>

@@ -134,7 +134,7 @@ class NetworkTabController:
                 f"Network was exported to Pajek format successfully"
                 f"\n\t#Nodes: {len(to_plot.nodes)}"
                 f"\n\t#Edges: {len(to_plot.edges)}"
-                f"Network save path: {path}")
+                f"\n\tNetwork save path: {path}\n")
 
             subprocess.Popen([pajek_path, path])
             # time.sleep(5)

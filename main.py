@@ -267,6 +267,8 @@ class main(QMainWindow):
     def disable_tabs(self):
         for i in range(1, 6):
             self.ui.mainTabs.setTabEnabled(i, False)
+        self.ui.label_recomb.setHidden(True)
+        self.ui.map_recombination.setHidden(True)
 
 
 if __name__ == "__main__":
