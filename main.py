@@ -238,6 +238,10 @@ class main(QMainWindow):
         self.ui.calc_mst_btn.setEnabled(False)
         self.ui.draw_pajek_btn.setEnabled(False)
         self.ui.subdivide_btn.setEnabled(False)
+        self.ui.lg_skeleton.toggled.connect(
+            lambda checked: self.ui.lg_skeleton.setChecked(False) if checked else self.ui.lg_skeleton.setChecked(True))
+
+
 
     def export_alleles_btn_clicked(self):
         if self.ui.mainTabs.currentIndex() == 3:

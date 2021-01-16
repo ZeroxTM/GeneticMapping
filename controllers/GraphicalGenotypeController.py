@@ -18,6 +18,7 @@ from classes.Marker import Marker
 class GraphicalGenotypeController:
     ui = None
     is_changed = False
+    clearing = False
     colors = {
         "1": QtGui.QColor(128, 0, 0, 180),
         "0": QtGui.QColor(0, 128, 0),
@@ -58,25 +59,26 @@ class GraphicalGenotypeController:
                     # item.setFlags(QtCore.Qt.ItemIsEnabled)
                     GraphicalGenotypeController.ui.genotypingTable.setItem(row, col_index, item)
         Data.orig_alleles_dict = orig_alleles_dict
-        GraphicalGenotypeController.ui.genotypingTable.cellChanged.connect(GraphicalGenotypeController.cell_changed)
+        GraphicalGenotypeController.ui.genotypingTable.cellChanged.connect(GraphicalGenotypeController.cell_changed if not GraphicalGenotypeController.clearing else None)
 
     @staticmethod
     def cell_changed(row, column):
-        item = GraphicalGenotypeController.ui.genotypingTable.item(row, column)
-        color = GraphicalGenotypeController.colors[str(item.text())]
-        if str(item.text()) == '1':
-            color.setAlpha(150)
-        elif str(item.text()) == '0':
-            color.setAlpha(220)
-        else:
-            color.setAlpha(150)
-        item.setBackground(color)
-        # item.setBackground(GraphicalGenotypeController.colors[str(item.text())])
-        new_allele = ""
-        for column in range(GraphicalGenotypeController.ui.genotypingTable.columnCount()):
-            new_allele += str(GraphicalGenotypeController.ui.genotypingTable.item(row, column).text())
-        Marker.markers[row].alleles = [new_allele]
-        GraphicalGenotypeController.is_changed = True
+        if not GraphicalGenotypeController.clearing:
+            item = GraphicalGenotypeController.ui.genotypingTable.item(row, column)
+            color = GraphicalGenotypeController.colors[str(item.text())]
+            if str(item.text()) == '1':
+                color.setAlpha(150)
+            elif str(item.text()) == '0':
+                color.setAlpha(220)
+            else:
+                color.setAlpha(150)
+            item.setBackground(color)
+            # item.setBackground(GraphicalGenotypeController.colors[str(item.text())])
+            new_allele = ""
+            for column in range(GraphicalGenotypeController.ui.genotypingTable.columnCount()):
+                    new_allele += str(GraphicalGenotypeController.ui.genotypingTable.item(row, column).text())
+            Marker.markers[row].alleles = [new_allele]
+            GraphicalGenotypeController.is_changed = True
 
     @staticmethod
     def update_graphical_genotype_map(updated_alleles_dict, swapped_rows):
