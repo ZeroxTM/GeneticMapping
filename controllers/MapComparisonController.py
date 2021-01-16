@@ -38,7 +38,7 @@ class MapComparisonController:
         map2_markers = list()
         data = FileBrowserController.read_map_file(path)
         for _, row in data.iterrows():
-            map2_markers.append((row['marker'], row['coorGenet']))
+            map2_markers.append((row['marker_name'], row['genetic_coord']))
         map1_markers = MarkersTabController.markers
 
         for marker1 in map1_markers:

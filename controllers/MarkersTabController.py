@@ -26,7 +26,7 @@ class MarkersTabController:
             for index, row in data.iterrows():
                 marker = Marker(row['id'], row['marker_name'],
                                 (list(ddf.loc[ddf['marker_name'] == row['marker_name'], 'properties'])),
-                                row['linkage_id'], row['chr'], 0, row['genetic_coord'])
+                                row['linkage_id'], row['chr'], "-", row['genetic_coord'])
                 markers.append(marker)
                 linkageGroupsDict[marker.linkage_group].append(marker)
 

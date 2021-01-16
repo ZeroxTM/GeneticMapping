@@ -87,8 +87,8 @@ class NetworkTabController:
             for row in range(NetworkTabController.ui.markersTable.rowCount()):
                 item = NetworkTabController.ui.markersTable.item(row, 1)
                 if item.text() == node.marker.name:
-                    node.marker.skeleton_index = True
-                    NetworkTabController.ui.markersTable.setItem(row, 14, QTableWidgetItem(str(True)))
+                    node.marker.skeleton_index = node.id
+                    NetworkTabController.ui.markersTable.setItem(row, 14, QTableWidgetItem(str(node.id)))
                     for column in range(NetworkTabController.ui.markersTable.columnCount()):
                         NetworkTabController.ui.markersTable.item(row, column).setBackground(QtGui.QColor(color[0], color[1],
                                                                                           color[2], 70))
