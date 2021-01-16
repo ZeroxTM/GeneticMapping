@@ -483,4 +483,4 @@ class Network:
             idsExclude = self.nodesIDUnprovenByParallelpaths(cutoff, cutoffParallel)
             linear_net = self.netWithoutNodesFromList(idsExclude, cutoffParallel)
             # Network.print_pajek_network(linear_net, sFileName="linear.net")
-        return linear_net  # clusters, inCluster
+        return linear_net, idsExclude  # clusters, inCluster

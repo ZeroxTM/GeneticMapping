@@ -5,7 +5,9 @@ import time
 
 import pyautogui
 from PySide2 import QtCore
-from PySide2.QtWidgets import QFileDialog, QApplication, QMessageBox, QInputDialog
+import numpy as np
+from PySide2.QtWidgets import QFileDialog, QApplication, QMessageBox, QInputDialog, QTableWidgetItem
+from PySide2 import QtGui
 
 from Data import Data
 from classes.CheckableComboBox import CheckableComboBox
@@ -70,7 +72,26 @@ class NetworkTabController:
         NetworkTabController.ui.log_plainTextEdit.appendPlainText(f"Network was built successfully!"
                                                                   f"\n\t#Nodes: {len(net.mst.nodes)}"
                                                                   f"\n\t#Edges: {len(net.mst.edges)}\n")
+        NetworkTabController.color_skeleton()
         print(net.mst.idNodesOnPathLongest())
+
+    @staticmethod
+    def color_skeleton():
+        color = list(np.ceil(np.random.random(size=3) * 256))
+        if color in Data.skeleton_colors:
+            while color not in Data.skeleton_colors:
+                color = list(np.ceil(np.random.random(size=3) * 256))
+        Data.skeleton_colors.append(color)
+        mst_markers = Data.network.mst.nodes
+        for node in mst_markers:
+            for row in range(NetworkTabController.ui.markersTable.rowCount()):
+                item = NetworkTabController.ui.markersTable.item(row, 1)
+                if item.text() == node.marker.name:
+                    node.marker.skeleton_index = True
+                    NetworkTabController.ui.markersTable.setItem(row, 14, QTableWidgetItem(str(True)))
+                    for column in range(NetworkTabController.ui.markersTable.columnCount()):
+                        NetworkTabController.ui.markersTable.item(row, column).setBackground(QtGui.QColor(color[0], color[1],
+                                                                                          color[2], 70))
 
     @staticmethod
     def subdivide_network():
@@ -78,10 +99,17 @@ class NetworkTabController:
                                          "Input cutoff value for unproven parallel linkages", 0.25, 0.0, 1.0, step=0.1)
         if ok:
             NetworkTabController.ui.log_plainTextEdit.appendPlainText(f"Testing network for linear structure...")
-            linear_net = Data.network.makeLinearContigClusters(bExcludeNodesCausingNonLinearClusters=True, cutoff=float(
+
+            linear_net, excluded = Data.network.makeLinearContigClusters(bExcludeNodesCausingNonLinearClusters=True, cutoff=float(
                 NetworkTabController.ui.cutoff_textfield.toPlainText()), cutoffParallel=float(val))
+
             NetworkTabController.ui.log_plainTextEdit.appendPlainText(
-                f"{len(Data.network.nodes) - len(linear_net.nodes)} nodes were removed")
+                f"{len(Data.network.nodes) - len(linear_net.nodes)} nodes were removed:")
+
+            excluded = [str(str(id) + "\t" + Data.network.nodes[id].caption) for id in excluded]
+            for ex in excluded:
+                NetworkTabController.ui.log_plainTextEdit.appendPlainText(ex)
+
             pajek_path = os.getcwd() + '\Pajek64\Pajek.exe'
             try:
                 path, _ = QFileDialog().getSaveFileName(QApplication.activeWindow(), filter='*.net')

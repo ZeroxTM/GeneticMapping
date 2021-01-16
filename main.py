@@ -177,6 +177,12 @@ class main(QMainWindow):
             self.ui.lg_name.setText(self.ui.markersTable.item(row, 12).text())
             self.ui.lg_markers.setText(
                 str(len(LinkageGroup.LinkageGroups[self.ui.markersTable.item(row, 12).text()].markers)))
+        if Data.network is not None:
+            if Data.network.mst is not None:
+                if self.ui.markersTable.item(row, 1).text() in [node.marker.name for node in Data.network.mst.nodes]:
+                    self.ui.lg_skeleton.setChecked(True)
+                else:
+                    self.ui.lg_skeleton.setChecked(False)
         self.current_hover = [row, column]
 
     def init_file_system_tree(self):
@@ -232,7 +238,6 @@ class main(QMainWindow):
         self.ui.calc_mst_btn.setEnabled(False)
         self.ui.draw_pajek_btn.setEnabled(False)
         self.ui.subdivide_btn.setEnabled(False)
-        self.ui.lg_skeleton.stateChanged.connect(self.show_Skeleton_markers)
 
     def export_alleles_btn_clicked(self):
         if self.ui.mainTabs.currentIndex() == 3:
@@ -240,28 +245,6 @@ class main(QMainWindow):
         else:
             GeneticMapController.save_file()
 
-    def show_Skeleton_markers(self):
-        if Data.network is None:
-            QMessageBox().warning(self.ui, "Error", "You have to build the network first!")
-        else:
-            if Data.network.mst is None:
-                QMessageBox().warning(self.ui, "Error", "You have to calculate the MST of the network first!")
-            else:
-                color = list(np.ceil(np.random.random(size=3) * 256))
-                if color in Data.skeleton_colors:
-                    while color not in Data.skeleton_colors:
-                        color = list(np.ceil(np.random.random(size=3) * 256))
-                Data.skeleton_colors.append(color)
-                mst_markers = Data.network.mst.nodes
-                for node in mst_markers:
-                    for row in range(self.ui.markersTable.rowCount()):
-                        item = self.ui.markersTable.item(row, 1)
-                        if item.text() == node.marker.name:
-                            node.marker.skeleton_index = True
-                            self.ui.markersTable.setItem(row, 14, QTableWidgetItem(str(True)))
-                            for column in range(self.ui.markersTable.columnCount()):
-                                self.ui.markersTable.item(row, column).setBackground(QtGui.QColor(color[0], color[1],
-                                                                                                  color[2], 70))
 
 
     def disable_tabs(self):
