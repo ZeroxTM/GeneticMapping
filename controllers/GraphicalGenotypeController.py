@@ -81,6 +81,13 @@ class GraphicalGenotypeController:
             GraphicalGenotypeController.is_changed = True
 
     @staticmethod
+    def reset_colors():
+        GraphicalGenotypeController.colors["1"].alpha(180)
+        GraphicalGenotypeController.colors["0"].alpha(0)
+        GraphicalGenotypeController.colors["-"].alpha(180)
+        GraphicalGenotypeController.colors["No Data"].alpha(180)
+
+    @staticmethod
     def update_graphical_genotype_map(updated_alleles_dict, swapped_rows):
         GraphicalGenotypeController.ui.rename_alleles_btn.setEnabled(False)
         for index in swapped_rows:
@@ -97,6 +104,7 @@ class GraphicalGenotypeController:
                 GraphicalGenotypeController.ui.genotypingTable.setItem(index, i, item)
         QMessageBox.information(GraphicalGenotypeController.ui, "Info",
                                 str(len(swapped_rows)) + " alleles were renamed successfully.")
+        GraphicalGenotypeController.reset_colors()
 
     @staticmethod
     def rename_alleles():

@@ -6,6 +6,8 @@ from PySide2 import QtWidgets
 from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg as
                                                 FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
 from matplotlib.figure import Figure
+from matplotlib.patches import Ellipse, Rectangle
+
 from controllers.FileBrowserController import FileBrowserController
 from controllers.MarkersTabController import MarkersTabController
 import matplotlib.pyplot as plt
@@ -13,6 +15,7 @@ import seaborn as sns
 import pandas as pd
 import os
 import sys
+import numpy as np
 from PySide2 import QtWidgets, QtCore, QtGui
 from PySide2.QtCore import QFile
 from PySide2.QtUiTools import QUiLoader
@@ -29,7 +32,8 @@ import pandas as pd
 # map_widget
 class MapComparisonController:
     ui = None
-
+    plotted = False
+    ax = None
 
     @staticmethod
     def compare_maps(path):
@@ -59,7 +63,14 @@ class MapComparisonController:
             FigureCanvas(MapComparisonController.ui.map_widget.figure))
         #MapComparisonController.ui.map_widget.graphLayout.addWidget(NavigationToolbar(MapComparisonController.ui.map_widget.canvas, MapComparisonController.ui))
         MapComparisonController.ui.map_widget.setLayout(MapComparisonController.ui.map_widget.graphLayout)
-        ax = MapComparisonController.ui.map_widget.figure.add_subplot()
+        #MapComparisonController.ui.map_widget.figure.clf()
+        if not MapComparisonController.plotted:
+            ax = MapComparisonController.ui.map_widget.figure.add_subplot()
+            MapComparisonController.ax = ax
+            MapComparisonController.plotted = True
+        else:
+            MapComparisonController.ui.map_widget.figure.clear(keep_observers=True)
+            ax = MapComparisonController.ax
         # Scatter all the lines on the plot without lines between them
         sns.stripplot(data=data, x='variable', y='value', ax=ax, jitter=0)
         #sns.swarmplot(data=data, x='variable', y='value', ax=ax)
@@ -70,6 +81,19 @@ class MapComparisonController:
             x = [locs1[i, 0], locs2[i, 0]]
             y = [locs1[i, 1], locs2[i, 1]]
             ax.plot(x, y, color='black', alpha=0.1)
+        try:
+            for i in range(2):
+                rect = MapComparisonController.draw_rectangle(ax.collections[i])
+                ax.add_patch(rect)
+        except ValueError:
+            pass
         MapComparisonController.ui.map_widget.canvas.draw()
+        MapComparisonController.ui.map_widget.canvas.flush_events()
+
+
+    @staticmethod
+    def draw_rectangle(map):
+        x, y = np.array(map.get_offsets()).T
+        return Rectangle((x.min(), y.min()), x.ptp(), y.ptp(), edgecolor='k', facecolor='None', lw=3)
 
 

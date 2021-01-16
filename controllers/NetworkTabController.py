@@ -96,7 +96,7 @@ class NetworkTabController:
     @staticmethod
     def subdivide_network():
         val, ok = QInputDialog.getDouble(QApplication.activeWindow(), "Parallel cutoff",
-                                         "Input cutoff value for unproven parallel linkages", 0.25, 0.0, 1.0, step=0.1)
+                                         "Input cutoff value for unproven parallel linkages", 0.25, 0.0, 1.0, decimals=3, step=0.01)
         if ok:
             NetworkTabController.ui.log_plainTextEdit.appendPlainText(f"Testing network for linear structure...")
 

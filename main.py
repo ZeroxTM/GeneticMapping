@@ -115,6 +115,10 @@ class main(QMainWindow):
             self.ui.export_alleles_btn.show()
             self.ui.export_alleles_btn.setText("Save")
             self.ui.rename_alleles_btn.hide()
+        elif i == 5:
+            self.ui.groupBox_2.setVisible(False)
+            self.ui.groupBox_3.setVisible(False)
+            self.ui.export_alleles_btn.hide()
         else:
             self.ui.export_alleles_btn.setText("Export Alleles Genotyping")
             self.ui.rename_alleles_btn.hide()
