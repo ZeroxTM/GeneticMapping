@@ -139,6 +139,7 @@ class NetworkTabController:
             else:
                 QMessageBox.information(NetworkTabController.ui, "Notice",
                                         "Network is already linearly structured!")
+                NetworkTabController.ui.log_plainTextEdit.appendPlainText("\tNetwork is already linearly structured!\n")
 
 
     @staticmethod
