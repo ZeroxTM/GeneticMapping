@@ -61,6 +61,8 @@ class NetworkTabController:
             f"\n\t#Nodes: {len(net.nodes)}"
             f"\n\t#Edges: {len(net.edges)}\n")
         Network.low_quality_markers = 0
+        QMessageBox.information(NetworkTabController.ui, "Notice",
+                                "Network was built successfully!")
 
     @staticmethod
     def calculate_mst():
@@ -69,13 +71,17 @@ class NetworkTabController:
             f"Calculating minimal spanning tree of {len(net.nodes)} nodes and {len(net.edges)} edges")
         net.mst = net.calc_MST_net(bPrint=True, bPrintDetails=False)
         # net.mst = net.calc_max_MST()
+        skeleton_ids = net.mst.idNodesOnPathLongest()
         NetworkTabController.ui.log_plainTextEdit.appendPlainText(f"Network was built successfully!"
                                                                   f"\n\t#Nodes: {len(net.mst.nodes)}"
-                                          
-                                                                  f"\n\t#Edges: {len(net.mst.edges)}\n")
-        skeleton_ids = net.mst.idNodesOnPathLongest()
+                                                                  f"\n\t#Edges: {len(net.mst.edges)}"
+                                                                  f"\n\t#Skeleton nodes: {len(skeleton_ids)}"
+                                                                  f"\n\tIDs of nodes forming skeleton:\n\t{str(skeleton_ids)}")
+
         Data.skeleton_nodes = [Data.network.nodes[sid] for sid in skeleton_ids]
         NetworkTabController.color_skeleton()
+        QMessageBox.information(NetworkTabController.ui, "Notice",
+                                "MST Network was built successfully!")
 
     @staticmethod
     def color_skeleton():
@@ -105,27 +111,35 @@ class NetworkTabController:
             linear_net, excluded = Data.network.makeLinearContigClusters(bExcludeNodesCausingNonLinearClusters=True, cutoff=float(
                 NetworkTabController.ui.cutoff_textfield.toPlainText()), cutoffParallel=float(val))
 
-            NetworkTabController.ui.log_plainTextEdit.appendPlainText(
-                f"{len(Data.network.nodes) - len(linear_net.nodes)} nodes were removed:")
+            if len(excluded) != 0:
+                NetworkTabController.ui.log_plainTextEdit.appendPlainText(
+                    f"{len(Data.network.nodes) - len(linear_net.nodes)} nodes were removed:")
 
-            excluded = [str(str(id) + "\t" + Data.network.nodes[id].caption) for id in excluded]
-            for ex in excluded:
-                NetworkTabController.ui.log_plainTextEdit.appendPlainText(ex)
+                excluded = [str(str(id) + "\t" + Data.network.nodes[id].caption) for id in excluded]
+                for ex in excluded:
+                    NetworkTabController.ui.log_plainTextEdit.appendPlainText(ex)
 
-            pajek_path = os.getcwd() + '\Pajek64\Pajek.exe'
-            try:
-                path, _ = QFileDialog().getSaveFileName(QApplication.activeWindow(), filter='*.net')
-                Network.print_pajek_network(plot_net=linear_net, sFileName=path)
-                QMessageBox.information(NetworkTabController.ui, "Info", "Save Success\nMap "
-                                                                         "was successfully saved to path")
-            except():
-                QMessageBox.information(NetworkTabController.ui, "Warning",
-                                        "Save Failed\nAn error has occurred!")
-            NetworkTabController.ui.log_plainTextEdit.appendPlainText(
-                f"Linear structure network was built successfully!"
-                f"\n\t#Nodes: {len(linear_net.nodes)}"
-                f"\n\t#Edges: {len(linear_net.edges)}\n")
-            subprocess.Popen([pajek_path, path])
+                pajek_path = os.getcwd() + '\Pajek64\Pajek.exe'
+                try:
+                    path, _ = QFileDialog().getSaveFileName(QApplication.activeWindow(), filter='*.net')
+                    Network.print_pajek_network(plot_net=linear_net, sFileName=path)
+                    QMessageBox.information(NetworkTabController.ui, "Info", "Save Success\nMap "
+                                                                             "was successfully saved to path")
+                except():
+                    QMessageBox.information(NetworkTabController.ui, "Warning",
+                                            "Save Failed\nAn error has occurred!")
+                NetworkTabController.ui.log_plainTextEdit.appendPlainText(
+                    f"Linear structure network was built successfully!"
+                    f"\n\t#Nodes: {len(linear_net.nodes)}"
+                    f"\n\t#Edges: {len(linear_net.edges)}\n")
+
+                QMessageBox.information(NetworkTabController.ui, "Notice",
+                                        "Network was subdivided into linear components successfully!")
+                subprocess.Popen([pajek_path, path])
+            else:
+                QMessageBox.information(NetworkTabController.ui, "Notice",
+                                        "Network is already linearly structured!")
+
 
     @staticmethod
     def draw_pajek():
