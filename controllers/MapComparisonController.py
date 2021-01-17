@@ -56,21 +56,23 @@ class MapComparisonController:
         df = pd.DataFrame({'Map A': map1, 'Map B': map2})
         data = pd.melt(df)
         # Initialize the plot
-        MapComparisonController.ui.map_widget.figure = Figure(tight_layout=True)
-        MapComparisonController.ui.map_widget.canvas = FigureCanvas(MapComparisonController.ui.map_widget.figure)
-        MapComparisonController.ui.map_widget.graphLayout = QtWidgets.QVBoxLayout()
-        MapComparisonController.ui.map_widget.graphLayout.addWidget(
-            FigureCanvas(MapComparisonController.ui.map_widget.figure))
-        #MapComparisonController.ui.map_widget.graphLayout.addWidget(NavigationToolbar(MapComparisonController.ui.map_widget.canvas, MapComparisonController.ui))
-        MapComparisonController.ui.map_widget.setLayout(MapComparisonController.ui.map_widget.graphLayout)
+        plt.ion()
         #MapComparisonController.ui.map_widget.figure.clf()
         if not MapComparisonController.plotted:
+            MapComparisonController.ui.map_widget.figure = Figure(tight_layout=True)
+            MapComparisonController.ui.map_widget.canvas = FigureCanvas(MapComparisonController.ui.map_widget.figure)
+            MapComparisonController.ui.map_widget.navigation_bar = NavigationToolbar(MapComparisonController.ui.map_widget.canvas, MapComparisonController.ui.map_widget)
+            MapComparisonController.ui.map_widget.graphLayout = QtWidgets.QVBoxLayout()
             ax = MapComparisonController.ui.map_widget.figure.add_subplot()
             MapComparisonController.ax = ax
             MapComparisonController.plotted = True
         else:
-            MapComparisonController.ui.map_widget.figure.clear(keep_observers=True)
+           # MapComparisonController.ui.map_widget.figure.clear(keep_observers=True)
+            MapComparisonController.ui.map_widget.graphLayout.removeWidget(MapComparisonController.ui.map_widget.canvas)
             ax = MapComparisonController.ax
+        MapComparisonController.ui.map_widget.graphLayout.addWidget(MapComparisonController.ui.map_widget.canvas)
+        MapComparisonController.ui.map_widget.graphLayout.addWidget(MapComparisonController.ui.map_widget.navigation_bar)
+        MapComparisonController.ui.map_widget.setLayout(MapComparisonController.ui.map_widget.graphLayout)
         # Scatter all the lines on the plot without lines between them
         sns.stripplot(data=data, x='variable', y='value', ax=ax, jitter=0)
         #sns.swarmplot(data=data, x='variable', y='value', ax=ax)
@@ -87,8 +89,10 @@ class MapComparisonController:
                 ax.add_patch(rect)
         except ValueError:
             pass
+        #MapComparisonController.ui.map_widget.graphLayout.update()
         MapComparisonController.ui.map_widget.canvas.draw()
         MapComparisonController.ui.map_widget.canvas.flush_events()
+        MapComparisonController.ui.map_widget.graphLayout.update()
 
 
     @staticmethod
