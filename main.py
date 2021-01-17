@@ -182,8 +182,8 @@ class main(QMainWindow):
             self.ui.lg_markers.setText(
                 str(len(LinkageGroup.LinkageGroups[self.ui.markersTable.item(row, 12).text()].markers)))
         if Data.network is not None:
-            if Data.network.mst is not None:
-                if self.ui.markersTable.item(row, 1).text() in [node.marker.name for node in Data.network.mst.nodes]:
+            if Data.skeleton_nodes is not None:
+                if self.ui.markersTable.item(row, 1).text() in [node.marker.name for node in Data.skeleton_nodes]:
                     self.ui.lg_skeleton.setChecked(True)
                 else:
                     self.ui.lg_skeleton.setChecked(False)

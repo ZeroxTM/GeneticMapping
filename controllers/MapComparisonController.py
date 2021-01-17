@@ -70,6 +70,7 @@ class MapComparisonController:
            # MapComparisonController.ui.map_widget.figure.clear(keep_observers=True)
             MapComparisonController.ui.map_widget.graphLayout.removeWidget(MapComparisonController.ui.map_widget.canvas)
             ax = MapComparisonController.ax
+            ax.clear()
         MapComparisonController.ui.map_widget.graphLayout.addWidget(MapComparisonController.ui.map_widget.canvas)
         MapComparisonController.ui.map_widget.graphLayout.addWidget(MapComparisonController.ui.map_widget.navigation_bar)
         MapComparisonController.ui.map_widget.setLayout(MapComparisonController.ui.map_widget.graphLayout)

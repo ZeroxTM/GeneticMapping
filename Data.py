@@ -5,3 +5,4 @@ class Data:
     linkage_groups = dict()
     network = None
     skeleton_colors = list()
+    skeleton_nodes = None

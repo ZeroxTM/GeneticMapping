@@ -109,8 +109,8 @@ class FileBrowserController:
         Data.linkage_groups.clear()
         Data.skeleton_colors.clear()
         Data.network = None
+        Data.skeleton_nodes = None
         MarkersTabController.markers.clear()
-        #FileBrowserController.clear_Statistics()
         FileBrowserController.ui.alaa_plainTextEdit.clear()
         FileBrowserController.clear_Statistics()
         FileBrowserController.ui.draw_network_btn.setEnabled(False)

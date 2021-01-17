@@ -71,9 +71,11 @@ class NetworkTabController:
         # net.mst = net.calc_max_MST()
         NetworkTabController.ui.log_plainTextEdit.appendPlainText(f"Network was built successfully!"
                                                                   f"\n\t#Nodes: {len(net.mst.nodes)}"
+                                          
                                                                   f"\n\t#Edges: {len(net.mst.edges)}\n")
+        skeleton_ids = net.mst.idNodesOnPathLongest()
+        Data.skeleton_nodes = [Data.network.nodes[sid] for sid in skeleton_ids]
         NetworkTabController.color_skeleton()
-        print(net.mst.idNodesOnPathLongest())
 
     @staticmethod
     def color_skeleton():
@@ -82,8 +84,8 @@ class NetworkTabController:
             while color not in Data.skeleton_colors:
                 color = list(np.ceil(np.random.random(size=3) * 256))
         Data.skeleton_colors.append(color)
-        mst_markers = Data.network.mst.nodes
-        for node in mst_markers:
+        #mst_markers = Data.network.mst.nodes
+        for node in Data.skeleton_nodes:
             for row in range(NetworkTabController.ui.markersTable.rowCount()):
                 item = NetworkTabController.ui.markersTable.item(row, 1)
                 if item.text() == node.marker.name:
